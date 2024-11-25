@@ -22,7 +22,7 @@ namespace Application.Services
 
 
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("HighTech", "HighTech@gmail.com"));
+                message.From.Add(new MailboxAddress("KOIDelivery", "KOIDelivery@gmail.com"));
                 message.To.Add(new MailboxAddress("", recievedUser));
                 message.Subject = $"Verification Email";
 
