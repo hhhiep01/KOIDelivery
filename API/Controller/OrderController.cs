@@ -30,7 +30,7 @@ namespace API.Controller
                 {
                     statusCode = 400,
                     isSuccess = false,
-                    errorMessage = string.Join("; ", order),
+                    errorMessage = string.Join("; ", errors),
                     result = (object)null
                 });
             }

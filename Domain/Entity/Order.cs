@@ -5,7 +5,6 @@ namespace Domain.Entity
     public class Order 
     {
         public int Id { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public OrderStatusEnum OrderStatus { get; set; } 
         public string FromAddress { get; set; } = string.Empty;
@@ -22,10 +21,10 @@ namespace Domain.Entity
         public string FeedbackContent { get; set; } = string.Empty;
         public string ReasonToCancel { get; set; } = string.Empty;
         //
-        public UserAccount UserAccount { get; set; }
-        public int AccountId { get; set; }
-        public int TransportServiceId { get; set; }
-        public int PaymentId { get; set; }
+        public UserAccount? UserAccount { get; set; }
+        public int? AccountId { get; set; }
+        public int? TransportServiceId { get; set; }
+        public int? PaymentId { get; set; }
     }
 
     public enum OrderStatusEnum

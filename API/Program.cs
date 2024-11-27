@@ -62,9 +62,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-builder.Services.AddFluentValidationAutoValidation()
-    .AddValidatorsFromAssemblyContaining<RegisterValidator>()
-    .AddValidatorsFromAssemblyContaining<CreateOrderValidator>();
+builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<RegisterValidator>();
+builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<CreateOrderValidator>();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
