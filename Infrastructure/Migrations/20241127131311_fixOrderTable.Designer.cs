@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241127131311_fixOrderTable")]
+    partial class fixOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,8 +242,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TransportServiceId");
-
                     b.HasIndex("UserAccountId");
 
                     b.ToTable("Orders");
@@ -408,6 +409,12 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<float>("BasePrice")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -442,9 +449,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<float>("PricePerKm")
                         .HasColumnType("real");
-
-                    b.Property<int>("TransportType")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -503,11 +507,16 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TransportServiceId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DriverId")
                         .IsUnique()
                         .HasFilter("[DriverId] IS NOT NULL");
+
+                    b.HasIndex("TransportServiceId");
 
                     b.ToTable("Users");
                 });
@@ -545,15 +554,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Order", b =>
                 {
-                    b.HasOne("Domain.Entity.TransportService", "TransportService")
-                        .WithMany("Orders")
-                        .HasForeignKey("TransportServiceId");
-
                     b.HasOne("Domain.Entity.UserAccount", "UserAccount")
                         .WithMany("Orders")
                         .HasForeignKey("UserAccountId");
-
-                    b.Navigation("TransportService");
 
                     b.Navigation("UserAccount");
                 });
@@ -613,7 +616,13 @@ namespace Infrastructure.Migrations
                         .WithOne("UserAccount")
                         .HasForeignKey("Domain.Entity.UserAccount", "DriverId");
 
+                    b.HasOne("Domain.Entity.TransportService", "TransportService")
+                        .WithMany("UserAccounts")
+                        .HasForeignKey("TransportServiceId");
+
                     b.Navigation("Driver");
+
+                    b.Navigation("TransportService");
                 });
 
             modelBuilder.Entity("Domain.Entity.Driver", b =>
@@ -644,7 +653,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.TransportService", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("UserAccounts");
                 });
 
             modelBuilder.Entity("Domain.Entity.UserAccount", b =>

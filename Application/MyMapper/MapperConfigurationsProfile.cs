@@ -1,4 +1,6 @@
 ﻿using Application.Request.Order;
+using Application.Request.TransportService;
+using Application.Response.TransportService;
 using AutoMapper;
 using Domain.Entity;
 using System;
@@ -14,6 +16,13 @@ namespace Application.MyMapper
         public MapperConfigurationsProfile()
         {
             CreateMap<OrderRequest, Order>();
+
+            //TransportService
+            CreateMap<TransportServiceRequest, TransportService>();
+            CreateMap<TransportService, TransportServiceResponse>();
+
+            
+
         }
     }
 }

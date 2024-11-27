@@ -13,7 +13,7 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<TransportService> builder)
         {
-            builder.HasMany(o => o.UserAccounts)
+            builder.HasMany(o => o.Orders)
                 .WithOne(o => o.TransportService)
                 .HasForeignKey(o => o.TransportServiceId);
         }

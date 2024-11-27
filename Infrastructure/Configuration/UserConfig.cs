@@ -16,10 +16,10 @@ namespace Infrastructure.Configuration
             builder.HasMany(x => x.Orders)
                 .WithOne(x => x.UserAccount)
                 .HasForeignKey(x => x.AccountId);
-            
+            /*
             builder.HasOne(o => o.TransportService)
                .WithMany(o => o.UserAccounts)
-               .HasForeignKey(o => o.TransportServiceId);
+               .HasForeignKey(o => o.TransportServiceId);*/
 
 
             builder.HasOne(d => d.Driver)

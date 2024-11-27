@@ -31,9 +31,10 @@ namespace Application.Services
             {
                 
                 var order = _mapper.Map<Order>(request);
-                var userId = _claim.GetUserClaim();
+                var claim = _claim.GetUserClaim();
                
                 await _unitOfWork.Orders.AddAsync(order);
+                order.AccountId = claim.Id;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add success");
             }
