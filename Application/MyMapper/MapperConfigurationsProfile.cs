@@ -14,6 +14,7 @@ namespace Application.MyMapper
         public MapperConfigurationsProfile()
         {
             CreateMap<OrderRequest, Order>();
+            CreateMap<OrderFishRequest, OrderFish>();
         }
     }
 }

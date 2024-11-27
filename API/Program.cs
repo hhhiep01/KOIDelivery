@@ -61,6 +61,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderFishService, OrderFishService>();
 
 builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<RegisterValidator>();
 builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<CreateOrderValidator>();
