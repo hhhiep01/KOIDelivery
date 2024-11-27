@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Configuration
 {
-    public class UserConfig : IEntityTypeConfiguration<UserAccount>
+    public class OrderConfig : IEntityTypeConfiguration<Order>
     {
-        public void Configure(EntityTypeBuilder<UserAccount> builder)
+        public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.HasMany(x => x.Orders)
-                .WithOne(x => x.UserAccount)
-                .HasForeignKey(x => x.UserAccount.Id);
+            builder.HasOne(x => x.UserAccount)
+                .WithMany(x => x.Orders)
+                .HasForeignKey(x => x.UserAccount.Id);   
         }
     }
 }

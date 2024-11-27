@@ -20,6 +20,7 @@ namespace Domain.Entity
         public Role Role { get; set; }
         //
         public List<EmailVerification>? EmailVerifications { get; set; }
+        public List<Order>? Orders { get; set; }
     }
     public enum Role
     {
