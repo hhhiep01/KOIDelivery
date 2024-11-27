@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Application.Request.Order;
+using AutoMapper;
+using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace Application.MyMapper
     {
         public MapperConfigurationsProfile()
         {
-
+            CreateMap<OrderRequest, Order>();
         }
     }
 }

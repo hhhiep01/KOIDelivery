@@ -15,11 +15,13 @@ namespace Infrastructure
         private AppDbContext _context;
         public IUserAccountRepository UserAccounts { get; }
         public IEmailVerificationRepository EmailVerifications { get; }
+        public IOrderRepository Orders { get; }
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             UserAccounts = new UserAccountRepository(context);
             EmailVerifications = new EmailVerificationRepository(context);
+            Orders = new OrderRepository(context);
 
         }
         public async Task SaveChangeAsync()

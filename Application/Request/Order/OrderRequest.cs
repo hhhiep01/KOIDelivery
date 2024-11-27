@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Domain.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Entity
+namespace Application.Request.Order
 {
-    public class Order 
+    public class OrderRequest
     {
-        public int Id { get; set; }
-
         public DateTime CreatedAt { get; set; }
-        public OrderStatusEnum OrderStatus { get; set; } 
+        public OrderStatusEnum OrderStatus { get; set; }
         public string FromAddress { get; set; } = string.Empty;
         public string ToAddress { get; set; } = string.Empty;
         public string ReceiverPhone { get; set; } = string.Empty;
@@ -21,27 +24,5 @@ namespace Domain.Entity
         public float FeedbackStars { get; set; }
         public string FeedbackContent { get; set; } = string.Empty;
         public string ReasonToCancel { get; set; } = string.Empty;
-        //
-        public UserAccount UserAccount { get; set; }
-        public int AccountId { get; set; }
-        public int TransportServiceId { get; set; }
-        public int PaymentId { get; set; }
-    }
-
-    public enum OrderStatusEnum
-    {
-        Pending,
-        Processing,
-        Shipped,
-        Delivered,
-        Canceled
-    }
-
-    public enum PaymentMethodEnum
-    {
-        CashOnDelivery,
-        CreditCard,
-        BankTransfer,
-        DigitalWallet
     }
 }

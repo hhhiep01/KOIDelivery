@@ -11,6 +11,7 @@ namespace Application
     {
         public IUserAccountRepository UserAccounts { get; }
         public IEmailVerificationRepository EmailVerifications { get; }
+        public IOrderRepository Orders { get; }
         public Task SaveChangeAsync();
     }
 }

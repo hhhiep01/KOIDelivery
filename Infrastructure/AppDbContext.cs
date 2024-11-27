@@ -21,6 +21,8 @@ namespace Infrastructure
         public DbSet<UserAccount> Users { get; set; }
         public DbSet<EmailVerification> EmailVerifications { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }

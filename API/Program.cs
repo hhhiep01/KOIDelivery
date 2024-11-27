@@ -60,9 +60,11 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddFluentValidationAutoValidation()
-    .AddValidatorsFromAssemblyContaining<RegisterValidator>();
+    .AddValidatorsFromAssemblyContaining<RegisterValidator>()
+    .AddValidatorsFromAssemblyContaining<CreateOrderValidator>();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
