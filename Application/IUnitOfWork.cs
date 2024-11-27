@@ -12,6 +12,12 @@ namespace Application
         public IUserAccountRepository UserAccounts { get; }
         public IEmailVerificationRepository EmailVerifications { get; }
         public IOrderRepository Orders { get; }
+        public ITransportServiceRepository TransportServices { get; }
+        public IOrderFishRepository OrderFishes { get; }
+        public IFishQualificationRepository FishQualifications { get; }
+        public IFishHealthRepository FishHealths { get; }
+        public IRouteStopRepository RouteStops { get; }
+        public IRouteRepository Routes { get; }
         public Task SaveChangeAsync();
     }
 }

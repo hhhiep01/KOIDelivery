@@ -21,6 +21,12 @@ namespace Domain.Entity
         //
         public List<EmailVerification>? EmailVerifications { get; set; }
         public List<Order>? Orders { get; set; }
+        public int? TransportServiceId { get; set; }
+        public TransportService? TransportService { get; set; }
+        public List<OrderFish>? OrderFishes { get; set; }
+        public Driver? Driver { get; set; }
+        public int? DriverId { get; set; }
+
     }
     public enum Role
     {

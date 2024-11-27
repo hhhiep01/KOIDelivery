@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241127104756_complteteDiverTable")]
+    partial class complteteDiverTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,10 +52,18 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("RouteId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RouteId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RouteId1");
 
                     b.ToTable("Drivers");
                 });
@@ -346,8 +357,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DriverId");
-
                     b.ToTable("Routes");
                 });
 
@@ -368,9 +377,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("DriverId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -394,8 +400,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DriverId");
 
                     b.HasIndex("OrderId");
 
@@ -472,7 +476,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DriverId")
+                    b.Property<int>("DriverId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -516,12 +520,20 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DriverId")
-                        .IsUnique()
-                        .HasFilter("[DriverId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("TransportServiceId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Driver", b =>
+                {
+                    b.HasOne("Domain.Entity.Route", "Route")
+                        .WithMany()
+                        .HasForeignKey("RouteId1");
+
+                    b.Navigation("Route");
                 });
 
             modelBuilder.Entity("Domain.Entity.EmailVerification", b =>
@@ -577,23 +589,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("Domain.Entity.Route", b =>
-                {
-                    b.HasOne("Domain.Entity.Driver", "Driver")
-                        .WithMany("Routes")
-                        .HasForeignKey("DriverId");
-
-                    b.Navigation("Driver");
-                });
-
             modelBuilder.Entity("Domain.Entity.RouteStop", b =>
                 {
-                    b.HasOne("Domain.Entity.Driver", "Driver")
-                        .WithMany()
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entity.Order", "Order")
                         .WithMany("RouteStops")
                         .HasForeignKey("OrderId")
@@ -606,8 +603,6 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Driver");
-
                     b.Navigation("Order");
 
                     b.Navigation("Route");
@@ -617,7 +612,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entity.Driver", "Driver")
                         .WithOne("UserAccount")
-                        .HasForeignKey("Domain.Entity.UserAccount", "DriverId");
+                        .HasForeignKey("Domain.Entity.UserAccount", "DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entity.TransportService", "TransportService")
                         .WithMany("UserAccounts")
@@ -630,8 +627,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Driver", b =>
                 {
-                    b.Navigation("Routes");
-
                     b.Navigation("UserAccount");
                 });
 

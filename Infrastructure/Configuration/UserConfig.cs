@@ -15,7 +15,16 @@ namespace Infrastructure.Configuration
         {
             builder.HasMany(x => x.Orders)
                 .WithOne(x => x.UserAccount)
-                .HasForeignKey(x => x.UserAccount.Id);
+                .HasForeignKey(x => x.AccountId);
+            
+            builder.HasOne(o => o.TransportService)
+               .WithMany(o => o.UserAccounts)
+               .HasForeignKey(o => o.TransportServiceId);
+
+
+            builder.HasOne(d => d.Driver)
+                   .WithOne(ua => ua.UserAccount)
+                   .HasForeignKey<UserAccount>(d => d.DriverId); 
         }
     }
 }

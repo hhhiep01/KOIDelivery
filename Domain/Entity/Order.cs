@@ -2,7 +2,7 @@
 
 namespace Domain.Entity
 {
-    public class Order 
+    public class Order : Base
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -25,6 +25,8 @@ namespace Domain.Entity
         public int? AccountId { get; set; }
         public int? TransportServiceId { get; set; }
         public int? PaymentId { get; set; }
+        public List<OrderFish> OrderFishs { get; set; }
+        public List<RouteStop> RouteStops { get; set; }
     }
 
     public enum OrderStatusEnum
