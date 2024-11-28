@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,8 @@ namespace Application.Response.Fish
         public float Weight { get; set; }
         public float Length { get; set; }
         public string FishImgURL { get; set; }
+
+        public List<FishQualification> FishQualifications { get; set; }
+        public List<FishHealth> FishHealths { get; set; }
     }
 }
