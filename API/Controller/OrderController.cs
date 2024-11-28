@@ -1,6 +1,7 @@
 ﻿using Application.Interface;
 using Application.Request.Order;
 using Application.Request.UserAccount;
+using Application.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,5 +40,49 @@ namespace API.Controller
             var result = await _service.CreateOrderAsync(order);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrderAsync()
+        {
+            var result = await _service.GetAllOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteOrderByIdAsync(int id)
+        {
+            var result = await _service.DeleteOrderByIdAsync(id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [Authorize(Roles = "Customer")]
+        [HttpGet("Customer")]
+        public async Task<IActionResult> GetAllUserOrderAsync()
+        {
+            var result = await _service.GetAllUserOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPut("Update-Order-Status-Delivering")]
+        public async Task<IActionResult> UpdateStatusOrderToDelivering(int OrderId)
+        {
+            var result = await _service.UpdateStatusOrderToDelivering(OrderId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPut("Update-Order-Status-PendingPickUp")]
+        public async Task<IActionResult> UpdateStatusOrderToPendingPickUp(int OrderId)
+        {
+            var result = await _service.UpdateStatusOrderToPendingPickUp(OrderId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPut("Update-Order-Status-Canceled")]
+        public async Task<IActionResult> UpdateStatusOrderToCanceled(int OrderId)
+        {
+            var result = await _service.UpdateStatusOrderToCanceled(OrderId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPut("Update-Order-Status-Completed")]
+        public async Task<IActionResult> UpdateStatusOrderToCompleted(int OrderId)
+        {
+            var result = await _service.UpdateStatusOrderToCompleted(OrderId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        
     }
 }

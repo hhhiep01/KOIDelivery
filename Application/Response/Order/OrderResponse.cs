@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Application.Response.TransportService;
+using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Application.Response.Order
 {
     public class OrderResponse
     {
-        public DateTime CreatedAt { get; set; }
+        public int Id { get; set; }
         public OrderStatusEnum OrderStatus { get; set; }
         public string FromAddress { get; set; } = string.Empty;
         public string ToAddress { get; set; } = string.Empty;
@@ -23,5 +24,7 @@ namespace Application.Response.Order
         public float FeedbackStars { get; set; }
         public string FeedbackContent { get; set; } = string.Empty;
         public string ReasonToCancel { get; set; } = string.Empty;
+        public TransportServiceResponse TransportService { get; set; }
+        //public List<OrderFishRe> MyProperty { get; set; }
     }
 }

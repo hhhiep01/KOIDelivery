@@ -9,8 +9,7 @@ namespace Application.Request.Order
 {
     public class OrderRequest
     {
-        public DateTime CreatedAt { get; set; }
-        public OrderStatusEnum OrderStatus { get; set; }
+        //public OrderStatusEnum OrderStatus { get; set; }
         public string FromAddress { get; set; } = string.Empty;
         public string ToAddress { get; set; } = string.Empty;
         public string ReceiverPhone { get; set; } = string.Empty;
@@ -20,8 +19,9 @@ namespace Application.Request.Order
         public PaymentMethodEnum PaymentMethod { get; set; }
         public string FromProvince { get; set; } = string.Empty;
         public string ToProvince { get; set; } = string.Empty;
-        public float FeedbackStars { get; set; }
+        /*public float FeedbackStars { get; set; }*/
         public string FeedbackContent { get; set; } = string.Empty;
         public string ReasonToCancel { get; set; } = string.Empty;
+        public int TransportServiceId { get; set; }
     }
 }

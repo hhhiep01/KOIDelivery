@@ -24,6 +24,7 @@ namespace Infrastructure
         public IRouteStopRepository RouteStops { get;  }
         public IRouteRepository Routes { get;  }
         public IDriverRepository Drivers { get;  }
+        public IPaymentRepository Payments { get;  }
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
@@ -37,6 +38,7 @@ namespace Infrastructure
             RouteStops = new RouteStopRepository(context);
             Routes = new RouteRepository(context);
             Drivers = new DriverRepository(context);
+            Payments = new PaymentRepository(context);
         }
         public async Task SaveChangeAsync()
         {

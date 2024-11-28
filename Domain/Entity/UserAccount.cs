@@ -18,6 +18,7 @@ namespace Domain.Entity
         public string? PhoneNumber { get; set; }
         public bool? IsEmailVerified { get; set; } = false;
         public Role Role { get; set; }
+        //public double? walletAmount { get; set; }
         //
         public List<EmailVerification>? EmailVerifications { get; set; }
         public List<Order>? Orders { get; set; }
