@@ -13,5 +13,7 @@ namespace Application.Interface
         Task<ApiResponse> AddTransportServiceAsync(TransportServiceRequest transportServiceRequest);
         Task<ApiResponse> GetAllTransportServiceAsync();
         Task<ApiResponse> DeleteTransportServiceByIdAsync(int id);
+        Task<ApiResponse> GetTransportServiceByIdAsync(int id);
+        Task<ApiResponse> UpdateTransportServiceByIdAsync(TransportServiceUpdateRequest transportServiceUpdateRequest);
     }
 }

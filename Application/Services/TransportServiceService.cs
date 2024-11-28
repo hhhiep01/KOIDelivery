@@ -3,6 +3,7 @@ using Application.Request.TransportService;
 using Application.Response;
 using Application.Response.TransportService;
 using AutoMapper;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Entity;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace Application.Services
             try
             {
                 var transportServices = await _unitOfWork.TransportServices.GetAllAsync(null);
-                var responseList =  _mapper.Map<List<TransportServiceResponse>>(transportServices);
+                var responseList = _mapper.Map<List<TransportServiceResponse>>(transportServices);
                 return new ApiResponse().SetOk(responseList);
             }
             catch (Exception ex)
@@ -51,11 +52,55 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
+        public async Task<ApiResponse> GetTransportServiceByIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var transportService = await _unitOfWork.TransportServices.GetAsync(x => x.Id == id);
+                if (transportService is null)
+                {
+                    return apiResponse.SetBadRequest("Can not found transportService Id : " + id);
+                }
+                var response = _mapper.Map<TransportServiceResponse>(transportService);
+                return new ApiResponse().SetOk(response);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> UpdateTransportServiceByIdAsync(TransportServiceUpdateRequest transportServiceUpdateRequest)
+        {
+            try
+            {
+                var transportService = await _unitOfWork.TransportServices.GetAsync(x => x.Id == transportServiceUpdateRequest.Id);
+                if (transportService == null)
+                {
+                    return new ApiResponse().SetNotFound("Can not found transportService Id : " + transportServiceUpdateRequest.id);
+                }
+                transportService.Name = transportServiceUpdateRequest.Name;
+                transportService.Description = transportServiceUpdateRequest.Description;   
+                transportService.TransportType = transportServiceUpdateRequest.TransportType;
+                transportService.PricePerKm = transportServiceUpdateRequest.PricePerKm;
+                transportService.PricePerKg = transportServiceUpdateRequest.PricePerKg;
+                transportService.PricePerAmount = transportServiceUpdateRequest.PricePerAmount;
+                transportService.IsActive = transportServiceUpdateRequest.IsActive;
+                
+                await _unitOfWork.SaveChangeAsync();
+                return new ApiResponse().SetOk("TransportService update successfully!");
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
         public async Task<ApiResponse> DeleteTransportServiceByIdAsync(int id)
         {
             try
             {
-               
+
                 var transportService = await _unitOfWork.TransportServices.GetAsync(x => x.Id == id);
                 if (transportService == null)
                 {

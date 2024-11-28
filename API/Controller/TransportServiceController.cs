@@ -1,6 +1,7 @@
 ﻿using Application.Interface;
 using Application.Request.Order;
 using Application.Request.TransportService;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +43,19 @@ namespace API.Controller
             var resposne = await _service.GetAllTransportServiceAsync();
             return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTransportServiceByIdAsync(int id)
+        {
+            var resposne = await _service.GetTransportServiceByIdAsync(id);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateTransportServiceByIdAsync(TransportServiceUpdateRequest request)
+        {
+            var resposne = await _service.UpdateTransportServiceByIdAsync(request);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteTransportServiceByIdAsync(int id)
         {
