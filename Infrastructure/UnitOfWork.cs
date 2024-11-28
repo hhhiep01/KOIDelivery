@@ -2,6 +2,7 @@
 using Application.Repository;
 using Domain.Entity;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,57 @@ namespace Infrastructure
 
                 throw new Exception(ex.Message);
             }
-        }   
+        }
+
+        public async Task<T> ExecuteScalarAsync<T>(string sql) 
+            // helper method thực thi 1 câu lệnh SQL, trả về 1 giá trị duy nhất dưới dạng kiểu dữ liệu chỉ định T
+        {
+            using (var command = _context.Database.GetDbConnection().CreateCommand()) 
+                // DBCommand thực thi 1 câu lệnh SQL
+            {
+                try
+                {
+                    // Đảm bảo rằng kết nối với cơ sở dữ liệu được mở trước khi thực thi
+                    if (command.Connection!.State != System.Data.ConnectionState.Open) 
+                        await command.Connection.OpenAsync();
+
+                    command.CommandText = sql;
+
+                    var result = await command.ExecuteScalarAsync(); 
+                    //ExecuteScalarAsync trả về giá trị đầu tiên từ kết quả truy vấn
+                    return (T)Convert.ChangeType(result, typeof(T));
+                    //Chuyển đổi kết quả thành kiểu dữ liệu T
+                }
+                finally
+                {
+                    // Đóng kết nối dù thành công hay là lỗi
+                    if (command.Connection!.State == System.Data.ConnectionState.Open)
+                        await command.Connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task ExecuteRawSqlAsync(string sql)
+        {
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                try
+                {
+                    if (command.Connection.State != System.Data.ConnectionState.Open)
+                    {
+                        await command.Connection.OpenAsync();
+                    }
+
+                    command.CommandText = sql;
+                    await command.ExecuteNonQueryAsync();
+                }
+                finally
+                {
+                    if (command.Connection.State == System.Data.ConnectionState.Open)
+                        await command.Connection.CloseAsync();
+                }
+            }
+        }
     }
     
 }
