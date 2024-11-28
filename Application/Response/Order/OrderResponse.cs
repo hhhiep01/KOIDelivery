@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Request.Order
+namespace Application.Response.Order
 {
-    public class OrderRequest
+    public class OrderResponse
     {
         public DateTime CreatedAt { get; set; }
         public OrderStatusEnum OrderStatus { get; set; }

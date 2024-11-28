@@ -1,6 +1,7 @@
 ﻿using Application.Interface;
 using Application.Request.Order;
 using Application.Request.UserAccount;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +16,9 @@ namespace API.Controller
         {
             _service = service;
         }
-
-        [HttpPost("create-order")]
+        [Authorize(Roles = "Customer")]
+        [Route("create-order")]
+        [HttpPost]
         public async Task<IActionResult> CreateOrderAsync(OrderRequest order)
         {
             if (!ModelState.IsValid)
