@@ -18,6 +18,7 @@ namespace Application
         public IFishHealthRepository FishHealths { get; }
         public IRouteStopRepository RouteStops { get; }
         public IRouteRepository Routes { get; }
+        public IDriverRepository Drivers { get; }
         public Task SaveChangeAsync();
         Task<T> ExecuteScalarAsync<T>(string sql);
         Task ExecuteRawSqlAsync(string sql);

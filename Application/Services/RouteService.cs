@@ -5,10 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entity;
+using Application.Response;
+using Microsoft.AspNetCore.Localization.Routing;
+using Application.Request.Route;
+using Application.Response.Route;
+using Application.Interface;
 
 namespace Application.Services
 {
-    public class RouteService 
+    public class RouteService : IRouteService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -21,7 +26,74 @@ namespace Application.Services
 
         //public async Task<Route> GetByIdAsync(int routeId)
         //{
-        //    return await 
+        //    return await
         //}
+
+        public async Task<ApiResponse> AddRouteAsync(RouteRequest request)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var route = _mapper.Map<Route>(request);
+                await _unitOfWork.Routes.AddAsync(route);
+                await _unitOfWork.SaveChangeAsync();
+                return apiResponse.SetOk("Add Success");
+            }
+            catch (Exception ex) 
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> GetAllRouteAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var routes = await _unitOfWork.Routes.GetAllAsync(null);
+                var responseList = _mapper.Map<List<RouteResponse>>(routes);
+                return new ApiResponse().SetOk(responseList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> GetRouteByIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var route = await _unitOfWork.Routes.GetAsync(x => x.Id == id);
+                if (route is null)
+                {
+                    return apiResponse.SetBadRequest("Can not found Route Id : " + id);
+                }
+                var response = _mapper.Map<RouteResponse>(route);
+                return new ApiResponse().SetOk(response);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> DeleteRouteByIdAsync(int id)
+        {
+            try
+            {
+                var route = await _unitOfWork.Routes.GetAsync(x => x.Id == id);
+                if (route == null)
+                    return new ApiResponse().SetNotFound("Route not found");
+                await _unitOfWork.Routes.RemoveByIdAsync(route.Id);
+                await _unitOfWork.SaveChangeAsync();
+                return new ApiResponse().SetOk("Route deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
     }
 }

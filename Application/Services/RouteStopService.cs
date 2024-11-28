@@ -1,6 +1,7 @@
 ﻿using Application.Interface;
 using Application.Request.RouteStop;
 using Application.Response;
+using Application.Response.RouteStop;
 using AutoMapper;
 using Domain.Entity;
 using System;
@@ -42,15 +43,68 @@ namespace Application.Services
             await _unitOfWork.ExecuteRawSqlAsync(resetIdentitySql);
         }
 
-        public async Task<ApiResponse> AddNewRouteStop(RouteStopRequest request)
+        public async Task<ApiResponse> AddNewRouteStopAsync(RouteStopRequest request)
         {
+            ApiResponse apiResponse = new ApiResponse();
             try
             {
-                await ResetRouteStopIdSequenceAsync();
                 var routeStop = _mapper.Map<RouteStop>(request);
                 await _unitOfWork.RouteStops.AddAsync(routeStop);
                 await _unitOfWork.SaveChangeAsync();
-                return new ApiResponse().SetOk(routeStop);
+                return apiResponse.SetOk(routeStop);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> GetAllRouteStopAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var routeStop = await _unitOfWork.RouteStops.GetAllAsync(null);
+                var responseList = _mapper.Map<List<RouteStopResponse>>(routeStop);
+                return apiResponse.SetOk(responseList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> GetRouteStopByIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var routeStop = await _unitOfWork.RouteStops.GetAsync(x => x.Id == id);
+                if (routeStop == null)
+                {
+                    return apiResponse.SetBadRequest("Can not found route stop id : " + id);
+                }
+                var response = _mapper.Map<RouteStopResponse>(routeStop);
+                return apiResponse.SetOk(response);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> UpdateRouteStopByIdAsync(UpdateRouteStopRequest request)
+        {
+            try
+            {
+                var routeStop = await _unitOfWork.RouteStops.GetAsync(x => x.Id == request.Id);
+                if (routeStop == null)
+                {
+                    return new ApiResponse().SetNotFound("Can not found route stop id : " + request.Id);
+                }
+
+                await _unitOfWork.SaveChangeAsync();
+                return new ApiResponse().SetOk("Route stop update successfully");
             }
             catch (Exception ex)
             {
@@ -58,13 +112,23 @@ namespace Application.Services
             }
         }
 
-        //public async Task<ApiResponse> UpdateRouteStop(int routeId, int stopId, RouteStopRequest request)
-        //{
-        //    ApiResponse apiResponse = new ApiResponse();
-        //    try
-        //    {
-        //        var route = await _unitOfWork.Routes.GetAsync(x => x.Id == request.Id);
-        //    }
-        //}
+        public async Task<ApiResponse> DeleteRouteStopByIdAsync(int id)
+        {
+            try
+            {
+                var routeStop = await _unitOfWork.RouteStops.GetAsync(x => x.Id == id);
+                if (routeStop == null)
+                {
+                    return new ApiResponse().SetNotFound("Route stop not found");
+                }
+                await _unitOfWork.RouteStops.RemoveByIdAsync(routeStop.Id);
+                await _unitOfWork.SaveChangeAsync();
+                return new ApiResponse().SetOk("Route stop deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
     }
 }
