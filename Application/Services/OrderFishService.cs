@@ -21,23 +21,6 @@ namespace Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<ApiResponse> AddOrderFish(OrderFishService request)
-        {
-            ApiResponse apiResponse = new ApiResponse();
-            try
-            {
-                var orderFish = _mapper.Map<OrderFish>(request);
-
-                await _unitOfWork.OrderFishes.AddAsync(orderFish);
-                await _unitOfWork.SaveChangeAsync();
-                return apiResponse.SetOk("Add success");
-            }
-            catch (Exception ex)
-            {
-                return apiResponse.SetBadRequest(ex.Message);
-            }
-
-        }
 
         public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request)
         {
@@ -65,7 +48,7 @@ namespace Application.Services
                 var orderFish = await _unitOfWork.OrderFishes.GetAsync(x => x.Id == id);
                 if (orderFish == null)
                 {
-                    return apiResponse.SetNotFound("Con not found fish Id: " + id);
+                    return apiResponse.SetNotFound("Can not found fish Id: " + id);
                 }
                 await _unitOfWork.OrderFishes.RemoveByIdAsync(id);
                 await _unitOfWork.SaveChangeAsync();

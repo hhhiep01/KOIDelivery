@@ -1,4 +1,6 @@
-﻿using Application.Request.Order;
+﻿using Application.Request.FishHealth;
+using Application.Request.FishQualification;
+using Application.Request.Order;
 using AutoMapper;
 using Domain.Entity;
 using System;
@@ -15,6 +17,8 @@ namespace Application.MyMapper
         {
             CreateMap<OrderRequest, Order>();
             CreateMap<OrderFishRequest, OrderFish>();
+            CreateMap<FishHealthRequest, FishHealth>();
+            CreateMap<FishQualificationRequest, FishQualification>();
         }
     }
 }
