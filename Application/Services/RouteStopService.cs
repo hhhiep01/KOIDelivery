@@ -58,13 +58,13 @@ namespace Application.Services
             }
         }
 
-        public async Task<ApiResponse> UpdateRouteStop(int routeId, int stopId, RouteStopRequest request)
-        {
-            ApiResponse apiResponse = new ApiResponse();
-            try
-            {
-                var route = await _unitOfWork.Routes.GetAsync(x => x.Id == request.Id);
-            }
-        }
+        //public async Task<ApiResponse> UpdateRouteStop(int routeId, int stopId, RouteStopRequest request)
+        //{
+        //    ApiResponse apiResponse = new ApiResponse();
+        //    try
+        //    {
+        //        var route = await _unitOfWork.Routes.GetAsync(x => x.Id == request.Id);
+        //    }
+        //}
     }
 }

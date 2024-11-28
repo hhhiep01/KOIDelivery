@@ -8,6 +8,7 @@ namespace Application.Request.RouteStop
 {
     public class RouteStopRequest
     {
+        public int Id { get; set; }
         public int StopOrder { get; set; }
         public string Address { get; set; }
         public int RouteId { get; set; }
