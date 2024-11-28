@@ -1,6 +1,6 @@
 ﻿using Application.Interface;
+using Application.Request.Fish;
 using Application.Request.FishHealth;
-using Application.Request.FishQualification;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controller
@@ -46,6 +46,18 @@ namespace API.Controller
         {
             var response = await _service.DeleteFishQualificationAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFishQualificationByIdAsync(int id)
+        {
+            var resposne = await _service.GetFishQualificationByIdAsync(id);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+        [HttpPut("Update-fishQualification")]
+        public async Task<IActionResult> UpdateFishQualificationAsync(FishQualificationUpdateRequest request)
+        {
+            var resposne = await _service.UpdateFishQualificationAsync(request);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
     }
 }

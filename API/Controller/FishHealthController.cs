@@ -1,4 +1,5 @@
 ﻿using Application.Interface;
+using Application.Request.Fish;
 using Application.Request.FishHealth;
 using Application.Request.Order;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,18 @@ namespace API.Controller
         {
             var response = await _service.DeleteFishHealthAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFishHealthByIdAsync(int id)
+        {
+            var resposne = await _service.GetFishHealthByIdAsync(id);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+        [HttpPut("Update-fishQualification")]
+        public async Task<IActionResult> UpdateFishHealthAsync(FishHealthUpdateRequest request)
+        {
+            var resposne = await _service.UpdateFishHealthAsync(request);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
 
     }

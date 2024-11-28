@@ -1,7 +1,9 @@
+using Application.Request.Fish;
 using Application.Request.FishHealth;
-using Application.Request.FishQualification;
 using Application.Request.Order;
 using Application.Request.TransportService;
+using Application.Response.Fish;
+using Application.Response.Order;
 using Application.Response.Order;
 using Application.Response.TransportService;
 using AutoMapper;
@@ -19,11 +21,18 @@ namespace Application.MyMapper
         public MapperConfigurationsProfile()
         {
             CreateMap<OrderRequest, Order>();
+            CreateMap<Order, OrderResponse>();
+
             CreateMap<Order, OrderResponse>()
                 .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService)); ;
             CreateMap<OrderFishRequest, OrderFish>();
+            CreateMap<OrderFish, OrderFishResponse>();
+
             CreateMap<FishHealthRequest, FishHealth>();
+            CreateMap<FishHealth, FishHealthResponse>();
+
             CreateMap<FishQualificationRequest, FishQualification>();
+            CreateMap<FishQualification, FishQualificationResponse>();
 
             //TransportService
             CreateMap<TransportServiceRequest, TransportService>();

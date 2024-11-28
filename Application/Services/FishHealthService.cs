@@ -1,7 +1,8 @@
 ﻿using Application.Interface;
+using Application.Request.Fish;
 using Application.Request.FishHealth;
-using Application.Request.FishQualification;
 using Application.Response;
+using Application.Response.Fish;
 using AutoMapper;
 using Domain.Entity;
 using System;
@@ -71,13 +72,58 @@ namespace Application.Services
             try
             {
                 var fishHealth = await _unitOfWork.FishHealths.GetAllAsync(null);
-                var fishHealthResponse = _mapper.Map<List<FishHealth>>(fishHealth);
+                var fishHealthList = _mapper.Map<List<FishHealthResponse>>(fishHealth);
 
-                return apiResponse.SetOk(fishHealthResponse);
+                return apiResponse.SetOk(fishHealthList);
             }
             catch (Exception ex)
             {
                 return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> GetFishHealthByIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var fishHealthService = await _unitOfWork.FishHealths.GetAsync(x => x.Id == id);
+                if (fishHealthService is null)
+                {
+                    return apiResponse.SetBadRequest("Can not found fishHealthService Id : " + id);
+                }
+                var response = _mapper.Map<FishHealthResponse>(fishHealthService);
+                return new ApiResponse().SetOk(response);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> UpdateFishHealthAsync(FishHealthUpdateRequest fishHealthUpdateRequest)
+        {
+            try
+            {
+                var fishHealthService = await _unitOfWork.FishHealths.GetAsync(x => x.Id == fishHealthUpdateRequest.Id);
+                if (fishHealthService == null)
+                {
+                    return new ApiResponse().SetNotFound("Can not found fishHealthService Id : " + fishHealthUpdateRequest.Id);
+                }
+                fishHealthService.HealthStatus = fishHealthService.HealthStatus;
+                fishHealthService.CheckDate = fishHealthService.CheckDate;
+                fishHealthService.Notes = fishHealthService.Notes;
+                fishHealthService.Temperature = fishHealthService.Temperature;
+                fishHealthService.WaterQuality = fishHealthService.WaterQuality;
+                fishHealthService.Behavior = fishHealthService.Behavior;
+
+                await _unitOfWork.SaveChangeAsync();
+                return new ApiResponse().SetOk("FishHealthService update successfully!");
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
     }
