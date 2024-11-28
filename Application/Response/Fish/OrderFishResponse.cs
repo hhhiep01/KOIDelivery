@@ -16,7 +16,7 @@ namespace Application.Response.Fish
         public float Length { get; set; }
         public string FishImgURL { get; set; }
 
-        public List<FishQualification> FishQualifications { get; set; }
-        public List<FishHealth> FishHealths { get; set; }
+        public List<FishQualificationResponse> FishQualifications { get; set; }
+        public List<FishHealthResponse> FishHealths { get; set; }
     }
 }
