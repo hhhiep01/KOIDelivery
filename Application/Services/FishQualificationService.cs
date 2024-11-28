@@ -1,6 +1,7 @@
 ﻿using Application.Interface;
-using Application.Request.FishQualification;
+using Application.Request.Fish;
 using Application.Response;
+using Application.Response.Fish;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Entity;
@@ -78,6 +79,47 @@ namespace Application.Services
                     return apiResponse.SetBadRequest(ex.Message);
                 }
             }
-            
+
+        public async Task<ApiResponse> GetFishQualificationByIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var fishQualificationService = await _unitOfWork.FishQualifications.GetAsync(x => x.Id == id);
+                if (fishQualificationService is null)
+                {
+                    return apiResponse.SetBadRequest("Can not found fishQualificationService Id : " + id);
+                }
+                var response = _mapper.Map<FishHealthResponse>(fishQualificationService);
+                return new ApiResponse().SetOk(response);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> UpdateFishQualificationAsync(FishQualificationUpdateRequest fishQualificationUpdateRequest)
+        {
+            try
+            {
+                var fishQualificationService = await _unitOfWork.FishQualifications.GetAsync(x => x.Id == fishQualificationUpdateRequest.Id);
+                if (fishQualificationService == null)
+                {
+                    return new ApiResponse().SetNotFound("Can not found fishQualificationService Id : " + fishQualificationUpdateRequest.Id);
+                }
+                fishQualificationService.CreateAt = fishQualificationService.CreateAt;
+                fishQualificationService.UpdatedAt = fishQualificationService.UpdatedAt;
+                fishQualificationService.ImageUrl = fishQualificationService.ImageUrl;
+
+                await _unitOfWork.SaveChangeAsync();
+                return new ApiResponse().SetOk("FishQualificationService update successfully!");
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Request.FishQualification;
+﻿using Application.Request.Fish;
 using Application.Response;
 using System;
 using System.Collections.Generic;
@@ -13,5 +13,7 @@ namespace Application.Interface
         Task<ApiResponse> CreateFishQualificationAsync(FishQualificationRequest request);
         Task<ApiResponse> GetAllFishQualificationAsync();
         Task<ApiResponse> DeleteFishQualificationAsync(int id);
+        Task<ApiResponse> GetFishQualificationByIdAsync(int id);
+        Task<ApiResponse> UpdateFishQualificationAsync(FishQualificationUpdateRequest fishQualificationUpdateRequest);
     }
 }

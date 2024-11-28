@@ -1,5 +1,6 @@
 ﻿using Application.Interface;
-using Application.Request.Order;
+using Application.Request.Fish;
+using Application.Request.TransportService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controller
@@ -40,11 +41,25 @@ namespace API.Controller
             var response = await _service.GetAllOrderFishAsync();
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrderFishAsync(int id)
         {
             var response =  await _service.DeleteOrderFishAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrderFishByIdAsync(int id)
+        {
+            var resposne = await _service.GetOrderFishByIdAsync(id);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+        [HttpPut("Update-fish")]
+        public async Task<IActionResult> UpdateOrderFishAsync(OrderFishUpdateRequest request)
+        {
+            var resposne = await _service.UpdateOrderFishAsync(request);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
 
     }

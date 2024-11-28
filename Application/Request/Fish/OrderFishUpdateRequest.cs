@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Request.Order
+namespace Application.Request.Fish
 {
-    public class OrderFishRequest
+    public class OrderFishUpdateRequest
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }
         public float Weight { get; set; }

@@ -1,4 +1,4 @@
-﻿using Application.Request.Order;
+﻿using Application.Request.Fish;
 using Application.Response;
 using System;
 using System.Collections.Generic;
@@ -13,5 +13,7 @@ namespace Application.Interface
         Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request);
         Task<ApiResponse> GetAllOrderFishAsync();
         Task<ApiResponse> DeleteOrderFishAsync(int id);
-    }
+        Task<ApiResponse> GetOrderFishByIdAsync(int id);
+        Task<ApiResponse> UpdateOrderFishAsync(OrderFishUpdateRequest orderFishUpdateRequest);
+        }
 }
