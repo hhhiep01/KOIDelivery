@@ -17,8 +17,7 @@ namespace Domain.Entity
         public int RouteId { get; set; }
         public Order Order { get; set; }
         public int OrderId { get; set; }
-        public Driver Driver { get; set; }
-        public int DriverId { get; set; }
+      
 
     }
     public enum StopOrder
