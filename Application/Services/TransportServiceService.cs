@@ -77,7 +77,7 @@ namespace Application.Services
                 var transportService = await _unitOfWork.TransportServices.GetAsync(x => x.Id == transportServiceUpdateRequest.Id);
                 if (transportService == null)
                 {
-                    return new ApiResponse().SetNotFound("Can not found transportService Id : " + transportServiceUpdateRequest.id);
+                    return new ApiResponse().SetNotFound("Can not found transportService Id : " + transportServiceUpdateRequest.Id);
                 }
                 transportService.Name = transportServiceUpdateRequest.Name;
                 transportService.Description = transportServiceUpdateRequest.Description;   
