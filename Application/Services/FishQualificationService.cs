@@ -70,9 +70,9 @@ namespace Application.Services
                 try
                 {
                     var fishQualification = await _unitOfWork.FishQualifications.GetAllAsync(null);
-                    var fishQualificationResponse = _mapper.Map<List<FishQualification>>(fishQualification);
+                    var fishQualificationList= _mapper.Map<List<FishQualificationResponse>>(fishQualification);
 
-                    return apiResponse.SetOk(fishQualificationResponse);
+                    return apiResponse.SetOk(fishQualificationList);
                 }
                 catch (Exception ex)
                 {

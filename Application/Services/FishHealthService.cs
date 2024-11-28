@@ -72,9 +72,9 @@ namespace Application.Services
             try
             {
                 var fishHealth = await _unitOfWork.FishHealths.GetAllAsync(null);
-                var fishHealthResponse = _mapper.Map<List<FishHealth>>(fishHealth);
+                var fishHealthList = _mapper.Map<List<FishHealthResponse>>(fishHealth);
 
-                return apiResponse.SetOk(fishHealthResponse);
+                return apiResponse.SetOk(fishHealthList);
             }
             catch (Exception ex)
             {

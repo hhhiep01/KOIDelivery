@@ -70,9 +70,9 @@ namespace Application.Services
             try
             {
                 var orderFish = await _unitOfWork.OrderFishes.GetAllAsync(null);
-                var orderFishResponse = _mapper.Map<List<OrderFish>>(orderFish);
+                var orderFishList = _mapper.Map<List<OrderFishResponse>>(orderFish);
 
-                return apiResponse.SetOk(orderFishResponse);
+                return apiResponse.SetOk(orderFishList);
             }
             catch (Exception ex)
             {
