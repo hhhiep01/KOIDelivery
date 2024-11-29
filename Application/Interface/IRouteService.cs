@@ -1,4 +1,5 @@
 ﻿using Application.Request.Route;
+using Application.Request.RouteStop;
 using Application.Response;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Application.Interface
 {
     public interface IRouteService
     {
-        Task<ApiResponse> AddRouteAsync(RouteRequest request);
+        Task<ApiResponse> AddRouteAsync(RouteRequest request, List<RouteStopRequest> routeStopRequests);
 
         Task<ApiResponse> GetAllRouteAsync();
 

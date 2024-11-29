@@ -8,6 +8,7 @@ using Domain.Entity;
 using Application.Response;
 using Microsoft.AspNetCore.Localization.Routing;
 using Application.Request.Route;
+using Application.Request.RouteStop;
 using Application.Response.Route;
 using Application.Interface;
 
@@ -24,17 +25,23 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        //public async Task<Route> GetByIdAsync(int routeId)
-        //{
-        //    return await
-        //}
-
-        public async Task<ApiResponse> AddRouteAsync(RouteRequest request)
+        public async Task<ApiResponse> AddRouteAsync(RouteRequest request, List<RouteStopRequest> routeStopRequests)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
             {
                 var route = _mapper.Map<Route>(request);
+                route.RouteStatus = RouteStatus.Pending;
+                route.CreateAt = DateTime.Now;
+                route.RouteStops = new List<RouteStop>();
+
+                foreach (var stopRequest in routeStopRequests)
+                {
+                    var routeStop = _mapper.Map<RouteStop>(stopRequest);
+                    routeStop.CreatedDate = DateTime.Now;
+                    routeStop.RouteStatus = RouteStopStatus.Pending;
+                    route.RouteStops.Add(routeStop);
+                }
                 await _unitOfWork.Routes.AddAsync(route);
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add Success");

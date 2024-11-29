@@ -1,5 +1,6 @@
 ﻿using Application.Interface;
 using Application.Request.Route;
+using Application.Request.RouteStop;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace API.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRouteAsync(RouteRequest request)
+        public async Task<IActionResult> CreateRouteAndRouteStopsAsync([FromForm] CreateRouteAndListRouteStopRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +35,7 @@ namespace API.Controller
                     result = (object)null
                 });
             }
-            var result = await _service.AddRouteAsync(request);
+            var result = await _service.AddRouteAsync(request.RouteRequest, request.RouteStopRequests);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

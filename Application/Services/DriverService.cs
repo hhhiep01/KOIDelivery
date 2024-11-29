@@ -29,9 +29,23 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
+                var account = await _unitOfWork.UserAccounts.GetAsync(x => x.Id == request.UserAccountId);
+                if (account == null)
+                {
+                    return apiResponse.SetNotFound();
+                }
+                if (account.Role != Role.DeliveringStaff)
+                {
+                    return apiResponse.SetBadRequest("User is not a Delivering Staff");
+                }
+
                 var driver = _mapper.Map<Driver>(request);
+                driver.Status = DriverStatus.Available;
+                driver.UserAccount = account;
+
                 await _unitOfWork.Drivers.AddAsync(driver);
                 await _unitOfWork.SaveChangeAsync();
+
                 return apiResponse.SetOk(driver);
             }
             catch (Exception ex)
