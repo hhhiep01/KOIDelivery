@@ -13,5 +13,6 @@ namespace Application.Request.Fish
         public float Weight { get; set; }
         public float Length { get; set; }
         public string FishImgURL { get; set; }
+        public int? OrderId { get; set; }
     }
 }

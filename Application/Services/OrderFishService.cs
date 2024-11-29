@@ -28,16 +28,16 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request, int id)
+        public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
             {
                 var orderFish = _mapper.Map<OrderFish>(request);
-                var orderFishExist = await _unitOfWork.Orders.GetAsync(x => x.Id == id);
+                var orderFishExist = await _unitOfWork.Orders.GetAsync(x => x.Id == orderFish.OrderId);
                 if (orderFishExist == null)
                 {
-                    return apiResponse.SetNotFound("Can not found Order Id: " + id);
+                    return apiResponse.SetNotFound("Can not found Order Id: ");
                 }
                 await _unitOfWork.OrderFishes.AddAsync(orderFish);
                 await _unitOfWork.SaveChangeAsync();
