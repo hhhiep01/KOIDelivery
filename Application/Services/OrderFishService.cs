@@ -1,5 +1,6 @@
 ﻿using Application.Interface;
 using Application.Request.Fish;
+using Application.Request.Order;
 using Application.Request.TransportService;
 using Application.Response;
 using Application.Response.Fish;
@@ -27,15 +28,20 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request)
+        public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request, int id)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
             {
                 var orderFish = _mapper.Map<OrderFish>(request);
-
+                var orderFishExist = await _unitOfWork.Orders.GetAsync(x => x.Id == id);
+                if (orderFishExist == null)
+                {
+                    return apiResponse.SetNotFound("Can not found Order Id: " + id);
+                }
                 await _unitOfWork.OrderFishes.AddAsync(orderFish);
                 await _unitOfWork.SaveChangeAsync();
+
                 return apiResponse.SetOk("Add success");
             }
             catch (Exception ex)

@@ -10,7 +10,7 @@ namespace Application.Interface
 {
     public interface IOrderFishService
     {
-        Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request);
+        Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request, int id);
         Task<ApiResponse> GetAllOrderFishAsync();
         Task<ApiResponse> DeleteOrderFishAsync(int id);
         Task<ApiResponse> GetOrderFishByIdAsync(int id);
