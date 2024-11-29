@@ -94,6 +94,10 @@ builder.Services.AddScoped<IOrderFishService, OrderFishService>();
 builder.Services.AddScoped<IFishHealthService, FishHealthService>();
 builder.Services.AddScoped<IFishQualificationService, FishQualificationService>();
 builder.Services.AddScoped<ITransportServiceService, TransportServiceService>();
+builder.Services.AddScoped<IDriverService, DriverService>();
+builder.Services.AddScoped<IRouteService, RouteService>();
+builder.Services.AddScoped<IRouteStopService, RouteStopService>();
+
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<RegisterValidator>();

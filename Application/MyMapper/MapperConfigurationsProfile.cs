@@ -1,11 +1,17 @@
+using Application.Request.Driver;
 using Application.Request.Fish;
 using Application.Request.FishHealth;
 using Application.Request.Order;
+using Application.Request.Route;
+using Application.Request.RouteStop;
 using Application.Request.TransportService;
+using Application.Response.Driver;
+using Application.Response.RouteStop;
 using Application.Response.Fish;
 using Application.Response.Order;
 using Application.Response.Order;
 using Application.Response.TransportService;
+using Application.Services;
 using AutoMapper;
 using Domain.Entity;
 using System;
@@ -39,7 +45,16 @@ namespace Application.MyMapper
             CreateMap<TransportService, TransportServiceResponse>()
                  ;
 
-            
+            //Route
+            CreateMap<RouteRequest, Route>();
+
+            //RouteStop
+            CreateMap<RouteStopRequest, RouteStop>();
+            CreateMap<RouteStopService, RouteStopResponse>();
+
+            //Driver
+            CreateMap<DriverRequest, Driver>();
+            CreateMap<DriverService, DriverResponse>();
 
         }
     }
