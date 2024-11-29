@@ -12,9 +12,7 @@ namespace Application.Validation
     {
         public CreateOrderValidator()
         {
-            RuleFor(order => order.FeedbackStars)
-            .InclusiveBetween(1.0f, 5.0f)
-            .WithMessage("Feedback stars must be between 1 and 5.");
+           
         }
     }
 }

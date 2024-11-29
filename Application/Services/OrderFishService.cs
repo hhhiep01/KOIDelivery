@@ -78,7 +78,7 @@ namespace Application.Services
             try
             {
                 //var orderFish = await _unitOfWork.OrderFishes.GetAllAsync(null, x => x.Include(c => c.FishHealths).Include(a => a.FishQualifications));
-                var orderFish = await _unitOfWork.OrderFishes.GetAllAsync(null);
+                var orderFish = await _unitOfWork.OrderFishes.GetAllAsync(null, x => x.Include(c => c.FishHealths).Include(a => a.FishQualifications));
                 var orderFishList = _mapper.Map<List<OrderFishResponse>>(orderFish);
 
                 return apiResponse.SetOk(orderFishList);

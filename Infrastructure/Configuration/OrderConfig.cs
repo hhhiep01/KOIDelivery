@@ -29,6 +29,10 @@ namespace Infrastructure.Configuration
                .WithMany(x => x.Orders)
                .HasForeignKey(x => x.TransportServiceId);
 
+            builder.HasMany(x => x.Payments)
+              .WithOne(x => x.Order)
+              .HasForeignKey(x => x.OrderId);
+
         }
     }
 }

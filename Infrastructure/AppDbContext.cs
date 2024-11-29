@@ -28,6 +28,7 @@ namespace Infrastructure
         public DbSet<RouteStop> RouteStops { get; set; }
         public DbSet<Route> Routes { get; set; }
         public DbSet<Driver> Drivers { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
