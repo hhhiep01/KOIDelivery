@@ -43,9 +43,18 @@ namespace Application.Services
                     Payment payment = new Payment();
                     payment.StatusPayment = StatusPayment.Pending;
                 }
+
                 var order = _mapper.Map<Order>(request);
                 await _unitOfWork.Orders.AddAsync(order);
                 order.AccountId = claim.Id;
+                await _unitOfWork.SaveChangeAsync();
+                var orderAfterSave = await _unitOfWork.Orders.GetAsync(x => x.Id == order.Id);
+                if (order == null)
+                {
+                    return new ApiResponse().SetNotFound("Order not found");
+                }
+                double totalPrice = await CaculateTotalPrice(orderAfterSave.Id);
+                order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add success");
             }
@@ -174,7 +183,40 @@ namespace Application.Services
             {
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
-        }   
+        }
+        public async Task<double> CaculateTotalPrice(int OrderId)
+        {
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == OrderId,
+                                                              x => x.Include(x => x.TransportService)
+                                                                    .Include(x => x.OrderFishs));
+                if (order == null)
+                {
+                    throw new Exception("Order not found");
+                }
+                var transportService = order.TransportService;
+                if (transportService == null)
+                {
+                    throw new Exception("TransportService is not linked to the order");
+                }
+                var totalWeight = order.OrderFishs.Sum(fish => fish.Weight);
+                var numberOfFishes = order.OrderFishs.Count;
+                var totalDistance = 100;
+
+                var weightPrice = totalWeight * transportService.PricePerKg;
+                var distancePrice = totalDistance * transportService.PricePerKm;
+                var amountPrice = numberOfFishes * transportService.PricePerAmount;
+                var totalPrice = weightPrice + distancePrice + amountPrice;
+                return totalPrice;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
+        }
 
     }
 }

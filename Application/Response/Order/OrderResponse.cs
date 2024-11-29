@@ -1,4 +1,5 @@
-﻿using Application.Response.TransportService;
+﻿using Application.Response.Fish;
+using Application.Response.TransportService;
 using Domain.Entity;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,6 @@ namespace Application.Response.Order
         public string FeedbackContent { get; set; } = string.Empty;
         public string ReasonToCancel { get; set; } = string.Empty;
         public TransportServiceResponse TransportService { get; set; }
-        //public List<OrderFishRe> MyProperty { get; set; }
+        public List<OrderFishResponse> OrderFishes { get; set; }
     }
 }
