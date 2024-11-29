@@ -41,12 +41,14 @@ namespace Application.Services
 
                 var driver = _mapper.Map<Driver>(request);
                 driver.Status = DriverStatus.Available;
-                driver.UserAccount = account;
 
                 await _unitOfWork.Drivers.AddAsync(driver);
                 await _unitOfWork.SaveChangeAsync();
 
-                return apiResponse.SetOk(driver);
+                account.DriverId = driver.Id;
+                await _unitOfWork.SaveChangeAsync();
+
+                return apiResponse.SetOk("Add successfully");
             }
             catch (Exception ex)
             {

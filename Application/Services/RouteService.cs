@@ -33,6 +33,10 @@ namespace Application.Services
                 var route = _mapper.Map<Route>(request);
                 route.RouteStatus = RouteStatus.Pending;
                 route.CreateAt = DateTime.Now;
+
+                await _unitOfWork.Routes.AddAsync(route);
+                await _unitOfWork.SaveChangeAsync();
+
                 route.RouteStops = new List<RouteStop>();
 
                 foreach (var stopRequest in routeStopRequests)
@@ -40,9 +44,10 @@ namespace Application.Services
                     var routeStop = _mapper.Map<RouteStop>(stopRequest);
                     routeStop.CreatedDate = DateTime.Now;
                     routeStop.RouteStatus = RouteStopStatus.Pending;
+                    routeStop.RouteId = route.Id;
                     route.RouteStops.Add(routeStop);
                 }
-                await _unitOfWork.Routes.AddAsync(route);
+                await _unitOfWork.RouteStops.AddRangeAsync(route.RouteStops);
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add Success");
             }

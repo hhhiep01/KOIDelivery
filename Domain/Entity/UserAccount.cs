@@ -31,7 +31,6 @@ namespace Domain.Entity
     public enum Role
     {
         Customer,
-        Guest,
         SalesStaff,
         DeliveringStaff,
         Manager

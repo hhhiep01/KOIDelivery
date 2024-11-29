@@ -9,11 +9,11 @@ namespace Domain.Entity
     public class Driver : Base
     {
         public int Id { get; set; }
-        public string CurrentProvince { get; set; }
-        public DriverStatus Status { get; set; }
+        public string? CurrentProvince { get; set; }
+        public DriverStatus? Status { get; set; }
         //
         public UserAccount? UserAccount { get; set; }
-        public List<Route> Routes { get; set; }
+        public List<Route>? Routes { get; set; }
     }
     public enum DriverStatus
     {
