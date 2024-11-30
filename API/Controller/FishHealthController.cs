@@ -15,7 +15,7 @@ namespace API.Controller
         {
             _service = service;
         }
-        [HttpPost("create-fishHealth")]
+        [HttpPost("CreateFishHealth")]
         public async Task<IActionResult> CreateFishHealthAsync(FishHealthRequest fish)
         {
             if (!ModelState.IsValid)
@@ -36,25 +36,25 @@ namespace API.Controller
             var result = await _service.CreateFishHealthAsync(fish);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("get-fish")]
+        [HttpGet("GetAllFishHealth")]
         public async Task<IActionResult> GetAllFishHealthAsync()
         {
             var response = await _service.GetAllFishHealthAsync();
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteFishHealthBy{id}")]
         public async Task<IActionResult> DeleteFishHealthAsync(int id)
         {
             var response = await _service.DeleteFishHealthAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
-        [HttpGet("{id}")]
+        [HttpGet("GetFishHealthByIdBy{id}")]
         public async Task<IActionResult> GetFishHealthByIdAsync(int id)
         {
             var resposne = await _service.GetFishHealthByIdAsync(id);
             return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
-        [HttpPut("Update-fishQualification")]
+        [HttpPut("UpdateFishHealth")]
         public async Task<IActionResult> UpdateFishHealthAsync(FishHealthUpdateRequest request)
         {
             var resposne = await _service.UpdateFishHealthAsync(request);

@@ -14,7 +14,7 @@ namespace API.Controller
         {
             _service = service;
         }
-        [HttpPost("create-fish")]
+        [HttpPost("GetCreateOrderFish")]
         public async Task<IActionResult> CreateOrderFishAsync(OrderFishRequest order)
         {
             if (!ModelState.IsValid)
@@ -35,27 +35,27 @@ namespace API.Controller
             var result = await _service.CreateOrderFishAsync(order);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("get-fish")]
+        [HttpGet("GetAllOrderFish")]
         public async Task<IActionResult> GetAllOrderFishAsync()
         {
             var response = await _service.GetAllOrderFishAsync();
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
         
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteOrderFishBy{id}")]
         public async Task<IActionResult> DeleteOrderFishAsync(int id)
         {
             var response =  await _service.DeleteOrderFishAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetOrderFishByIdBy{id}")]
         public async Task<IActionResult> GetOrderFishByIdAsync(int id)
         {
             var resposne = await _service.GetOrderFishByIdAsync(id);
             return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
-        [HttpPut("Update-fish")]
+        [HttpPut("UpdateOrderFish")]
         public async Task<IActionResult> UpdateOrderFishAsync(OrderFishUpdateRequest request)
         {
             var resposne = await _service.UpdateOrderFishAsync(request);

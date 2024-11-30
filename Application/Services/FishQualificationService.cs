@@ -34,6 +34,10 @@ namespace Application.Services
                 {
                     return apiresponse.SetNotFound("Can not found fish order id " );
                 }
+
+                fishqualification.CreateAt = DateTime.Now;
+                fishqualification.UpdatedAt = DateTime.Now;
+
                 await _unitOfWork.FishQualifications.AddAsync(fishqualification);
                 await _unitOfWork.SaveChangeAsync();
                 return apiresponse.SetOk("Add success");
