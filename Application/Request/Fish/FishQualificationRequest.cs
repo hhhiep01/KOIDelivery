@@ -8,8 +8,8 @@ namespace Application.Request.Fish
 {
     public class FishQualificationRequest
     {
-        public DateTime CreateAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        //public DateTime CreateAt { get; set; }
+        //public DateTime UpdatedAt { get; set; }
         public string ImageUrl { get; set; }
         public int OrderFishId { get; set; }
     }
