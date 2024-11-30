@@ -45,7 +45,7 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        [HttpGet("routeStopByRoute{routeId}")]
+        [HttpGet("RouteStopByRoute{routeId}")]
         public async Task<IActionResult> GetAllRouteStopByRouteIdAsync(int routeId)
         {
             var response = await _service.GetAllRouteStopByRouteIdAsync(routeId);

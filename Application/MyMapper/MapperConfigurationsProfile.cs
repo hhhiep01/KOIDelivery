@@ -38,6 +38,7 @@ namespace Application.MyMapper
             //RouteStop
             CreateMap<RouteStopRequest, RouteStop>();
             CreateMap<RouteStopService, RouteStopResponse>();
+            CreateMap<RouteStop, RouteStopResponse>();
 
             //Driver
             CreateMap<DriverRequest, Driver>();

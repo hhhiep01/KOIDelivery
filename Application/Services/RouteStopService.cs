@@ -90,7 +90,6 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
-
         public async Task<ApiResponse> GetRouteStopByIdAsync(int id)
         {
             ApiResponse apiResponse = new ApiResponse();
