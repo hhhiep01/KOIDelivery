@@ -111,8 +111,7 @@ namespace Application.Services
                 {
                     return new ApiResponse().SetNotFound("Can not found fishQualificationService Id : " + fishQualificationUpdateRequest.Id);
                 }
-                fishQualificationService.CreateAt = fishQualificationService.CreateAt;
-                fishQualificationService.UpdatedAt = fishQualificationService.UpdatedAt;
+               
                 fishQualificationService.ImageUrl = fishQualificationService.ImageUrl;
 
                 await _unitOfWork.SaveChangeAsync();
