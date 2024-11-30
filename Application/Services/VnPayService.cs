@@ -43,7 +43,7 @@ namespace Application.Services
                 return response.SetNotFound("Order Id not found");
             }
             var payment = await _unitOfWork.Payments.GetAsync(x => x.OrderId == request.OrderId);
-            if(payment.StatusPayment == StatusPayment.Paid)
+            if(payment!=null && payment.StatusPayment == StatusPayment.Paid)
             {
                 return response.SetNotFound("This order is Paid");
             }

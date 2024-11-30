@@ -18,5 +18,6 @@ namespace Application.Interface
         Task<ApiResponse> UpdateStatusOrderToCompleted(int OrderId);
         Task<ApiResponse> UpdateStatusOrderToCanceled(int OrderId);
         Task<ApiResponse> UpdateStatusOrderToPendingPickUp(int OrderId);
+        Task<ApiResponse> CaculateTotalPrice(int OrderId);
     }
 }

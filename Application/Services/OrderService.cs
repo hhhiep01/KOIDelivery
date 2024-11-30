@@ -53,8 +53,8 @@ namespace Application.Services
                 {
                     return new ApiResponse().SetNotFound("Order not found");
                 }
-                double totalPrice = await CaculateTotalPrice(orderAfterSave.Id);
-                order.TotalPrice = totalPrice;
+                //double totalPrice = await CaculateTotalPrice(orderAfterSave.Id);
+                //order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add success");
             }
@@ -184,8 +184,9 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
-        public async Task<double> CaculateTotalPrice(int OrderId)
+        public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
         {
+            ApiResponse apiResponse = new ApiResponse();
             try
             {
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == OrderId,
@@ -193,7 +194,7 @@ namespace Application.Services
                                                                     .Include(x => x.OrderFishs));
                 if (order == null)
                 {
-                    throw new Exception("Order not found");
+                    apiResponse.SetNotFound("Order not found");
                 }
                 var transportService = order.TransportService;
                 if (transportService == null)
@@ -208,12 +209,14 @@ namespace Application.Services
                 var distancePrice = totalDistance * transportService.PricePerKm;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
                 var totalPrice = weightPrice + distancePrice + amountPrice;
-                return totalPrice;
+                order.TotalPrice = totalPrice;
+                await _unitOfWork.SaveChangeAsync();
+                return apiResponse.SetOk(totalPrice);
 
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return apiResponse.SetBadRequest(ex.Message);
             }
             
         }

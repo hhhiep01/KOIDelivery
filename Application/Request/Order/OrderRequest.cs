@@ -20,8 +20,8 @@ namespace Application.Request.Order
         public string FromProvince { get; set; } = string.Empty;
         public string ToProvince { get; set; } = string.Empty;
         /*public float FeedbackStars { get; set; }*/
-        public string FeedbackContent { get; set; } = string.Empty;
-        public string ReasonToCancel { get; set; } = string.Empty;
+        /*public string FeedbackContent { get; set; } = string.Empty;
+        public string ReasonToCancel { get; set; } = string.Empty;*/
         public int TransportServiceId { get; set; }
     }
 }

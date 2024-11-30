@@ -83,6 +83,12 @@ namespace API.Controller
             var result = await _service.UpdateStatusOrderToCompleted(OrderId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        
+        [HttpPut("Caculate-total-price")]
+        public async Task<IActionResult> CaculateTotalPrice(int OrderId)
+        {
+            var result = await _service.CaculateTotalPrice(OrderId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
     }
 }
