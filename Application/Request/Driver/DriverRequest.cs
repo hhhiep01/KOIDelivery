@@ -8,11 +8,7 @@ using Domain.Entity;
 namespace Application.Request.Driver
 {
     public class DriverRequest
-    {
-        
+    {   
         public int UserAccountId { get; set; }
-
-        public string CurrentProvince { get; set; }
-
     }
 }

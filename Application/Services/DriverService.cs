@@ -8,6 +8,7 @@ using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,11 +18,13 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private IClaimService _claim;
 
-        public DriverService(IUnitOfWork unitOfWork, IMapper mapper)
+        public DriverService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _claim = claim;
         }
 
         public async Task<ApiResponse> AddNewDriverAsync(DriverRequest request)
@@ -29,6 +32,7 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
+                var claim = _claim.GetUserClaim();
                 var account = await _unitOfWork.UserAccounts.GetAsync(x => x.Id == request.UserAccountId);
                 if (account == null)
                 {
@@ -41,6 +45,7 @@ namespace Application.Services
 
                 var driver = _mapper.Map<Driver>(request);
                 driver.Status = DriverStatus.Available;
+                //driver.CreatedBy = claim.Name,
 
                 await _unitOfWork.Drivers.AddAsync(driver);
                 await _unitOfWork.SaveChangeAsync();

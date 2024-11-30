@@ -1,5 +1,6 @@
 ﻿using Application.Interface;
 using Application.Request.Driver;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace API.Controller
             _service = service;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost("CreateNewDriver")]
         public async Task<IActionResult> CreateDriverAsync(DriverRequest request)
         {

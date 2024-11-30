@@ -12,7 +12,8 @@ namespace Domain.Entity
         public DateTime CreateAt { get; set; } 
         public DateTime UpdatedAt { get; set; } 
         public string ImageUrl { get; set; }
-        //
+        
+        public string Name { get; set; }
         public OrderFish OrderFish { get; set; }
         public int OrderFishId { get; set; } 
     }

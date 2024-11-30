@@ -17,12 +17,14 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public FishQualificationService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IFirebaseStorageService _firebaseStorageService;
+        public FishQualificationService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService)
         {
-            _unitOfWork = unitOfWork;   
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _firebaseStorageService = firebaseStorageService;
         }
+
         public async Task<ApiResponse> CreateFishQualificationAsync(FishQualificationRequest request)
         {
             ApiResponse apiresponse = new ApiResponse();
@@ -34,6 +36,7 @@ namespace Application.Services
                 {
                     return apiresponse.SetNotFound("Can not found fish order id " );
                 }
+                fishqualification.ImageUrl = await _firebaseStorageService.UploadFishQualificationUrl(request.Name, request.File);
                 await _unitOfWork.FishQualifications.AddAsync(fishqualification);
                 await _unitOfWork.SaveChangeAsync();
                 return apiresponse.SetOk("Add success");

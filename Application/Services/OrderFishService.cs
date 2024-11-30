@@ -22,10 +22,13 @@ namespace Application.Services
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
-        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper)
+
+        private readonly IFirebaseStorageService _firebaseStorageService;
+        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _firebaseStorageService = firebaseStorageService;
         }
 
         public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request)
@@ -39,6 +42,8 @@ namespace Application.Services
                 {
                     return apiResponse.SetNotFound("Can not found Order Id: ");
                 }
+                orderFish.FishImgURL = await _firebaseStorageService.UploadOrderFishUrl(request.OrderId.ToString(), request.File);
+
                 await _unitOfWork.OrderFishes.AddAsync(orderFish);
                 await _unitOfWork.SaveChangeAsync();
 
