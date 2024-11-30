@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,8 @@ namespace Application.Request.Fish
         public int Age { get; set; }
         public float Weight { get; set; }
         public float Length { get; set; }
-        public string FishImgURL { get; set; }
         public int? OrderId { get; set; }
+
+        public IFormFile File { get; set; }
     }
 }

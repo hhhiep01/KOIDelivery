@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,8 @@ namespace Application.Request.Fish
         //public DateTime UpdatedAt { get; set; }
         public string ImageUrl { get; set; }
         public int OrderFishId { get; set; }
+        public string Name { get; set; }
+
+        public IFormFile File { get; set; }
     }
 }

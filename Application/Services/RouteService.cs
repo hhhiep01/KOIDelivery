@@ -96,6 +96,21 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
+        public async Task<ApiResponse> GetAllRouteByDriverIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var routes = await _unitOfWork.Routes.GetAllAsync(x => x.DriverId == id);
+
+                var responseList = _mapper.Map<List<RouteResponse>>(routes);
+                return apiResponse.SetOk(responseList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
 
         public async Task<ApiResponse> DeleteRouteByIdAsync(int id)
         {
@@ -113,5 +128,7 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
+
+        //public async Task<ApiResponse> UpdateStopOrder
     }
 }
