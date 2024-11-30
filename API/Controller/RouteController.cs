@@ -18,7 +18,7 @@ namespace API.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRouteAndRouteStopsAsync([FromForm] CreateRouteAndListRouteStopRequest request)
+        public async Task<IActionResult> CreateRouteAndRouteStopsAsync(CreateRouteAndListRouteStopRequest request)
         {
             if (!ModelState.IsValid)
             {

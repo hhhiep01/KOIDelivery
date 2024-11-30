@@ -11,5 +11,8 @@ namespace Application.Request.Driver
     {
         
         public int UserAccountId { get; set; }
+
+        public string CurrentProvince { get; set; }
+
     }
 }

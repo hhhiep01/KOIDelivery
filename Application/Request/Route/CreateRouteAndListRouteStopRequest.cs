@@ -10,10 +10,8 @@ namespace Application.Request.Route
 {
     public class CreateRouteAndListRouteStopRequest
     {
-        [Required]
         public RouteRequest RouteRequest { get; set; }
 
-        [Required]
         public List<RouteStopRequest> RouteStopRequests { get; set; }
     }
 }
