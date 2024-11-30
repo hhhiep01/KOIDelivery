@@ -48,7 +48,7 @@ namespace Application.Services
                 return response.SetNotFound("This order is Paid");
             }
             //payment.Amount = order.TotalPrice;
-            model.Amount = order.TotalPrice;
+            model.Amount = order.TotalPrice.Value;
             model.Name = "Pro Supcription";
             model.OrderDescription = "Pro Supcription";
             model.OrderType = "Pro";

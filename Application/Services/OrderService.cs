@@ -63,24 +63,25 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
-        public async Task<ApiResponse> GetAllOrderAsync()
-        {
-            ApiResponse apiResponse = new ApiResponse();
-            try
+            public async Task<ApiResponse> GetAllOrderAsync()
             {
-                var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService));
-                var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
-                return new ApiResponse().SetOk(orderResponse);
+                ApiResponse apiResponse = new ApiResponse();
+                try
+                {
+                    var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
+                    var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
+                    return new ApiResponse().SetOk(orderResponse);
+                }
+                catch (Exception ex)
+                {
+                    return apiResponse.SetBadRequest(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                return apiResponse.SetBadRequest(ex.Message);
-            }
-        }
         public async Task<ApiResponse> DeleteOrderByIdAsync(int id)
         {
             try
-            {
+            {   
+                
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == id);
                 if (order == null)
                 {
@@ -103,7 +104,7 @@ namespace Application.Services
             try
             {
                 var orders = await _unitOfWork.Orders.GetAllAsync(x => x.AccountId == claim.Id,
-                    x => x.Include(x => x.TransportService));
+                    x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
                 var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
                 return new ApiResponse().SetOk(orderResponse);
             }
@@ -186,6 +187,7 @@ namespace Application.Services
         }
         public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
         {
+            double totalPrice = 0;
             ApiResponse apiResponse = new ApiResponse();
             try
             {
@@ -203,12 +205,17 @@ namespace Application.Services
                 }
                 var totalWeight = order.OrderFishs.Sum(fish => fish.Weight);
                 var numberOfFishes = order.OrderFishs.Count;
-                var totalDistance = 100;
+                //var totalDistance = 100;
+                if(numberOfFishes == 0)
+                {
+                    totalPrice = 0;
+                    return apiResponse.SetOk(totalPrice);
+                }
 
                 var weightPrice = totalWeight * transportService.PricePerKg;
-                var distancePrice = totalDistance * transportService.PricePerKm;
+                var transportServicePrice = transportService.TransportPrice;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                var totalPrice = weightPrice + distancePrice + amountPrice;
+                totalPrice = weightPrice + transportServicePrice + amountPrice;
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);

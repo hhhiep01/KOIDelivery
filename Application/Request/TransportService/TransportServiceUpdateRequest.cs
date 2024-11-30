@@ -13,9 +13,9 @@ namespace Application.Request.TransportService
         public string Name { get; set; }
         public TransportType TransportType { get; set; }
         public string Description { get; set; }
-        public float PricePerKm { get; set; }
-        public float PricePerKg { get; set; }
-        public float PricePerAmount { get; set; }
+        public double TransportPrice { get; set; }
+        public double PricePerKg { get; set; }
+        public double PricePerAmount { get; set; }
         public bool IsActive { get; set; }
     }
 }

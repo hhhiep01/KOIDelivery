@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241130081559_updateOrderTable")]
+    partial class updateOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,10 +140,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -465,14 +464,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("PricePerAmount")
-                        .HasColumnType("float");
+                    b.Property<float>("PricePerAmount")
+                        .HasColumnType("real");
 
-                    b.Property<double>("PricePerKg")
-                        .HasColumnType("float");
+                    b.Property<float>("PricePerKg")
+                        .HasColumnType("real");
 
-                    b.Property<double>("TransportPrice")
-                        .HasColumnType("float");
+                    b.Property<float>("PricePerKm")
+                        .HasColumnType("real");
 
                     b.Property<int>("TransportType")
                         .HasColumnType("int");

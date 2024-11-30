@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Response.UserAccount;
 
 namespace Application.MyMapper
 {
@@ -30,7 +31,8 @@ namespace Application.MyMapper
             CreateMap<Order, OrderResponse>();
 
             CreateMap<Order, OrderResponse>()
-                .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService)); ;
+                .ForMember(dest => dest.OrderFishes, opt => opt.MapFrom(src => src.OrderFishs))
+                .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService));
             CreateMap<OrderFishRequest, OrderFish>();
             CreateMap<OrderFish, OrderFishResponse>();
 
@@ -56,6 +58,9 @@ namespace Application.MyMapper
             //Driver
             CreateMap<DriverRequest, Driver>();
             CreateMap<DriverService, DriverResponse>();
+
+            //UserAccount
+            CreateMap<UserProfileResponse, UserAccount>();
 
         }
     }

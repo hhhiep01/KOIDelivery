@@ -82,7 +82,7 @@ namespace Application.Services
                 transportService.Name = transportServiceUpdateRequest.Name;
                 transportService.Description = transportServiceUpdateRequest.Description;   
                 transportService.TransportType = transportServiceUpdateRequest.TransportType;
-                transportService.PricePerKm = transportServiceUpdateRequest.PricePerKm;
+                transportService.TransportPrice = transportServiceUpdateRequest.TransportPrice;
                 transportService.PricePerKg = transportServiceUpdateRequest.PricePerKg;
                 transportService.PricePerAmount = transportServiceUpdateRequest.PricePerAmount;
                 transportService.IsActive = transportServiceUpdateRequest.IsActive;
