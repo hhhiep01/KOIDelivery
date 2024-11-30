@@ -14,7 +14,7 @@ namespace API.Controller
         {
             _service = service;
         }
-        [HttpPost("create-fishQualification")]
+        [HttpPost("CreateFishQualification")]
         public async Task<IActionResult> CreateFishQualificationAsync(FishQualificationRequest fish)
         {
             if (!ModelState.IsValid)
@@ -35,25 +35,25 @@ namespace API.Controller
             var result = await _service.CreateFishQualificationAsync(fish);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("get-fish")]
+        [HttpGet("GetAllFishQualification")]
         public async Task<IActionResult> GetAllFishQualificationAsync()
         {
             var response = await _service.GetAllFishQualificationAsync();
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteFishQualificationBy{id}")]
         public async Task<IActionResult> DeleteFishQualificationAsync(int id)
         {
             var response = await _service.DeleteFishQualificationAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
-        [HttpGet("{id}")]
+        [HttpGet("GetFishQualificationByIdBy{id}")]
         public async Task<IActionResult> GetFishQualificationByIdAsync(int id)
         {
             var resposne = await _service.GetFishQualificationByIdAsync(id);
             return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
-        [HttpPut("Update-fishQualification")]
+        [HttpPut("UpdateFishQualification")]
         public async Task<IActionResult> UpdateFishQualificationAsync(FishQualificationUpdateRequest request)
         {
             var resposne = await _service.UpdateFishQualificationAsync(request);
