@@ -16,6 +16,8 @@ namespace Application.Request.TransportService
         public double TransportPrice { get; set; }
         public double PricePerKg { get; set; }
         public double PricePerAmount { get; set; }
+        public string FromProvince { get; set; }
+        public string ToProvince { get; set; } 
         public bool IsActive { get; set; }
     }
 }

@@ -54,6 +54,11 @@ namespace Application.Response
             Result = result;
             return this;
         }
+
+        public static implicit operator double(ApiResponse v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

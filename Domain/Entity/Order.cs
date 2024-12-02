@@ -11,10 +11,10 @@ namespace Domain.Entity
         public string ReceiverPhone { get; set; } = string.Empty;
         public string ReceiverName { get; set; } = string.Empty;
         public double? TotalPrice { get; set; }
+        public double? Distance  { get; set; }
         public string? Notes { get; set; } = string.Empty;
         public PaymentMethodEnum PaymentMethod { get; set; }
-        public string FromProvince { get; set; } = string.Empty;
-        public string ToProvince { get; set; } = string.Empty;
+        
         public int? FeedbackStars { get; set; }
         public string? FeedbackContent { get; set; } = string.Empty;
         public string? ReasonToCancel { get; set; } = string.Empty;

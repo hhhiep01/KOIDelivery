@@ -9,5 +9,6 @@ namespace Application.Interface
     public interface IGoogleMapService
     {
         Task<string> GetCurrentLocationAsync();
+        Task<string> GetDistanceAsync(string origin, string destination);
     }
 }

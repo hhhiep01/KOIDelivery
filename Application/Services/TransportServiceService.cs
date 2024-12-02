@@ -85,6 +85,8 @@ namespace Application.Services
                 transportService.TransportPrice = transportServiceUpdateRequest.TransportPrice;
                 transportService.PricePerKg = transportServiceUpdateRequest.PricePerKg;
                 transportService.PricePerAmount = transportServiceUpdateRequest.PricePerAmount;
+                transportService.FromProvince = transportServiceUpdateRequest.FromProvince;
+                transportService.ToProvince = transportServiceUpdateRequest.ToProvince;
                 transportService.IsActive = transportServiceUpdateRequest.IsActive;
                 
                 await _unitOfWork.SaveChangeAsync();
@@ -110,6 +112,45 @@ namespace Application.Services
                 await _unitOfWork.SaveChangeAsync();
                 return new ApiResponse().SetOk("TransportService deleted successfully!");
 
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetTransportServiceLocal()
+        {
+            try
+            {
+                var transportServices = await _unitOfWork.TransportServices.GetAllAsync(x => x.TransportType == TransportType.Local);
+                var responseList = _mapper.Map<List<TransportServiceResponse>>(transportServices);
+                return new ApiResponse().SetOk(responseList);                
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetTransportServiceDomestic()
+        {
+            try
+            {
+                var transportServices = await _unitOfWork.TransportServices.GetAllAsync(x => x.TransportType == TransportType.Domestic);
+                var responseList = _mapper.Map<List<TransportServiceResponse>>(transportServices);
+                return new ApiResponse().SetOk(responseList);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetTransportServiceInternational()
+        {
+            try
+            {
+                var transportServices = await _unitOfWork.TransportServices.GetAllAsync(x => x.TransportType == TransportType.International);
+                var responseList = _mapper.Map<List<TransportServiceResponse>>(transportServices);
+                return new ApiResponse().SetOk(responseList);
             }
             catch (Exception ex)
             {

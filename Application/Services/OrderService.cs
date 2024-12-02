@@ -19,12 +19,14 @@ namespace Application.Services
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private IClaimService _claim;
+        private readonly IGoogleMapService _googleMapService;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim)
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, IGoogleMapService googleMapService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _claim = claim;
+            _googleMapService = googleMapService;
         }
 
         public async Task<ApiResponse> CreateOrderAsync(OrderRequest request)
@@ -37,16 +39,25 @@ namespace Application.Services
                 if (transportService is null)
                 {
                     return new ApiResponse().SetNotFound("TransportService not found");
-                }
-                if (request.PaymentMethod == PaymentMethodEnum.Cash)
-                {
-                    Payment payment = new Payment();
-                    payment.StatusPayment = StatusPayment.Pending;
-                }
-
+                }                
                 var order = _mapper.Map<Order>(request);
                 await _unitOfWork.Orders.AddAsync(order);
                 order.AccountId = claim.Id;
+                var distanceResponse = await _googleMapService.GetDistanceAsync(request.FromAddress, request.ToAddress);
+                if (distanceResponse == null)
+                {
+                    return new ApiResponse().SetBadRequest("Unable to calculate distance.");
+                }
+
+                if (transportService.TransportType == TransportType.Local)
+                {
+                    var distanceData = Newtonsoft.Json.Linq.JObject.Parse(distanceResponse);
+                    var distanceText = distanceData["rows"][0]["elements"][0]["distance"]["text"].ToString();
+                    var distanceValue = double.Parse(distanceData["rows"][0]["elements"][0]["distance"]["value"].ToString());
+                    var distanceValueInKm = distanceValue / 1000;
+                    order.Distance = distanceValueInKm;
+                }
+
                 await _unitOfWork.SaveChangeAsync();
                 var orderAfterSave = await _unitOfWork.Orders.GetAsync(x => x.Id == order.Id);
                 if (order == null)
@@ -63,25 +74,25 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
-            public async Task<ApiResponse> GetAllOrderAsync()
+        public async Task<ApiResponse> GetAllOrderAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
             {
-                ApiResponse apiResponse = new ApiResponse();
-                try
-                {
-                    var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
-                    var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
-                    return new ApiResponse().SetOk(orderResponse);
-                }
-                catch (Exception ex)
-                {
-                    return apiResponse.SetBadRequest(ex.Message);
-                }
+                var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
+                var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
+                return new ApiResponse().SetOk(orderResponse);
             }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
         public async Task<ApiResponse> DeleteOrderByIdAsync(int id)
         {
             try
-            {   
-                
+            {
+
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == id);
                 if (order == null)
                 {
@@ -209,7 +220,7 @@ namespace Application.Services
                 var totalWeight = order.OrderFishs.Sum(fish => fish.Weight);
                 var numberOfFishes = order.OrderFishs.Count;
                 //var totalDistance = 100;
-                if(numberOfFishes == 0)
+                if (numberOfFishes == 0)
                 {
                     totalPrice = 0;
                     return apiResponse.SetOk(totalPrice);
@@ -218,7 +229,7 @@ namespace Application.Services
                 var weightPrice = totalWeight * transportService.PricePerKg;
                 var transportServicePrice = transportService.TransportPrice;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = weightPrice + transportServicePrice + amountPrice;
+                totalPrice = (double)(weightPrice + transportServicePrice + amountPrice);
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);
@@ -228,7 +239,7 @@ namespace Application.Services
             {
                 return apiResponse.SetBadRequest(ex.Message);
             }
-            
+
         }
 
     }

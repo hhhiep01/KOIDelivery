@@ -14,8 +14,11 @@ namespace Application.Response.TransportService
         public TransportType TransportType { get; set; }
         public string Description { get; set; }
         public double TransportPrice { get; set; }
+        public double PricePerKm { get; set; }
         public double PricePerKg { get; set; }
         public double PricePerAmount { get; set; }
+        public string FromProvince { get; set; } 
+        public string ToProvince { get; set; } 
         public bool IsActive { get; set; }
     }
 }

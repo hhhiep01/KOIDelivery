@@ -101,6 +101,8 @@ builder.Services.AddScoped<IRouteService, RouteService>();
 builder.Services.AddScoped<IRouteStopService, RouteStopService>();
 builder.Services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddScoped<ICaculateTotalPriceService, CaculateTotalPriceService>();
+builder.Services.AddScoped<ICashPaymentService, CashPaymentService>();
 
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 

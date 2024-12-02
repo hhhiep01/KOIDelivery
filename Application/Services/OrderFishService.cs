@@ -24,11 +24,13 @@ namespace Application.Services
         private readonly IMapper _mapper;
 
         private readonly IFirebaseStorageService _firebaseStorageService;
-        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService)
+        private readonly ICaculateTotalPriceService _caculateTotalPriceService;
+        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService, ICaculateTotalPriceService caculateTotalPriceService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _firebaseStorageService = firebaseStorageService;
+            _caculateTotalPriceService = caculateTotalPriceService;
         }
 
         public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request)
@@ -37,7 +39,7 @@ namespace Application.Services
             try
             {
                 var orderFish = _mapper.Map<OrderFish>(request);
-                var orderFishExist = await _unitOfWork.Orders.GetAsync(x => x.Id == orderFish.OrderId);
+                var orderFishExist = await _unitOfWork.Orders.GetAsync(x => x.Id == orderFish.OrderId, x => x.Include(x => x.TransportService));
                 if (orderFishExist == null)
                 {
                     return apiResponse.SetNotFound("Can not found Order Id: ");
@@ -46,15 +48,34 @@ namespace Application.Services
 
                 await _unitOfWork.OrderFishes.AddAsync(orderFish);
                 await _unitOfWork.SaveChangeAsync();
-                var calculateResponse = await CaculateTotalPrice(orderFish.OrderId.Value);
 
-
-                if (!calculateResponse.IsSuccess)
+                if (orderFishExist.TransportService.TransportType == TransportType.Local )
                 {
-                    return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
+                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceLocal(orderFish.OrderId.Value);
+
+                    if (!calculateResponse.IsSuccess)
+                    {
+                        return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
+                    }
                 }
+                else if (orderFishExist.TransportService.TransportType == TransportType.International)
+                {
+                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceInternational(orderFish.OrderId.Value);
 
+                    if (!calculateResponse.IsSuccess)
+                    {
+                        return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
+                    }
+                }
+                else if( orderFishExist.TransportService.TransportType == TransportType.Domestic)
+                {
+                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceInternational(orderFish.OrderId.Value);
 
+                    if (!calculateResponse.IsSuccess)
+                    {
+                        return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
+                    }
+                }
                 return apiResponse.SetOk("Add success");
             }
             catch (Exception ex)
@@ -149,49 +170,6 @@ namespace Application.Services
             {
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
-        }
-        
-        public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
-        {
-            double totalPrice = 0;
-            ApiResponse apiResponse = new ApiResponse();
-            try
-            {
-                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == OrderId,
-                                                              x => x.Include(x => x.TransportService)
-                                                                    .Include(x => x.OrderFishs));
-                if (order == null)
-                {
-                    apiResponse.SetNotFound("Order not found");
-                }
-                var transportService = order.TransportService;
-                if (transportService == null)
-                {
-                    throw new Exception("TransportService is not linked to the order");
-                }
-                var totalWeight = order.OrderFishs.Sum(fish => fish.Weight);
-                var numberOfFishes = order.OrderFishs.Count;
-                //var totalDistance = 100;
-                if (numberOfFishes == 0)
-                {
-                    totalPrice = 0;
-                    return apiResponse.SetOk(totalPrice);
-                }
-
-                var weightPrice = totalWeight * transportService.PricePerKg;
-                var transportServicePrice = transportService.TransportPrice;
-                var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = weightPrice + transportServicePrice + amountPrice;
-                order.TotalPrice = totalPrice;
-                await _unitOfWork.SaveChangeAsync();
-                return apiResponse.SetOk(totalPrice);
-
-            }
-            catch (Exception ex)
-            {
-                return apiResponse.SetBadRequest(ex.Message);
-            }
-
         }
 
     }
