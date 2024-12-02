@@ -67,5 +67,12 @@ namespace API.Controller
             var response = await _service.DeleteDriverByIdAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
+
+        [HttpGet("GetDriverLocation/{driverId}")]
+        public async Task<IActionResult> GetDriverLocation(int driverId)
+        {
+            var response = await _service.GetCurrentDriverLocationAsync(driverId);
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
     }
 }

@@ -131,6 +131,7 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
+
         public async Task<ApiResponse> UpdateStatusOrderToCompleted(int OrderId)
         {
             try
@@ -167,6 +168,7 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
+
         public async Task<ApiResponse> UpdateStatusOrderToPendingPickUp(int OrderId)
         {
             try
@@ -185,6 +187,7 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
+
         public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
         {
             double totalPrice = 0;

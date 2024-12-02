@@ -84,6 +84,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile).Assembly);
 builder.Services.AddSingleton(configuration!);
+builder.Services.AddHttpClient<IGoogleMapService, GoogleMapService>();
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();

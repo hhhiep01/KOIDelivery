@@ -5,6 +5,8 @@ using Application.Response.Fish;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Entity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +27,7 @@ namespace Application.Services
             _firebaseStorageService = firebaseStorageService;
         }
 
-        public async Task<ApiResponse> CreateFishQualificationAsync(FishQualificationRequest request)
+        public async Task<ApiResponse> CreateFishQualificationAsync(FishQualificationRequest request, IFormFile file)
         {
             ApiResponse apiresponse = new ApiResponse();
             try
@@ -36,7 +38,7 @@ namespace Application.Services
                 {
                     return apiresponse.SetNotFound("Can not found fish order id " );
                 }
-                fishqualification.ImageUrl = await _firebaseStorageService.UploadFishQualificationUrl(request.Name, request.File);
+                fishqualification.ImageUrl = await _firebaseStorageService.UploadFishQualificationUrl(request.Name, file);
                 await _unitOfWork.FishQualifications.AddAsync(fishqualification);
                 await _unitOfWork.SaveChangeAsync();
                 return apiresponse.SetOk("Add success");

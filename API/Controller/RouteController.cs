@@ -60,6 +60,13 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
+        [HttpPut("UpdateStopOrderAndStatus")]
+        public async Task<IActionResult> UpdateStopOrderAndStatus(int RouteId)
+        {
+            var result = await _service.UpdateStopOrderAndStatusAsync(RouteId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteRouteByIdAsync(int id)
         {

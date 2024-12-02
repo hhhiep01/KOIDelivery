@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Response.UserAccount;
+using Application.Response.Route;
 
 namespace Application.MyMapper
 {
@@ -49,6 +50,8 @@ namespace Application.MyMapper
 
             //Route
             CreateMap<RouteRequest, Route>();
+            CreateMap<RouteService, RouteResponse>();
+            CreateMap<Route, RouteResponse>();
 
             //RouteStop
             CreateMap<RouteStopRequest, RouteStop>();
