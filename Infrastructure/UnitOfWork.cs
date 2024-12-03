@@ -25,6 +25,9 @@ namespace Infrastructure
         public IRouteRepository Routes { get;  }
         public IDriverRepository Drivers { get;  }
         public IPaymentRepository Payments { get;  }
+
+        public IFeedbackRepository Feedbacks { get; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;

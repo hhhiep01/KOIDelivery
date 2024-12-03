@@ -1,4 +1,5 @@
 ﻿using Application.Interface;
+using Application.Request.Feedback;
 using Application.Request.Order;
 using Application.Response;
 using Application.Response.Order;
@@ -198,7 +199,32 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
+        }
 
+        public async Task<ApiResponse> CreateFeedBackAsync(FeedbackRequest request)
+        {
+            ApiResponse apiresponse = new ApiResponse();
+            try
+            {
+                var feedback = _mapper.Map<Order>(request);
+                var orderExist = await _unitOfWork.Orders.GetAsync(x => x.Id == feedback.Id);
+                if (orderExist == null)
+                {
+                    return apiresponse.SetNotFound("Can not found order id ");
+                }
+                if (orderExist.OrderStatus != OrderStatusEnum.Completed)
+                {
+                    return apiresponse.SetNotFound("Feedback can only be created for completed orders ");
+                }
+                await _unitOfWork.Feedbacks.AddAsync(feedback);
+                await _unitOfWork.SaveChangeAsync();
+                return apiresponse.SetOk("Add success");
+            }
+            catch (Exception ex)
+            {
+                return apiresponse.SetBadRequest(ex.Message);
+            }
+        }
         public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
         {
             double totalPrice = 0;

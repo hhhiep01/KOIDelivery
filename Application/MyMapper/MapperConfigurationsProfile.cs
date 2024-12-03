@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Request.Feedback;
+using Application.Response.Feedback;
 using Application.Response.UserAccount;
 using Application.Response.Route;
 
@@ -61,6 +63,9 @@ namespace Application.MyMapper
             //Driver
             CreateMap<DriverRequest, Driver>();
             CreateMap<DriverService, DriverResponse>();
+
+            CreateMap<FeedbackRequest, Order>();
+            CreateMap<Order, FeedbackResponse>();
 
             //UserAccount
             CreateMap<UserProfileResponse, UserAccount>();

@@ -104,6 +104,7 @@ builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 builder.Services.AddScoped<ICaculateTotalPriceService, CaculateTotalPriceService>();
 builder.Services.AddScoped<ICashPaymentService, CashPaymentService>();
 
+
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 builder.Services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<RegisterValidator>();
