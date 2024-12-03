@@ -10,7 +10,7 @@ namespace Domain.Entity
         public string ToAddress { get; set; } = string.Empty;
         public string ReceiverPhone { get; set; } = string.Empty;
         public string ReceiverName { get; set; } = string.Empty;
-        public double? TotalPrice { get; set; }
+        public decimal? TotalPrice { get; set; }
         public double? Distance  { get; set; }
         public string? Notes { get; set; } = string.Empty;
         public PaymentMethodEnum PaymentMethod { get; set; }

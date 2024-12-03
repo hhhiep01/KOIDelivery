@@ -26,7 +26,7 @@ namespace Application.Services
         }
         public async Task<ApiResponse> CaculateTotalPriceLocal(int OrderId)
         {
-            double totalPrice = 0;
+            decimal totalPrice = 0;
             ApiResponse apiResponse = new ApiResponse();
             try
             {
@@ -59,7 +59,7 @@ namespace Application.Services
                 //var transportServicePrice = transportService.TransportPrice;
                 var kmPrice = totalKm * transportService.PricePerKm;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = (double)(weightPrice + kmPrice + amountPrice);
+                totalPrice = (decimal)(weightPrice + kmPrice + amountPrice);
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);
@@ -73,7 +73,7 @@ namespace Application.Services
         }
         public async Task<ApiResponse> CaculateTotalPriceDomestic(int OrderId)
         {
-            double totalPrice = 0;
+            decimal totalPrice = 0;
             ApiResponse apiResponse = new ApiResponse();
             try
             {
@@ -106,7 +106,7 @@ namespace Application.Services
                 var transportServicePrice = transportService.TransportPrice;
                 //var kmPrice = totalKm * transportService.PricePerKm;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = (double)(weightPrice + transportServicePrice + amountPrice);
+                totalPrice = (decimal)(weightPrice + transportServicePrice + amountPrice);
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);
@@ -120,7 +120,7 @@ namespace Application.Services
         }
         public async Task<ApiResponse> CaculateTotalPriceInternational(int OrderId)
         {
-            double totalPrice = 0;
+            decimal totalPrice = 0;
             ApiResponse apiResponse = new ApiResponse();
             try
             {
@@ -153,7 +153,7 @@ namespace Application.Services
                 var transportServicePrice = transportService.TransportPrice;
                 //var kmPrice = totalKm * transportService.PricePerKm;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = (double)(weightPrice + transportServicePrice + amountPrice);
+                totalPrice = (decimal)(weightPrice + transportServicePrice + amountPrice);
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);
