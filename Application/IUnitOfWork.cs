@@ -20,6 +20,7 @@ namespace Application
         public IRouteRepository Routes { get; }
         public IDriverRepository Drivers { get; }
         public IPaymentRepository Payments { get; }
+        public IFeedbackRepository Feedbacks { get; }
 
         public Task SaveChangeAsync();
         Task<T> ExecuteScalarAsync<T>(string sql);

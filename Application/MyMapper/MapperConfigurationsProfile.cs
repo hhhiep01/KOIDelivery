@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Request.Feedback;
+using Application.Response.Feedback;
 
 namespace Application.MyMapper
 {
@@ -55,6 +57,9 @@ namespace Application.MyMapper
             //Driver
             CreateMap<DriverRequest, Driver>();
             CreateMap<DriverService, DriverResponse>();
+
+            CreateMap<FeedbackRequest, Order>();
+            CreateMap<Order, FeedbackResponse>();
 
         }
     }
