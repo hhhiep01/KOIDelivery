@@ -23,12 +23,45 @@ namespace Application.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<ApiResponse> AddTransportServiceAsync(TransportServiceRequest transportServiceRequest)
+        public async Task<ApiResponse> AddTransportLocalServiceAsync(TransportLocalServiceRequest transportServiceRequest)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
             {
                 var transportService = _mapper.Map<TransportService>(transportServiceRequest);
+                transportService.TransportType = TransportType.Local;
+                await _unitOfWork.TransportServices.AddAsync(transportService);
+                await _unitOfWork.SaveChangeAsync();
+                return apiResponse.SetOk("Add Success!");
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> AddTransportDomesticServiceAsync(TransportServiceRequest transportServiceRequest)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var transportService = _mapper.Map<TransportService>(transportServiceRequest);
+                transportService.TransportType = TransportType.Domestic;
+                await _unitOfWork.TransportServices.AddAsync(transportService);
+                await _unitOfWork.SaveChangeAsync();
+                return apiResponse.SetOk("Add Success!");
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> AddTransportInternaltionalServiceAsync(TransportServiceRequest transportServiceRequest)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var transportService = _mapper.Map<TransportService>(transportServiceRequest);
+                transportService.TransportType = TransportType.International;
                 await _unitOfWork.TransportServices.AddAsync(transportService);
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add Success!");
@@ -123,7 +156,7 @@ namespace Application.Services
             try
             {
                 var transportServices = await _unitOfWork.TransportServices.GetAllAsync(x => x.TransportType == TransportType.Local);
-                var responseList = _mapper.Map<List<TransportServiceResponse>>(transportServices);
+                var responseList = _mapper.Map<List<TransportLocalServiceResponse>>(transportServices);
                 return new ApiResponse().SetOk(responseList);                
             }
             catch (Exception ex)
