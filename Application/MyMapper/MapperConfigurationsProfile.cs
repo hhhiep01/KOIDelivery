@@ -21,6 +21,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Request.Feedback;
 using Application.Response.Feedback;
+using Application.Response.UserAccount;
+using Application.Response.Route;
+using Application.Request.Feedback;
+using Application.Response.Feedback;
 
 namespace Application.MyMapper
 {
@@ -60,6 +64,9 @@ namespace Application.MyMapper
 
             CreateMap<FeedbackRequest, Order>();
             CreateMap<Order, FeedbackResponse>();
+
+            //UserAccount
+            CreateMap<UserProfileResponse, UserAccount>();
 
         }
     }
