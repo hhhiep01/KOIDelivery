@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241203074424_ChangeDataToDecimal")]
+    partial class ChangeDataToDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,8 +259,8 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Length")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float>("Length")
+                        .HasColumnType("real");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
@@ -275,8 +278,8 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("UserAccountId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -457,20 +460,20 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PricePerAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("PricePerAmount")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("PricePerKg")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("PricePerKg")
+                        .HasColumnType("float");
 
-                    b.Property<decimal?>("PricePerKm")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("PricePerKm")
+                        .HasColumnType("float");
 
                     b.Property<string>("ToProvince")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("TransportPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("TransportPrice")
+                        .HasColumnType("float");
 
                     b.Property<int>("TransportType")
                         .HasColumnType("int");

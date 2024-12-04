@@ -104,7 +104,7 @@ namespace Application.Services
                         var order = await _unitOfWork.Orders.GetAsync(x => x.Id == orderId);
                         if (user != null && order is not null)
                         {
-                            if (collections.TryGetValue("amount", out var amountValue) && int.TryParse(amountValue, out int amount))
+                            if (collections.TryGetValue("amount", out var amountValue) && decimal.TryParse(amountValue, out decimal amount))
                             {
 
                                 Payment payment = new Payment();

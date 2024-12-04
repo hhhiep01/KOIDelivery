@@ -5,19 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Request.TransportService
+namespace Application.Response.TransportService
 {
-    public class TransportServiceUpdateRequest
+    public class TransportLocalServiceResponse
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public TransportType TransportType { get; set; }
         public string Description { get; set; }
-        public decimal TransportPrice { get; set; }
+        //public decimal TransportPrice { get; set; }
+        public decimal PricePerKm { get; set; }
         public decimal PricePerKg { get; set; }
         public decimal PricePerAmount { get; set; }
-        public string FromProvince { get; set; }
-        public string ToProvince { get; set; } 
+        //public string FromProvince { get; set; }
+        //public string ToProvince { get; set; }
         public bool IsActive { get; set; }
     }
 }
