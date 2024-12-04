@@ -20,12 +20,14 @@ namespace Application.Services
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private IClaimService _claim;
+        private IGoogleMapService _googleMapService;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim)
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, IGoogleMapService googleMapService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _claim = claim;
+            _googleMapService = googleMapService;
         }
 
         public async Task<ApiResponse> CreateOrderAsync(OrderRequest request)
@@ -45,7 +47,17 @@ namespace Application.Services
                     payment.StatusPayment = StatusPayment.Pending;
                 }
                 var order = _mapper.Map<Order>(request);
+                var distanceResponse = await _googleMapService.GetDistanceAsync(request.FromAddress, request.ToAddress);
+                if (distanceResponse == null)
+                {
+                    return new ApiResponse().SetBadRequest("Unable to calculate distance.");
+                }
+
+                var distanceData = Newtonsoft.Json.Linq.JObject.Parse(distanceResponse);
+                var distanceInMeters = double.Parse(distanceData["rows"][0]["elements"][0]["distance"]["value"].ToString());
+                var distanceInKm = distanceInMeters / 1000;
                 await _unitOfWork.Orders.AddAsync(order);
+                order.Distance = distanceInKm;
                 order.AccountId = claim.Id;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add success");
