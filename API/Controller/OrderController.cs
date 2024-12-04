@@ -112,6 +112,12 @@ namespace API.Controller
             var result = await _service.CreateFeedBackAsync(feedback);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetAllProccessingOrder")]
+        public async Task<IActionResult> GetAllProccessingOrderAsync()
+        {
+            var result = await _service.GetAllProccessingOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
     }
 
 }

@@ -201,5 +201,19 @@ namespace Application.Services
                 return apiresponse.SetBadRequest(ex.Message);
             }
         }
+        public async Task<ApiResponse> GetAllProccessingOrderAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Processing);
+                var orderProccessingList = _mapper.Map<List<OrderResponse>>(order);
+                return new ApiResponse().SetOk(orderProccessingList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
     }
 }
