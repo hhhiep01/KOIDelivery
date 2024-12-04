@@ -13,9 +13,9 @@ namespace Application.Interface
         Task<ApiResponse> AddNewDriverAsync(DriverRequest request);
         Task<ApiResponse> GetAllDriverAsync();
         Task<ApiResponse> GetDriverByIdAsync(int id);
-        Task<ApiResponse> UpdateDriverByIdAsync(UpdateDriverRequest request);
+        //Task<ApiResponse> UpdateDriverByIdAsync(UpdateDriverRequest request);
         Task<ApiResponse> DeleteDriverByIdAsync(int id);
 
-        Task<ApiResponse> GetCurrentDriverLocationAsync(int driverId);
+        //Task<ApiResponse> GetCurrentDriverLocationAsync(int driverId);
     }
 }
