@@ -11,6 +11,8 @@ using Application.Request.Route;
 using Application.Request.RouteStop;
 using Application.Response.Route;
 using Application.Interface;
+using Microsoft.EntityFrameworkCore;
+using Application.Response.RouteStop;
 
 namespace Application.Services
 {
@@ -30,20 +32,52 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
+                if (routeStopRequests == null || !routeStopRequests.Any())
+                {
+                    return apiResponse.SetBadRequest("RouteStopRequests is empty or null");
+                }
+
+                var driver = await _unitOfWork.Drivers.GetAsync(d => d.Id == request.DriverId);
+                if (driver == null)
+                {
+                    return apiResponse.SetNotFound("Driver not found");
+                }
+                if (driver.Status == DriverStatus.OnRoute)
+                {
+                    return apiResponse.SetBadRequest("Driver is currently on delivery and cannot pick up orders");
+                }
+                if (driver.Status == DriverStatus.Inactive) 
+                {
+                    return apiResponse.SetBadRequest("Driver has retired and cannot be assigned");
+                }
+
                 var route = _mapper.Map<Route>(request);
                 route.RouteStatus = RouteStatus.Pending;
                 route.CreateAt = DateTime.Now;
+
+                await _unitOfWork.Routes.AddAsync(route);
+                await _unitOfWork.SaveChangeAsync();
+
                 route.RouteStops = new List<RouteStop>();
 
                 foreach (var stopRequest in routeStopRequests)
                 {
                     var routeStop = _mapper.Map<RouteStop>(stopRequest);
-                    routeStop.CreatedDate = DateTime.Now;
                     routeStop.RouteStatus = RouteStopStatus.Pending;
+                    routeStop.RouteId = route.Id;
                     route.RouteStops.Add(routeStop);
+                    
+                    var order = await _unitOfWork.Orders.GetAsync(o => o.Id == stopRequest.OrderId);
+                    if (order != null)
+                    {
+                        order.OrderStatus = OrderStatusEnum.PendingPickUp;
+                    }
                 }
-                await _unitOfWork.Routes.AddAsync(route);
+                await _unitOfWork.RouteStops.AddRangeAsync(route.RouteStops);
+
+                driver.Status = DriverStatus.OnRoute;
                 await _unitOfWork.SaveChangeAsync();
+
                 return apiResponse.SetOk("Add Success");
             }
             catch (Exception ex) 
@@ -85,6 +119,21 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
+        public async Task<ApiResponse> GetAllRouteByDriverIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var routes = await _unitOfWork.Routes.GetAllAsync(x => x.DriverId == id, include: x => x.Include(r => r.RouteStops));
+
+                var responseList = _mapper.Map<List<RouteResponse>>(routes);
+                return apiResponse.SetOk(responseList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
 
         public async Task<ApiResponse> DeleteRouteByIdAsync(int id)
         {
@@ -96,6 +145,67 @@ namespace Application.Services
                 await _unitOfWork.Routes.RemoveByIdAsync(route.Id);
                 await _unitOfWork.SaveChangeAsync();
                 return new ApiResponse().SetOk("Route deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> UpdateStopOrderAndStatusAsync(int RouteId)
+        {
+            try
+            {
+                var routeStops = await _unitOfWork.RouteStops.GetAllAsync(rs => rs.RouteId == RouteId);
+                if (routeStops == null) return new ApiResponse().SetNotFound("RouteStops not found for the given RouteId");
+                
+                
+                var route = await _unitOfWork.Routes.GetAsync(r => r.Id == RouteId);
+                if (route == null) return new ApiResponse().SetNotFound("Route not found");
+                route.DeliveryStartDate = DateTime.Now;
+
+                var orderIds = routeStops.Select(rs => rs.RouteId).Distinct();
+                var orders = await _unitOfWork.Orders.GetAllAsync(o => orderIds.Contains(o.Id));
+                if (orders == null) return new ApiResponse().SetNotFound("Orders not found for the given RouteId");
+
+                var driverId = route.DriverId;
+                var driver = await _unitOfWork.Drivers.GetAsync(d => d.Id == driverId);
+                if (driver == null) return new ApiResponse().SetNotFound("Driver not found for the given Route");
+
+                bool hasStopOrderGreaterThanZero = false;
+
+                foreach (var routeStop in routeStops)
+                {
+                    if (routeStop.StopOrder ==(int)StopOrder.First)
+                    {
+                        routeStop.StopOrder = 0;
+                        routeStop.RouteStatus = RouteStopStatus.Completed;
+                    }
+                    else if (routeStop.StopOrder > 1)
+                    {
+                        routeStop.StopOrder -= 1;
+                    }
+                    if (routeStop.StopOrder > 0) hasStopOrderGreaterThanZero = true;
+                }
+
+                if (!hasStopOrderGreaterThanZero) 
+                {
+                    route.RouteStatus = (RouteStatus)3;
+                    driver.Status = (DriverStatus)1;
+                }
+
+                var routeResponse = new RouteResponse()
+                {
+                    Id = RouteId,
+                    Notes = route.Notes,
+                    RouteStops = routeStops.Select(rs => new RouteStopResponse
+                    {
+                        Id = rs.Id,
+                        StopOrder = rs.StopOrder,
+                    }).ToList(),
+                };
+                await _unitOfWork.SaveChangeAsync();
+                return new ApiResponse().SetOk("Update successfully");
             }
             catch (Exception ex)
             {

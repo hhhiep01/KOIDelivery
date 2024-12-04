@@ -1,5 +1,6 @@
 ﻿using Application.Request.Fish;
 using Application.Response;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Application.Interface
 {
     public interface IFishQualificationService
     {
-        Task<ApiResponse> CreateFishQualificationAsync(FishQualificationRequest request);
+        Task<ApiResponse> CreateFishQualificationAsync(FishQualificationRequest request, IFormFile file);
         Task<ApiResponse> GetAllFishQualificationAsync();
         Task<ApiResponse> DeleteFishQualificationAsync(int id);
         Task<ApiResponse> GetFishQualificationByIdAsync(int id);

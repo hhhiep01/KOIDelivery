@@ -33,7 +33,7 @@ namespace Application.Services
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
             var tick = DateTime.Now.Ticks.ToString();
             var pay = new VnPayLibrary();
-           
+
             var model = new PaymentInformation();
             var claim = _claimService.GetUserClaim();
             var userId = claim.Id;
@@ -42,18 +42,25 @@ namespace Application.Services
             {
                 return response.SetNotFound("Order Id not found");
             }
-            var payment = await _unitOfWork.Payments.GetAsync(x => x.OrderId == request.OrderId);
-            if(payment.StatusPayment == StatusPayment.Paid)
+            if (order.PaymentMethod != PaymentMethodEnum.VnPay)
             {
-                return response.SetNotFound("This order is Paid");
+                return response.SetBadRequest("Order must have Payment Method VnPay");
+            }
+            var existingPayment = await _unitOfWork.Payments.GetAsync(x => x.OrderId == request.OrderId);
+            if (existingPayment != null)
+            {
+                if (existingPayment.StatusPayment == StatusPayment.Pending || existingPayment.StatusPayment == StatusPayment.Paid)
+                {
+                    return response.SetBadRequest("This order has already been paid or the payment is being processed.");
+                }
             }
             //payment.Amount = order.TotalPrice;
-            model.Amount = order.TotalPrice;
-            model.Name = "Pro Supcription";
-            model.OrderDescription = "Pro Supcription";
-            model.OrderType = "Pro";
+            model.Amount = order.TotalPrice.Value;
+            model.Name = "KOI Delevery";
+            model.OrderDescription = "KOI Delevery";
+            model.OrderType = "VnPay";
 
-            
+
             var urlCallBack = $"{_configuration["PaymentCallBack:ReturnUrl"]}?userId={claim.Id}&amount={model.Amount}&orderId={order.Id}";
 
 
@@ -98,15 +105,14 @@ namespace Application.Services
                         if (user != null && order is not null)
                         {
                             if (collections.TryGetValue("amount", out var amountValue) && int.TryParse(amountValue, out int amount))
-                            {   
+                            {
 
-                                Payment payment = new Payment();                                
+                                Payment payment = new Payment();
                                 if (amount == order.TotalPrice)
                                 {
                                     payment.Amount = amount;
                                     payment.StatusPayment = StatusPayment.Paid;
                                     payment.OrderId = orderId;
-
                                 }
                                 else
                                 {

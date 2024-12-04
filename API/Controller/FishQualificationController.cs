@@ -14,7 +14,7 @@ namespace API.Controller
         {
             _service = service;
         }
-        [HttpPost("CreateFishQualification")]
+        [HttpPost("create-fishQualification")]
         public async Task<IActionResult> CreateFishQualificationAsync(FishQualificationRequest fish)
         {
             if (!ModelState.IsValid)
@@ -32,28 +32,29 @@ namespace API.Controller
                     result = (object)null
                 });
             }
-            var result = await _service.CreateFishQualificationAsync(fish);
+            var result = await _service.CreateFishQualificationAsync(fish, fish.File);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("GetAllFishQualification")]
+
+        [HttpGet("get-fish")]
         public async Task<IActionResult> GetAllFishQualificationAsync()
         {
             var response = await _service.GetAllFishQualificationAsync();
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
-        [HttpDelete("DeleteFishQualificationBy{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFishQualificationAsync(int id)
         {
             var response = await _service.DeleteFishQualificationAsync(id);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
-        [HttpGet("GetFishQualificationByIdBy{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetFishQualificationByIdAsync(int id)
         {
             var resposne = await _service.GetFishQualificationByIdAsync(id);
             return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
-        [HttpPut("UpdateFishQualification")]
+        [HttpPut("Update-fishQualification")]
         public async Task<IActionResult> UpdateFishQualificationAsync(FishQualificationUpdateRequest request)
         {
             var resposne = await _service.UpdateFishQualificationAsync(request);

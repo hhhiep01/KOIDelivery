@@ -37,7 +37,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CurrentProvince")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -49,7 +48,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -134,18 +133,16 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderFishId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -171,6 +168,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<double?>("Distance")
+                        .HasColumnType("float");
+
                     b.Property<string>("FeedbackContent")
                         .HasColumnType("nvarchar(max)");
 
@@ -178,10 +178,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FromAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FromProvince")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -218,11 +214,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ToProvince")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("TotalPrice")
+                    b.Property<double?>("TotalPrice")
                         .HasColumnType("float");
 
                     b.Property<int?>("TransportServiceId")
@@ -446,6 +438,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FromProvince")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -462,14 +457,20 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("PricePerAmount")
-                        .HasColumnType("real");
+                    b.Property<double>("PricePerAmount")
+                        .HasColumnType("float");
 
-                    b.Property<float>("PricePerKg")
-                        .HasColumnType("real");
+                    b.Property<double>("PricePerKg")
+                        .HasColumnType("float");
 
-                    b.Property<float>("PricePerKm")
-                        .HasColumnType("real");
+                    b.Property<double?>("PricePerKm")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ToProvince")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("TransportPrice")
+                        .HasColumnType("float");
 
                     b.Property<int>("TransportType")
                         .HasColumnType("int");
@@ -500,6 +501,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")

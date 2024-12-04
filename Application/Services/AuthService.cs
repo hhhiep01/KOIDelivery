@@ -169,6 +169,7 @@ namespace Application.Services
 
         private string CreateToken(UserAccount user)
         {
+            var fullName = user.FirstName + " " + user.LastName;
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -177,7 +178,8 @@ namespace Application.Services
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim( "Email" , user.Email!),
                 new Claim("UserId", user.Id.ToString()),
-               
+                new Claim("FullName", fullName),
+                new Claim(ClaimTypes.Name, fullName),
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
@@ -210,5 +212,7 @@ namespace Application.Services
             public byte[] PasswordHash { get; set; } = new byte[32];
             public byte[] PasswordSalt { get; set; } = new byte[32];
         }
+
+
     }
 }

@@ -14,14 +14,13 @@ namespace Application.Request.Order
         public string ToAddress { get; set; } = string.Empty;
         public string ReceiverPhone { get; set; } = string.Empty;
         public string ReceiverName { get; set; } = string.Empty;
-        public decimal TotalPrice { get; set; }
+        //public decimal TotalPrice { get; set; }
         public string Notes { get; set; } = string.Empty;
         public PaymentMethodEnum PaymentMethod { get; set; }
-        public string FromProvince { get; set; } = string.Empty;
-        public string ToProvince { get; set; } = string.Empty;
+       
         /*public float FeedbackStars { get; set; }*/
-        public string FeedbackContent { get; set; } = string.Empty;
-        public string ReasonToCancel { get; set; } = string.Empty;
+        /*public string FeedbackContent { get; set; } = string.Empty;
+        public string ReasonToCancel { get; set; } = string.Empty;*/
         public int TransportServiceId { get; set; }
     }
 }

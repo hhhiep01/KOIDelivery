@@ -18,7 +18,7 @@ namespace API.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRouteAndRouteStopsAsync([FromForm] CreateRouteAndListRouteStopRequest request)
+        public async Task<IActionResult> CreateRouteAndRouteStopsAsync(CreateRouteAndListRouteStopRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -46,6 +46,13 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
+        [HttpGet("GetRouteByDriver{driverId}")]
+        public async Task<IActionResult> GetAllRouteByDriverIdAsync(int driverId)
+        {
+            var response = await _service.GetAllRouteByDriverIdAsync(driverId);
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRouteByIdAsync(int id)
         {
@@ -53,12 +60,12 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateRouteStopByIdAsync(UpdateRouteRequest request)
-        //{
-        //    var response = await _service.UpdateRouteStopByIdAsync(request);
-        //    return response.IsSuccess ? Ok(response) : BadRequest(response);
-        //}
+        [HttpPut("UpdateStopOrderAndStatus")]
+        public async Task<IActionResult> UpdateStopOrderAndStatus(int RouteId)
+        {
+            var result = await _service.UpdateStopOrderAndStatusAsync(RouteId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteRouteByIdAsync(int id)

@@ -8,6 +8,7 @@ using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,11 +18,15 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private IClaimService _claim;
+        private readonly IGoogleMapService _service;
 
-        public DriverService(IUnitOfWork unitOfWork, IMapper mapper)
+        public DriverService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, IGoogleMapService service)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _claim = claim;
+            _service = service;
         }
 
         public async Task<ApiResponse> AddNewDriverAsync(DriverRequest request)
@@ -29,6 +34,7 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
+                var claim = _claim.GetUserClaim();
                 var account = await _unitOfWork.UserAccounts.GetAsync(x => x.Id == request.UserAccountId);
                 if (account == null)
                 {
@@ -38,15 +44,22 @@ namespace Application.Services
                 {
                     return apiResponse.SetBadRequest("User is not a Delivering Staff");
                 }
+                if (account.DriverId != null)
+                {
+                    return apiResponse.SetBadRequest("This user already has an associated Driver");
+                }
 
                 var driver = _mapper.Map<Driver>(request);
                 driver.Status = DriverStatus.Available;
-                driver.UserAccount = account;
+                //driver.CreatedBy = claim.Name,
 
                 await _unitOfWork.Drivers.AddAsync(driver);
                 await _unitOfWork.SaveChangeAsync();
 
-                return apiResponse.SetOk(driver);
+                account.DriverId = driver.Id;
+                await _unitOfWork.SaveChangeAsync();
+
+                return apiResponse.SetOk("Add successfully");
             }
             catch (Exception ex)
             {
@@ -123,6 +136,37 @@ namespace Application.Services
             catch (Exception ex)
             {
                 return new ApiResponse().SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> GetCurrentDriverLocationAsync(int driverId)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var driver = await _unitOfWork.Drivers.GetAsync(d => d.Id == driverId);
+                if (driver == null)
+                {
+                    return apiResponse.SetNotFound("Driver not found");
+                }
+
+                if (string.IsNullOrEmpty(driver.CurrentProvince))
+                {
+                    var currentLocation = await _service.GetCurrentLocationAsync();
+                    if (string.IsNullOrEmpty(currentLocation))
+                    {
+                        return apiResponse.SetBadRequest("Unable to fetch current location");
+                    }
+
+                    driver.CurrentProvince = currentLocation;
+                    await _unitOfWork.SaveChangeAsync();
+                }
+
+                return apiResponse.SetOk(new { currentProvince = driver.CurrentProvince });
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
             }
         }
     }

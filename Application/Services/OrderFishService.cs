@@ -22,10 +22,15 @@ namespace Application.Services
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
-        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper)
+
+        private readonly IFirebaseStorageService _firebaseStorageService;
+        private readonly ICaculateTotalPriceService _caculateTotalPriceService;
+        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService, ICaculateTotalPriceService caculateTotalPriceService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _firebaseStorageService = firebaseStorageService;
+            _caculateTotalPriceService = caculateTotalPriceService;
         }
 
         public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request)
@@ -34,14 +39,43 @@ namespace Application.Services
             try
             {
                 var orderFish = _mapper.Map<OrderFish>(request);
-                var orderFishExist = await _unitOfWork.Orders.GetAsync(x => x.Id == orderFish.OrderId);
+                var orderFishExist = await _unitOfWork.Orders.GetAsync(x => x.Id == orderFish.OrderId, x => x.Include(x => x.TransportService));
                 if (orderFishExist == null)
                 {
                     return apiResponse.SetNotFound("Can not found Order Id: ");
                 }
+                orderFish.FishImgURL = await _firebaseStorageService.UploadOrderFishUrl(request.OrderId.ToString(), request.File);
+
                 await _unitOfWork.OrderFishes.AddAsync(orderFish);
                 await _unitOfWork.SaveChangeAsync();
 
+                if (orderFishExist.TransportService.TransportType == TransportType.Local )
+                {
+                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceLocal(orderFish.OrderId.Value);
+
+                    if (!calculateResponse.IsSuccess)
+                    {
+                        return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
+                    }
+                }
+                else if (orderFishExist.TransportService.TransportType == TransportType.International)
+                {
+                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceInternational(orderFish.OrderId.Value);
+
+                    if (!calculateResponse.IsSuccess)
+                    {
+                        return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
+                    }
+                }
+                else if( orderFishExist.TransportService.TransportType == TransportType.Domestic)
+                {
+                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceInternational(orderFish.OrderId.Value);
+
+                    if (!calculateResponse.IsSuccess)
+                    {
+                        return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
+                    }
+                }
                 return apiResponse.SetOk("Add success");
             }
             catch (Exception ex)
@@ -137,5 +171,6 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
+
     }
 }

@@ -74,6 +74,22 @@ namespace Application.Services
             }
         }
 
+        public async Task<ApiResponse> GetAllRouteStopByRouteIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var routeStops = await _unitOfWork.RouteStops.GetAllAsync(x => x.RouteId == id);
+
+                var responseList = _mapper.Map<List<RouteStopResponse>>(routeStops);
+
+                return apiResponse.SetOk(responseList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
         public async Task<ApiResponse> GetRouteStopByIdAsync(int id)
         {
             ApiResponse apiResponse = new ApiResponse();

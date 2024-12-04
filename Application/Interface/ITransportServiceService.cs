@@ -15,5 +15,8 @@ namespace Application.Interface
         Task<ApiResponse> DeleteTransportServiceByIdAsync(int id);
         Task<ApiResponse> GetTransportServiceByIdAsync(int id);
         Task<ApiResponse> UpdateTransportServiceByIdAsync(TransportServiceUpdateRequest transportServiceUpdateRequest);
+        Task<ApiResponse> GetTransportServiceInternational();
+        Task<ApiResponse> GetTransportServiceDomestic();
+        Task<ApiResponse> GetTransportServiceLocal();
     }
 }

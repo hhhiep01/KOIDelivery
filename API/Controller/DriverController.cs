@@ -1,5 +1,6 @@
 ﻿using Application.Interface;
 using Application.Request.Driver;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace API.Controller
             _service = service;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost("CreateNewDriver")]
         public async Task<IActionResult> CreateDriverAsync(DriverRequest request)
         {
@@ -63,6 +65,13 @@ namespace API.Controller
         public async Task<IActionResult> DeleteDriverByIdAsync(int id)
         {
             var response = await _service.DeleteDriverByIdAsync(id);
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("GetDriverLocation/{driverId}")]
+        public async Task<IActionResult> GetDriverLocation(int driverId)
+        {
+            var response = await _service.GetCurrentDriverLocationAsync(driverId);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
     }

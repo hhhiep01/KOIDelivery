@@ -62,5 +62,23 @@ namespace API.Controller
             var resposne = await _service.DeleteTransportServiceByIdAsync(id);
             return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
+        [HttpGet("Local")]
+        public async Task<IActionResult> GetTransportServiceLocal()
+        {
+            var resposne = await _service.GetTransportServiceLocal();
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+        [HttpGet("Domestic")]
+        public async Task<IActionResult> GetTransportServiceDomestic()
+        {
+            var resposne = await _service.GetTransportServiceDomestic();
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+        [HttpGet("International")]
+        public async Task<IActionResult> GetTransportServiceInternational()
+        {
+            var resposne = await _service.GetTransportServiceInternational();
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
     }
 }

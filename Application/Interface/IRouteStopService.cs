@@ -14,6 +14,8 @@ namespace Application.Interface
 
         Task<ApiResponse> GetAllRouteStopAsync();
 
+        Task<ApiResponse> GetAllRouteStopByRouteIdAsync(int id);
+
         Task<ApiResponse> GetRouteStopByIdAsync(int id);
 
         Task<ApiResponse> UpdateRouteStopByIdAsync(UpdateRouteStopRequest request);

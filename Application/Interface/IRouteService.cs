@@ -17,6 +17,10 @@ namespace Application.Interface
 
         Task<ApiResponse> GetRouteByIdAsync(int id);
 
+        Task<ApiResponse> GetAllRouteByDriverIdAsync(int id);
+
         Task<ApiResponse> DeleteRouteByIdAsync(int id);
+
+        Task<ApiResponse> UpdateStopOrderAndStatusAsync(int RouteId);
     }
 }
