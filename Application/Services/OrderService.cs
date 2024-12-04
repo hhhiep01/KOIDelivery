@@ -20,14 +20,12 @@ namespace Application.Services
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private IClaimService _claim;
-        private readonly IGoogleMapService _googleMapService;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, IGoogleMapService googleMapService)
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _claim = claim;
-            _googleMapService = googleMapService;
         }
 
         public async Task<ApiResponse> CreateOrderAsync(OrderRequest request)
@@ -40,33 +38,15 @@ namespace Application.Services
                 if (transportService is null)
                 {
                     return new ApiResponse().SetNotFound("TransportService not found");
-                }                
+                }
+                if (request.PaymentMethod == PaymentMethodEnum.Cash)
+                {
+                    Payment payment = new Payment();
+                    payment.StatusPayment = StatusPayment.Pending;
+                }
                 var order = _mapper.Map<Order>(request);
                 await _unitOfWork.Orders.AddAsync(order);
                 order.AccountId = claim.Id;
-                var distanceResponse = await _googleMapService.GetDistanceAsync(request.FromAddress, request.ToAddress);
-                if (distanceResponse == null)
-                {
-                    return new ApiResponse().SetBadRequest("Unable to calculate distance.");
-                }
-
-                if (transportService.TransportType == TransportType.Local)
-                {
-                    var distanceData = Newtonsoft.Json.Linq.JObject.Parse(distanceResponse);
-                    var distanceText = distanceData["rows"][0]["elements"][0]["distance"]["text"].ToString();
-                    var distanceValue = double.Parse(distanceData["rows"][0]["elements"][0]["distance"]["value"].ToString());
-                    var distanceValueInKm = distanceValue / 1000;
-                    order.Distance = distanceValueInKm;
-                }
-
-                await _unitOfWork.SaveChangeAsync();
-                var orderAfterSave = await _unitOfWork.Orders.GetAsync(x => x.Id == order.Id);
-                if (order == null)
-                {
-                    return new ApiResponse().SetNotFound("Order not found");
-                }
-                //double totalPrice = await CaculateTotalPrice(orderAfterSave.Id);
-                //order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Add success");
             }
@@ -80,7 +60,7 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
-                var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
+                var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService));
                 var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
                 return new ApiResponse().SetOk(orderResponse);
             }
@@ -93,7 +73,6 @@ namespace Application.Services
         {
             try
             {
-
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == id);
                 if (order == null)
                 {
@@ -116,7 +95,7 @@ namespace Application.Services
             try
             {
                 var orders = await _unitOfWork.Orders.GetAllAsync(x => x.AccountId == claim.Id,
-                    x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
+                    x => x.Include(x => x.TransportService));
                 var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
                 return new ApiResponse().SetOk(orderResponse);
             }
@@ -143,7 +122,6 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
-
         public async Task<ApiResponse> UpdateStatusOrderToCompleted(int OrderId)
         {
             try
@@ -180,7 +158,6 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
-
         public async Task<ApiResponse> UpdateStatusOrderToPendingPickUp(int OrderId)
         {
             try
