@@ -153,7 +153,7 @@ namespace Application.Services
         
         public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
         {
-            double totalPrice = 0;
+            decimal totalPrice = 0;
             ApiResponse apiResponse = new ApiResponse();
             try
             {
@@ -178,7 +178,7 @@ namespace Application.Services
                     return apiResponse.SetOk(totalPrice);
                 }
 
-                var weightPrice = totalWeight * transportService.PricePerKg;
+                var weightPrice = (decimal)totalWeight * transportService.PricePerKg;
                 var transportServicePrice = transportService.TransportPrice;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
                 totalPrice = weightPrice + transportServicePrice + amountPrice;

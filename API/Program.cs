@@ -1,5 +1,6 @@
 using API.Middleware;
 using Application;
+using Application.Helper;
 using Application.Interface;
 using Application.MyMapper;
 using Application.Repository;
@@ -84,7 +85,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile).Assembly);
 builder.Services.AddSingleton(configuration!);
-builder.Services.AddHttpClient<IGoogleMapService, GoogleMapService>();
+builder.Services.AddHttpClient<IGeoLocationService>();
+builder.Services.AddScoped<IGeoLocationService, GeoLocationService>();
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
@@ -101,6 +103,7 @@ builder.Services.AddScoped<IRouteService, RouteService>();
 builder.Services.AddScoped<IRouteStopService, RouteStopService>();
 builder.Services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddSingleton<GeoHelper>();
 
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 

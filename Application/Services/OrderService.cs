@@ -63,25 +63,25 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
-            public async Task<ApiResponse> GetAllOrderAsync()
+        public async Task<ApiResponse> GetAllOrderAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
             {
-                ApiResponse apiResponse = new ApiResponse();
-                try
-                {
-                    var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
-                    var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
-                    return new ApiResponse().SetOk(orderResponse);
-                }
-                catch (Exception ex)
-                {
-                    return apiResponse.SetBadRequest(ex.Message);
-                }
+                var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService).Include(x => x.OrderFishs));
+                var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
+                return new ApiResponse().SetOk(orderResponse);
             }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
         public async Task<ApiResponse> DeleteOrderByIdAsync(int id)
         {
             try
-            {   
-                
+            {
+
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == id);
                 if (order == null)
                 {
@@ -190,7 +190,7 @@ namespace Application.Services
 
         public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
         {
-            double totalPrice = 0;
+            decimal totalPrice = 0;
             ApiResponse apiResponse = new ApiResponse();
             try
             {
@@ -209,13 +209,13 @@ namespace Application.Services
                 var totalWeight = order.OrderFishs.Sum(fish => fish.Weight);
                 var numberOfFishes = order.OrderFishs.Count;
                 //var totalDistance = 100;
-                if(numberOfFishes == 0)
+                if (numberOfFishes == 0)
                 {
                     totalPrice = 0;
                     return apiResponse.SetOk(totalPrice);
                 }
 
-                var weightPrice = totalWeight * transportService.PricePerKg;
+                var weightPrice = (decimal)totalWeight * transportService.PricePerKg;
                 var transportServicePrice = transportService.TransportPrice;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
                 totalPrice = weightPrice + transportServicePrice + amountPrice;
@@ -228,7 +228,7 @@ namespace Application.Services
             {
                 return apiResponse.SetBadRequest(ex.Message);
             }
-            
+
         }
 
     }

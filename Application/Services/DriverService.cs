@@ -5,6 +5,8 @@ using Application.Response;
 using Application.Response.Driver;
 using AutoMapper;
 using Domain.Entity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +21,9 @@ namespace Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private IClaimService _claim;
-        private readonly IGoogleMapService _service;
+        private readonly IGeoLocationService _service;
 
-        public DriverService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, IGoogleMapService service)
+        public DriverService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, IGeoLocationService service)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -139,7 +141,43 @@ namespace Application.Services
             }
         }
 
-        public async Task<ApiResponse> GetCurrentDriverLocationAsync(int driverId)
+        public string GetIpAddress(HttpContext context)
+        {
+            return context.Connection.RemoteIpAddress?.ToString();
+        }
+
+        //public async Task<ApiResponse> GetCurrentDriverLocationAsync(int driverId)
+        //{
+        //    ApiResponse apiResponse = new ApiResponse();
+        //    try
+        //    {
+        //        var driver = await _unitOfWork.Drivers.GetAsync(d => d.Id == driverId);
+        //        if (driver == null)
+        //        {
+        //            return apiResponse.SetNotFound("Driver not found");
+        //        }
+
+        //        if (string.IsNullOrEmpty(driver.CurrentProvince))
+        //        {
+        //            var currentLocation = await _service.GetCurrentLocationAsync();
+        //            if (string.IsNullOrEmpty(currentLocation))
+        //            {
+        //                return apiResponse.SetBadRequest("Unable to fetch current location");
+        //            }
+
+        //            driver.CurrentProvince = currentLocation;
+        //            await _unitOfWork.SaveChangeAsync();
+        //        }
+
+        //        return apiResponse.SetOk(new { currentProvince = driver.CurrentProvince });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return apiResponse.SetBadRequest(ex.Message);
+        //    }
+        //}
+
+        /*public async Task<ApiResponse> UpdateDriverLocationAsync(int driverId)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
@@ -150,17 +188,15 @@ namespace Application.Services
                     return apiResponse.SetNotFound("Driver not found");
                 }
 
-                if (string.IsNullOrEmpty(driver.CurrentProvince))
+                var currentLocation = await _service.GetCurrentLocationAsync();
+                if (string.IsNullOrEmpty(currentLocation))
                 {
-                    var currentLocation = await _service.GetCurrentLocationAsync();
-                    if (string.IsNullOrEmpty(currentLocation))
-                    {
-                        return apiResponse.SetBadRequest("Unable to fetch current location");
-                    }
-
-                    driver.CurrentProvince = currentLocation;
-                    await _unitOfWork.SaveChangeAsync();
+                    return apiResponse.SetBadRequest("Unable to fetch current location");
                 }
+
+                driver.CurrentProvince = currentLocation;
+                await _unitOfWork.SaveChangeAsync();
+
 
                 return apiResponse.SetOk(new { currentProvince = driver.CurrentProvince });
             }
@@ -168,6 +204,6 @@ namespace Application.Services
             {
                 return apiResponse.SetBadRequest(ex.Message);
             }
-        }
+        }*/
     }
 }
