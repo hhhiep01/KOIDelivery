@@ -1,4 +1,5 @@
-﻿using Application.Request.Feedback;
+﻿using Application.Interface;
+using Application.Request.Feedback;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,8 +9,8 @@ namespace API.Controller
     [ApiController]
     public class FeedbackController : ControllerBase
     {
-        public OrderService _service;
-        public FeedbackController(OrderService service)
+        public IOrderService _service;
+        public FeedbackController(IOrderService service)
         {
             _service = service;
         }

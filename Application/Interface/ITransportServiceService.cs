@@ -10,7 +10,9 @@ namespace Application.Interface
 {
     public interface ITransportServiceService
     {
-        Task<ApiResponse> AddTransportServiceAsync(TransportServiceRequest transportServiceRequest);
+        Task<ApiResponse> AddTransportLocalServiceAsync(TransportLocalServiceRequest transportServiceRequest);
+        Task<ApiResponse> AddTransportDomesticServiceAsync(TransportServiceRequest transportServiceRequest);
+        Task<ApiResponse> AddTransportInternaltionalServiceAsync(TransportServiceRequest transportServiceRequest);
         Task<ApiResponse> GetAllTransportServiceAsync();
         Task<ApiResponse> DeleteTransportServiceByIdAsync(int id);
         Task<ApiResponse> GetTransportServiceByIdAsync(int id);

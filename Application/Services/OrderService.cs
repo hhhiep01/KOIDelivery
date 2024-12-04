@@ -202,48 +202,5 @@ namespace Application.Services
                 return apiresponse.SetBadRequest(ex.Message);
             }
         }
-        public async Task<ApiResponse> CaculateTotalPrice(int OrderId)
-        {
-            decimal totalPrice = 0;
-            ApiResponse apiResponse = new ApiResponse();
-            try
-            {
-                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == OrderId,
-                                                              x => x.Include(x => x.TransportService)
-                                                                    .Include(x => x.OrderFishs));
-                if (order == null)
-                {
-                    apiResponse.SetNotFound("Order not found");
-                }
-                var transportService = order.TransportService;
-                if (transportService == null)
-                {
-                    throw new Exception("TransportService is not linked to the order");
-                }
-                var totalWeight = order.OrderFishs.Sum(fish => fish.Weight);
-                var numberOfFishes = order.OrderFishs.Count;
-                //var totalDistance = 100;
-                if (numberOfFishes == 0)
-                {
-                    totalPrice = 0;
-                    return apiResponse.SetOk(totalPrice);
-                }
-
-                var weightPrice = (decimal)totalWeight * transportService.PricePerKg;
-                var transportServicePrice = transportService.TransportPrice;
-                var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = (decimal)(weightPrice + transportServicePrice + amountPrice);
-                order.TotalPrice = totalPrice;
-                await _unitOfWork.SaveChangeAsync();
-                return apiResponse.SetOk(totalPrice);
-
-            }
-            catch (Exception ex)
-            {
-                return apiResponse.SetBadRequest(ex.Message);
-            }
-
-        }
-
     }
 }

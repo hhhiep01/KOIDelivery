@@ -16,8 +16,8 @@ namespace API.Controller
         {
             _service = service;
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateOrderAsync(TransportServiceRequest request)
+        [HttpPost("AddTransportLocalService")]
+        public async Task<IActionResult> AddTransportLocalServiceAsync(TransportLocalServiceRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +34,49 @@ namespace API.Controller
                     result = (object)null
                 });
             }
-            var result = await _service.AddTransportServiceAsync(request);
+            var result = await _service.AddTransportLocalServiceAsync(request);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPost("AddTransportDomesticService")]
+        public async Task<IActionResult> AddTransportDomesticServiceAsync(TransportServiceRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    statusCode = 400,
+                    isSuccess = false,
+                    errorMessage = string.Join("; ", errors),
+                    result = (object)null
+                });
+            }
+            var result = await _service.AddTransportDomesticServiceAsync(request);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPost("AddTransportInternationalService")]
+        public async Task<IActionResult> AddTransportInternarionalServiceAsync(TransportServiceRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    statusCode = 400,
+                    isSuccess = false,
+                    errorMessage = string.Join("; ", errors),
+                    result = (object)null
+                });
+            }
+            var result = await _service.AddTransportInternaltionalServiceAsync(request);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpGet]
