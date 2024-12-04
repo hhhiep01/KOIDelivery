@@ -252,7 +252,7 @@ namespace Application.Services
                     return apiResponse.SetOk(totalPrice);
                 }
 
-                var weightPrice = totalWeight * transportService.PricePerKg;
+                var weightPrice = (decimal)totalWeight * transportService.PricePerKg;
                 var transportServicePrice = transportService.TransportPrice;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
                 totalPrice = (decimal)(weightPrice + transportServicePrice + amountPrice);

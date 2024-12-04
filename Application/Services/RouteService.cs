@@ -66,13 +66,14 @@ namespace Application.Services
                     routeStop.RouteStatus = RouteStopStatus.Pending;
                     routeStop.RouteId = route.Id;
                     route.RouteStops.Add(routeStop);
-                    
-                    var order = await _unitOfWork.Orders.GetAsync(o => o.Id == stopRequest.OrderId);
-                    if (order != null)
-                    {
-                        order.OrderStatus = OrderStatusEnum.PendingPickUp;
-                    }
+
+                    //var order = await _unitOfWork.Orders.GetAsync(o => o.Id == stopRequest.OrderId);
+                    //if (order != null)
+                    //{
+                    //    order.OrderStatus = OrderStatusEnum.PendingPickUp;
+                    //}
                 }
+
                 await _unitOfWork.RouteStops.AddRangeAsync(route.RouteStops);
 
                 driver.Status = DriverStatus.OnRoute;
