@@ -48,7 +48,10 @@ namespace Application.MyMapper
 
             //TransportService
             CreateMap<TransportServiceRequest, TransportService>();
-            CreateMap<TransportService, TransportServiceResponse>()
+            CreateMap<TransportService, TransportServiceResponse>();
+            CreateMap<TransportLocalServiceRequest, TransportService>();
+            CreateMap<TransportService, TransportLocalServiceResponse>();
+
                  ;
 
             //Route
