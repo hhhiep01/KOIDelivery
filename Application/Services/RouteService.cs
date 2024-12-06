@@ -46,9 +46,28 @@ namespace Application.Services
                 {
                     return apiResponse.SetBadRequest("Driver is currently on delivery and cannot pick up orders");
                 }
-                if (driver.Status == DriverStatus.Inactive) 
+                if (driver.Status == DriverStatus.Inactive)
                 {
                     return apiResponse.SetBadRequest("Driver has retired and cannot be assigned");
+                }
+
+                var invalidOrder = false;
+                foreach (var stopRequest in routeStopRequests)
+                {
+                    var order = await _unitOfWork.Orders.GetAsync(o => o.Id == stopRequest.OrderId);
+                    if (order == null)
+                    {
+                        invalidOrder = true;
+                        break;
+                    }
+                    if (order.OrderStatus != OrderStatusEnum.Processing)
+                    {
+                        return apiResponse.SetBadRequest($"Order {order.Id} is not in 'Processing' status and cannot be included in a route.");
+                    }
+                }
+                if (invalidOrder)
+                {
+                    return apiResponse.SetBadRequest("One or more orders do not exist.");
                 }
 
                 var route = _mapper.Map<Route>(request);
@@ -67,11 +86,19 @@ namespace Application.Services
                     routeStop.RouteId = route.Id;
                     route.RouteStops.Add(routeStop);
 
+<<<<<<< HEAD
+                    var order = await _unitOfWork.Orders.GetAsync(o => o.Id == stopRequest.OrderId);
+                    if (order != null)
+                    {
+                        order.OrderStatus = OrderStatusEnum.PendingPickUp;
+                    }
+=======
                     //var order = await _unitOfWork.Orders.GetAsync(o => o.Id == stopRequest.OrderId);
                     //if (order != null)
                     //{
                     //    order.OrderStatus = OrderStatusEnum.PendingPickUp;
                     //}
+>>>>>>> 850e0a0a9d1e2d2420e540df4c8f0ec6a50c281b
                 }
 
                 await _unitOfWork.RouteStops.AddRangeAsync(route.RouteStops);
@@ -81,11 +108,12 @@ namespace Application.Services
 
                 return apiResponse.SetOk("Add Success");
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
+
 
         public async Task<ApiResponse> GetAllRouteAsync()
         {
@@ -159,8 +187,8 @@ namespace Application.Services
             {
                 var routeStops = await _unitOfWork.RouteStops.GetAllAsync(rs => rs.RouteId == RouteId);
                 if (routeStops == null) return new ApiResponse().SetNotFound("RouteStops not found for the given RouteId");
-                
-                
+
+
                 var route = await _unitOfWork.Routes.GetAsync(r => r.Id == RouteId);
                 if (route == null) return new ApiResponse().SetNotFound("Route not found");
                 route.DeliveryStartDate = DateTime.Now;
@@ -177,7 +205,7 @@ namespace Application.Services
 
                 foreach (var routeStop in routeStops)
                 {
-                    if (routeStop.StopOrder ==(int)StopOrder.First)
+                    if (routeStop.StopOrder == (int)StopOrder.First)
                     {
                         routeStop.StopOrder = 0;
                         routeStop.RouteStatus = RouteStopStatus.Completed;
@@ -189,7 +217,7 @@ namespace Application.Services
                     if (routeStop.StopOrder > 0) hasStopOrderGreaterThanZero = true;
                 }
 
-                if (!hasStopOrderGreaterThanZero) 
+                if (!hasStopOrderGreaterThanZero)
                 {
                     route.RouteStatus = (RouteStatus)3;
                     driver.Status = (DriverStatus)1;
