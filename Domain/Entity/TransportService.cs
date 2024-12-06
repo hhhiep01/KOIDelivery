@@ -12,10 +12,10 @@ namespace Domain.Entity
         public string Name { get; set; }
         public TransportType TransportType { get; set; }
         public string Description { get; set; }
-        public double? TransportPrice { get; set; }
-        public double? PricePerKm { get; set; }
-        public double PricePerKg { get; set; }
-        public double PricePerAmount { get; set; }
+        public decimal? TransportPrice { get; set; }
+        public decimal? PricePerKm { get; set; }
+        public decimal PricePerKg { get; set; }
+        public decimal PricePerAmount { get; set; }
         public string? FromProvince { get; set; } = string.Empty;
         public string? ToProvince { get; set; } = string.Empty;
 

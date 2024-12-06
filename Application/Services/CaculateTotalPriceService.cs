@@ -54,7 +54,7 @@ namespace Application.Services
                     totalPrice = 0;
                     return apiResponse.SetOk(totalPrice);
                 }
-                var totalKm = order.Distance;
+                var totalKm = (decimal)order.Distance;
                 var weightPrice = totalWeight * transportService.PricePerKg;
                 //var transportServicePrice = transportService.TransportPrice;
                 var kmPrice = totalKm * transportService.PricePerKm;

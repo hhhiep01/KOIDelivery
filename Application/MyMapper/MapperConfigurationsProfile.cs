@@ -23,6 +23,8 @@ using Application.Request.Feedback;
 using Application.Response.Feedback;
 using Application.Response.UserAccount;
 using Application.Response.Route;
+using Application.Request.Feedback;
+using Application.Response.Feedback;
 
 namespace Application.MyMapper
 {
@@ -34,8 +36,7 @@ namespace Application.MyMapper
             CreateMap<Order, OrderResponse>();
 
             CreateMap<Order, OrderResponse>()
-                .ForMember(dest => dest.OrderFishes, opt => opt.MapFrom(src => src.OrderFishs))
-                .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService));
+                .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService)); ;
             CreateMap<OrderFishRequest, OrderFish>();
             CreateMap<OrderFish, OrderFishResponse>();
 
@@ -47,18 +48,18 @@ namespace Application.MyMapper
 
             //TransportService
             CreateMap<TransportServiceRequest, TransportService>();
-            CreateMap<TransportService, TransportServiceResponse>()
+            CreateMap<TransportService, TransportServiceResponse>();
+            CreateMap<TransportLocalServiceRequest, TransportService>();
+            CreateMap<TransportService, TransportLocalServiceResponse>();
+
                  ;
 
             //Route
             CreateMap<RouteRequest, Route>();
-            CreateMap<RouteService, RouteResponse>();
-            CreateMap<Route, RouteResponse>();
 
             //RouteStop
             CreateMap<RouteStopRequest, RouteStop>();
             CreateMap<RouteStopService, RouteStopResponse>();
-            CreateMap<RouteStop, RouteStopResponse>();
 
             //Driver
             CreateMap<DriverRequest, Driver>();

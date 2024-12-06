@@ -54,12 +54,12 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("UpdateDriverById")]
+       /* [HttpPut("UpdateDriverById")]
         public async Task<IActionResult> UpdateDriverByIdAsync(UpdateDriverRequest request)
         {
             var response = await _service.UpdateDriverByIdAsync(request);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
-        }
+        }*/
 
         [HttpDelete("DeleteDriverById")]
         public async Task<IActionResult> DeleteDriverByIdAsync(int id)
@@ -68,11 +68,18 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        [HttpGet("GetDriverLocation/{driverId}")]
+        /*[HttpGet("GetDriverLocation/{driverId}")]
         public async Task<IActionResult> GetDriverLocation(int driverId)
         {
             var response = await _service.GetCurrentDriverLocationAsync(driverId);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
+
+        [HttpPut("UpdateDriverLocation/{driverId}")]
+        public async Task<IActionResult> UpdateDriverLocation(int driverId)
+        {
+            var response = await _service.UpdateDriverLocationAsync(driverId);
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }*/
     }
 }

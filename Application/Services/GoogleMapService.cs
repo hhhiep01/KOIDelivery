@@ -41,7 +41,7 @@ namespace Application.Services
             var apiKey = _config["GoogleMapAPI:Key"];
             string url = $"https://maps.gomaps.pro/maps/api/distancematrix/json?origins={Uri.EscapeDataString(origin)}&destinations={Uri.EscapeDataString(destination)}&key={apiKey}";
 
-            // Gửi yêu cầu GET
+            
             var response = await _httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)

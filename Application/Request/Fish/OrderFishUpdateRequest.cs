@@ -11,8 +11,8 @@ namespace Application.Request.Fish
         public int Id { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }
-        public float Weight { get; set; }
-        public float Length { get; set; }
+        public decimal Weight { get; set; }
+        public decimal Length { get; set; }
         public string FishImgURL { get; set; }
     }
 }

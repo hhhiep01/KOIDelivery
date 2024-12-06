@@ -91,5 +91,34 @@ namespace API.Controller
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }*/
 
+        [HttpPut("CreateFeedBackAsync")]
+        public async Task<IActionResult> CreateFeedBackAsync(FeedbackRequest feedback)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    isSuccess = false,
+                    errorMessage = string.Join(", ", errors),
+                    result = (object)null
+                });
+            }
+            var result = await _service.CreateFeedBackAsync(feedback);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllProccessingOrder")]
+        public async Task<IActionResult> GetAllProccessingOrderAsync()
+        {
+            var result = await _service.GetAllProccessingOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
     }
+
 }
+
