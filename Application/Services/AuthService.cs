@@ -1,6 +1,7 @@
 ﻿using Application.Interface;
 using Application.Request.UserAccount;
 using Application.Response;
+using Azure;
 using Domain;
 using Domain.Entity;
 using Microsoft.IdentityModel.Tokens;
@@ -29,62 +30,71 @@ namespace Application.Services
         public async Task<ApiResponse> RegisterAsync(UserRegisterRequest userRequest)
         {
             ApiResponse response = new ApiResponse();
-            var checkPassword = CheckUserPassword(userRequest);
-            if (!checkPassword)
+            try
             {
-                response.SetBadRequest(message: "Confirm password is wrong !");
+
+                var checkPassword = CheckUserPassword(userRequest);
+                if (!checkPassword)
+                {
+                    response.SetBadRequest(message: "Confirm password is wrong !");
+                    return response;
+                }
+                var existingUser = await _unitOfWork.UserAccounts.GetAsync(x => x.Email == userRequest.Email);
+                if (existingUser != null)
+                {
+                    response.SetBadRequest(message: "The email address is already register");
+                    return response;
+                }
+                // Create password hash and save user details
+                var pass = CreatePasswordHash(userRequest.Password);
+                UserAccount user = new UserAccount()
+                {
+                    //UserName = userRequest.UserName,
+                    PasswordHash = pass.PasswordHash,
+                    PasswordSalt = pass.PasswordSalt,
+                    Email = userRequest.Email,
+                    FirstName = userRequest.FistName,
+                    LastName = userRequest.LastName,
+                    Role = userRequest.Role,
+                    IsEmailVerified = false // Initially, email is not verified
+                };
+
+                await _unitOfWork.UserAccounts.AddAsync(user);
+                await _unitOfWork.SaveChangeAsync();
+
+                // Generate verification code
+                var verificationCode = GenerateVerificationCode(); // Method to generate the code
+                var emailVerification = new EmailVerification
+                {
+                    UserId = user.Id,
+                    VerificationCode = verificationCode,
+                    ExpiresAt = DateTime.Now.AddMinutes(30), // Code valid for 30 minutes
+                    IsUsed = false
+                };
+
+                // Save verification code to the database
+                await _unitOfWork.EmailVerifications.AddAsync(emailVerification);
+                await _unitOfWork.SaveChangeAsync();
+
+                // Prepare email content
+                string emailContent = $"Dear {user.FirstName},<br/>Please use the following verification code to validate your email: <strong>{verificationCode}</strong>.<br/>The code will expire in 30 minutes.";
+
+                // Send validation email
+                var emailResponse = await _emailService.SendValidationEmail(user.Email, emailContent);
+                if (!emailResponse.IsSuccess)
+                {
+                    response.SetBadRequest("Failed to send verification email.");
+                    return response;
+                }
+
+                response.SetOk(user.Id);
                 return response;
             }
-            var existingUser = await _unitOfWork.UserAccounts.GetAsync(x => x.Email == userRequest.Email);
-            if (existingUser != null)
+            catch (Exception ex)
             {
-                response.SetBadRequest(message: "The email address is already register");
-                return response;
-            }
-            // Create password hash and save user details
-            var pass = CreatePasswordHash(userRequest.Password);
-            UserAccount user = new UserAccount()
-            {
-                //UserName = userRequest.UserName,
-                PasswordHash = pass.PasswordHash,
-                PasswordSalt = pass.PasswordSalt,
-                Email = userRequest.Email,
-                FirstName = userRequest.FistName,
-                LastName = userRequest.LastName,
-                Role = userRequest.Role,
-                IsEmailVerified = false // Initially, email is not verified
-            };
-
-            await _unitOfWork.UserAccounts.AddAsync(user);
-            await _unitOfWork.SaveChangeAsync();
-
-            // Generate verification code
-            var verificationCode = GenerateVerificationCode(); // Method to generate the code
-            var emailVerification = new EmailVerification
-            {
-                UserId = user.Id,
-                VerificationCode = verificationCode,
-                ExpiresAt = DateTime.Now.AddMinutes(30), // Code valid for 30 minutes
-                IsUsed = false
-            };
-
-            // Save verification code to the database
-            await _unitOfWork.EmailVerifications.AddAsync(emailVerification);
-            await _unitOfWork.SaveChangeAsync();
-
-            // Prepare email content
-            string emailContent = $"Dear {user.FirstName},<br/>Please use the following verification code to validate your email: <strong>{verificationCode}</strong>.<br/>The code will expire in 30 minutes.";
-
-            // Send validation email
-            var emailResponse = await _emailService.SendValidationEmail(user.Email, emailContent);
-            if (!emailResponse.IsSuccess)
-            {
-                response.SetBadRequest("Failed to send verification email.");
-                return response;
+                return response.SetBadRequest($"Error: {ex.Message}. Details: {ex.InnerException?.Message}");
             }
 
-            response.SetOk(user.Id);
-            return response;
         }
         public async Task<ApiResponse> VerifyEmailAsync(int userId, string verificationCode)
         {
