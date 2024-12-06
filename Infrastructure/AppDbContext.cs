@@ -16,7 +16,7 @@ namespace Infrastructure
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=koifarmshopserver.database.windows.net;Initial Catalog=KoiFarmDeliverySystem;Persist Security Info=True;User ID=Huydqse151428;Password=Huy123456789;Encrypt=True;Trust Server Certificate=True");
+            //optionsBuilder.UseNpgsql("Host=172.17.0.2; Port=5431; Database=koidelivery; Username=postgres; Password=matkhau;Include Error Detail=True;TrustServerCertificate=True");
         }
         public DbSet<UserAccount> Users { get; set; }
         public DbSet<EmailVerification> EmailVerifications { get; set; }

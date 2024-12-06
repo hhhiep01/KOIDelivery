@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    container_name: koidelivery
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: matkhau
+      POSTGRES_DB: koidelivery
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: myemail@admin.com
+      PGADMIN_DEFAULT_PASSWORD: matkhau
+    ports:
+      - "5050:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
