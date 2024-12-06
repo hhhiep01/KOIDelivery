@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: koidelivery
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -21,8 +23,16 @@ services:
       PGADMIN_DEFAULT_PASSWORD: matkhau
     ports:
       - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
     networks:
       - app-network
+
+volumes:
+  pgdata:
+    driver: local
+  pgadmin-data:
+    driver: local
 
 networks:
   app-network:
