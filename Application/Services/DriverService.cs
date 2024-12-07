@@ -21,9 +21,9 @@ namespace Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private IClaimService _claim;
-        private readonly IGeoLocationService _service;
+        private readonly ILocationService _service;
 
-        public DriverService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, IGeoLocationService service)
+        public DriverService(IUnitOfWork unitOfWork, IMapper mapper, IClaimService claim, ILocationService service)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

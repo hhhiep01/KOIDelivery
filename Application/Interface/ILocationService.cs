@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interface
 {
-    public interface IGeoLocationService
+    public interface ILocationService
     {
-        //GeoLocation GetLocationFromIp(string ipAddress);
-        Task<string> GetGeoInfo();
+        void ProcessLocation(double latitude, double longitude);
     }
 }

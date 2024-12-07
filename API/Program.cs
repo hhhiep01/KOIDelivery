@@ -87,8 +87,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile).Assembly);
 builder.Services.AddSingleton(configuration!);
-builder.Services.AddHttpClient<IGeoLocationService>();
-builder.Services.AddScoped<IGeoLocationService, GeoLocationService>();
+builder.Services.AddHttpClient<ILocationService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();

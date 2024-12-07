@@ -1,5 +1,6 @@
 ﻿using Application.Helper;
 using Application.Interface;
+using Application.Request.Location;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,42 +10,27 @@ namespace API.Controller
     [ApiController]
     public class LocationController : ControllerBase
     {
-        private readonly IGeoLocationService _service;
+        private readonly ILocationService _service;
 
-        public LocationController(IGeoLocationService service)
+        public LocationController(ILocationService service)
         {
             _service = service;
         }
 
-        /*[HttpGet]
-        public IActionResult GetLocation()
+        [HttpPost]
+        public IActionResult ReceiveLocation([FromBody] LocationRequest request)
         {
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-
-            if (ipAddress == null)
+            if (request == null || request.Latitude == 0 || request.Longitude == 0) 
             {
-                return BadRequest("Khong the lay dia chi IP");
+                return BadRequest(new
+                {
+                    message = "Invalid location data"
+                });
             }
 
-            var location = _service.GetLocationFromIp(ipAddress);
-            if (location == null)
-            {
-                return NotFound("Khong the xac dinh vi tri");
-            }
+            _service.ProcessLocation(request.Latitude, request.Longitude);
 
-            return Ok(location);
-        }*/
-
-        [HttpGet("Geo")]
-        public async Task<IActionResult> GetLocation()
-        {
-            var result = await _service.GetGeoInfo();
-            if (result == null) 
-            {
-                return NotFound("Khong the lay thong tin Geo");
-            }
-
-            return Ok(result);
+            return Ok(new { message = "Location received", request});
         }
     }
 }
