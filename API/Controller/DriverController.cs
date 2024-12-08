@@ -47,7 +47,7 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        [HttpGet("GetDriverBy{id}")]
+        [HttpGet("GetDriverBy/{id}")]
         public async Task<IActionResult> GetDriverByIdAsync(int id)
         {
             var response = await _service.GetDriverByIdAsync(id);

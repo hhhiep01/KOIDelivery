@@ -17,8 +17,8 @@ namespace API.Controller
             _service = service;
         }
 
-        [HttpPost]
-        public IActionResult ReceiveLocation([FromBody] LocationRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateLocation(int id, [FromBody] LocationRequest request)
         {
             if (request == null || request.Latitude == 0 || request.Longitude == 0) 
             {
@@ -27,10 +27,10 @@ namespace API.Controller
                     message = "Invalid location data"
                 });
             }
+            var result = await _service.UpdateLocationAsync(id, request);
+            _service.ProcessLocation(request);
 
-            _service.ProcessLocation(request.Latitude, request.Longitude);
-
-            return Ok(new { message = "Location received", request});
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }
 }

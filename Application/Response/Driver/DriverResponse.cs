@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,9 @@ namespace Application.Response.Driver
 {
     public class DriverResponse
     {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        //public string? CurrentProvince { get; set; }
+        public DriverStatus? Status { get; set; }
     }
 }
