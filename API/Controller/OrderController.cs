@@ -73,9 +73,9 @@ namespace API.Controller
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPut("Update-Order-Status-Canceled")]
-        public async Task<IActionResult> UpdateStatusOrderToCanceled(int OrderId)
+        public async Task<IActionResult> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
         {
-            var result = await _service.UpdateStatusOrderToCanceled(OrderId);
+            var result = await _service.UpdateStatusOrderToCanceled(updateOrderToCancelRequest);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPut("Update-Order-Status-Completed")]
