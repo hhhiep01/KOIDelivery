@@ -13,5 +13,7 @@ namespace Application.Interface
         Task<ApiResponse> RegisterAsync(UserRegisterRequest userRequest);
         Task<ApiResponse> LoginAsync(LoginRequest request);
         Task<ApiResponse> VerifyEmailAsync(int userId, string verificationCode);
+
+        Task<ApiResponse> LoginForDriverAsync(LoginRequest request);
     }
 }
