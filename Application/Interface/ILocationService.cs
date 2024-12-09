@@ -1,4 +1,6 @@
-﻿using Application.Services;
+﻿using Application.Request.Location;
+using Application.Response;
+using Application.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,7 @@ namespace Application.Interface
 {
     public interface ILocationService
     {
-        void ProcessLocation(double latitude, double longitude);
+        void ProcessLocation(LocationRequest request);
+        Task<ApiResponse> UpdateLocationAsync(int id, LocationRequest request);
     }
 }

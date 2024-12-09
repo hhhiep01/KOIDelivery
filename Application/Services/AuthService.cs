@@ -166,6 +166,38 @@ namespace Application.Services
             return response;
         }
 
+        public async Task<ApiResponse> LoginForDriverAsync(LoginRequest request)
+        {
+            ApiResponse response = new ApiResponse();
+            var account = await _unitOfWork.UserAccounts.GetAsync(u => u.Email == request.UserEmail);
+            if (account == null || !VerifyPasswordHash(request.Password, account.PasswordHash, account.PasswordSalt))
+            {
+                response.SetBadRequest(message: "Email or password is wrong");
+                return response;
+            }
+
+            if (account.IsEmailVerified == false)
+            {
+                response.SetBadRequest(message: "Please Verify your email");
+                return response;
+            }
+            
+            if (account.Role != Role.DeliveringStaff)
+            {
+                response.SetBadRequest(message: "Only drivers can log in here");
+                return response;
+            }
+
+            if (!account.DriverId.HasValue)
+            {
+                response.SetBadRequest(message: "This account is not linked to a driver profile");
+                return response;
+            }
+
+            response.SetOk(CreateTokenForDriver(account));
+            return response;
+        }
+
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
@@ -175,7 +207,39 @@ namespace Application.Services
             }
         }
 
+        private string CreateTokenForDriver(UserAccount user)
+        {
+            if (!user.DriverId.HasValue) 
+            {
+                throw new InvalidOperationException("DriverId is required to create a token for a driver");
+            }
 
+            var fullName = user.FirstName + " " + user.LastName;
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("Role", user.Role.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim( "Email" , user.Email!),
+                new Claim("UserId", user.Id.ToString()),
+                new Claim("FullName", fullName),
+                new Claim(ClaimTypes.Name, fullName),
+                new Claim("DriverId", user.DriverId.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                 _appSettings!.SecretToken.Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
+        }
 
         private string CreateToken(UserAccount user)
         {

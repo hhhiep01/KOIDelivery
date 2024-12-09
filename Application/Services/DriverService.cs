@@ -89,7 +89,7 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
-                var driver = await _unitOfWork.Drivers.GetAsync(x => x.Id == id);
+                var driver = await _unitOfWork.Drivers.GetAsync(d => d.Id == id);
                 if (driver == null)
                 {
                     return apiResponse.SetBadRequest("Can not found driver id : " + id);

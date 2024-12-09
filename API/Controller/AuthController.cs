@@ -43,6 +43,14 @@ namespace API.Controller
             var result = await _service.LoginAsync(user);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+
+        [HttpPost("loginDriver")]
+        public async Task<IActionResult> LoginForDriver(LoginRequest user)
+        {
+            var result = await _service.LoginForDriverAsync(user);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
         [HttpPost("Verification")]
         public async Task<IActionResult> Verification(VerificationEmailRequest request)
         {

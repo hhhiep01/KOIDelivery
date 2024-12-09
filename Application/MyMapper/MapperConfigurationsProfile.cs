@@ -64,6 +64,7 @@ namespace Application.MyMapper
             //Driver
             CreateMap<DriverRequest, Driver>();
             CreateMap<DriverService, DriverResponse>();
+            CreateMap<Driver, DriverResponse>();
 
             CreateMap<FeedbackRequest, Order>();
             CreateMap<Order, FeedbackResponse>();
