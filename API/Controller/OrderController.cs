@@ -118,6 +118,30 @@ namespace API.Controller
             var result = await _service.GetAllProccessingOrderAsync();
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetAllPendingPickUpOrderAsync")]
+        public async Task<IActionResult> GetAllPendingPickUpOrderAsync()
+        {
+            var result = await _service.GetAllPendingPickUpOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllDeliveringOrderAsync")]
+        public async Task<IActionResult> GetAllDeliveringOrderAsync()
+        {
+            var result = await _service.GetAllDeliveringOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllCompletedOrderAsync")]
+        public async Task<IActionResult> GetAllCompletedOrderAsync()
+        {
+            var result = await _service.GetAllCompletedOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllCanceledOrderAsync")]
+        public async Task<IActionResult> GetAllCanceledOrderAsync()
+        {
+            var result = await _service.GetAllCanceledOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
     }
 
 }
