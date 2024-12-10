@@ -85,6 +85,29 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
+        public async Task<ApiResponse> GetOrderByIdAsyncAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == id, x => x.Include(x => x.TransportService)
+                                                                                 .Include(x => x.OrderFishs)
+                                                                                 .ThenInclude(of => of.FishQualifications)
+                                                                                 .Include(x => x.OrderFishs)
+                                                                                 .ThenInclude(of => of.FishHealths));
+                if (order == null)
+                {
+                    return new ApiResponse().SetNotFound("Order not found");
+                }
+
+                var orderResponse = _mapper.Map<OrderResponse>(order);
+                return new ApiResponse().SetOk(orderResponse);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
         public async Task<ApiResponse> DeleteOrderByIdAsync(int id)
         {
             try

@@ -59,7 +59,7 @@ namespace Application.Services
                 //var transportServicePrice = transportService.TransportPrice;
                 var kmPrice = totalKm * transportService.PricePerKm;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = (decimal)(weightPrice + kmPrice + amountPrice);
+                totalPrice = Math.Round((decimal)(weightPrice + kmPrice + amountPrice), 0);
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);
@@ -106,7 +106,7 @@ namespace Application.Services
                 var transportServicePrice = transportService.TransportPrice;
                 //var kmPrice = totalKm * transportService.PricePerKm;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = (decimal)(weightPrice + transportServicePrice + amountPrice);
+                totalPrice = Math.Round((decimal)(weightPrice + transportServicePrice + amountPrice), 0);
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);
@@ -153,7 +153,7 @@ namespace Application.Services
                 var transportServicePrice = transportService.TransportPrice;
                 //var kmPrice = totalKm * transportService.PricePerKm;
                 var amountPrice = numberOfFishes * transportService.PricePerAmount;
-                totalPrice = (decimal)(weightPrice + transportServicePrice + amountPrice);
+                totalPrice = Math.Round((decimal)(weightPrice + transportServicePrice + amountPrice), 0);
                 order.TotalPrice = totalPrice;
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(totalPrice);
