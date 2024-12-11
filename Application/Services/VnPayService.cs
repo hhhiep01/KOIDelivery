@@ -130,7 +130,7 @@ namespace Application.Services
                             }
 
                             await _unitOfWork.SaveChangeAsync();
-                            var redirectUrl = "http://localhost:5173/it-jobs?status=success";
+                            var redirectUrl = "http://localhost:3000/paymentfail";
                             return apiResponse.SetOk(redirectUrl);
                         }
                         else

@@ -32,12 +32,12 @@ namespace API.Controller
             if (response.IsSuccess)
             {
                 // Extract the redirect URL from the response and pass it as a query parameter to the FE
-                var redirectUrl = "https://jobsearch-zeta-nine.vercel.app/it-jobs?status=success";
+                var redirectUrl = "http://localhost:3000/paymentsuccess";
                 return Redirect(redirectUrl);
             }
             else
             {
-                var redirectUrl = "https://jobsearch-zeta-nine.vercel.app/it-jobs?status=failure";
+                var redirectUrl = "http://localhost:3000/paymentfail";
                 return Redirect(redirectUrl);
             }
         }
