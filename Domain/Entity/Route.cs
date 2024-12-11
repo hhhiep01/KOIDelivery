@@ -13,11 +13,9 @@ namespace Domain.Entity
         public DateTime CreateAt { get; set; } 
         public string Notes { get; set; } 
         public DateTime DeliveryStartDate { get; set; }
-        //
         public Driver Driver { get; set; }
         public int? DriverId { get; set; }
         public List<RouteStop> RouteStops { get; set; }
-        
     }
     public enum RouteStatus
     {

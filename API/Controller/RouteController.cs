@@ -46,10 +46,17 @@ namespace API.Controller
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        [HttpGet("GetRouteByDriver{driverId}")]
+        [HttpGet("GetRouteByDriver/{driverId}")]
         public async Task<IActionResult> GetAllRouteByDriverIdAsync(int driverId)
         {
             var response = await _service.GetAllRouteByDriverIdAsync(driverId);
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("GetAllRouteWithRouteStatusBy/{driverId}")]
+        public async Task<IActionResult> GetAllRouteWithRouteStatusByDriverIdAsync(int driverId)
+        {
+            var response = await _service.GetAllRouteWithRouteStatusByDriverIdAsync(driverId);
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 

@@ -73,9 +73,9 @@ namespace API.Controller
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPut("Update-Order-Status-Canceled")]
-        public async Task<IActionResult> UpdateStatusOrderToCanceled(int OrderId)
+        public async Task<IActionResult> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
         {
-            var result = await _service.UpdateStatusOrderToCanceled(OrderId);
+            var result = await _service.UpdateStatusOrderToCanceled(updateOrderToCancelRequest);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPut("Update-Order-Status-Completed")]
@@ -116,6 +116,30 @@ namespace API.Controller
         public async Task<IActionResult> GetAllProccessingOrderAsync()
         {
             var result = await _service.GetAllProccessingOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllPendingPickUpOrderAsync")]
+        public async Task<IActionResult> GetAllPendingPickUpOrderAsync()
+        {
+            var result = await _service.GetAllPendingPickUpOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllDeliveringOrderAsync")]
+        public async Task<IActionResult> GetAllDeliveringOrderAsync()
+        {
+            var result = await _service.GetAllDeliveringOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllCompletedOrderAsync")]
+        public async Task<IActionResult> GetAllCompletedOrderAsync()
+        {
+            var result = await _service.GetAllCompletedOrderAsync();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetAllCanceledOrderAsync")]
+        public async Task<IActionResult> GetAllCanceledOrderAsync()
+        {
+            var result = await _service.GetAllCanceledOrderAsync();
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

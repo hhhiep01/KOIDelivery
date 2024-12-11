@@ -152,16 +152,17 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
-        public async Task<ApiResponse> UpdateStatusOrderToCanceled(int OrderId)
+        public async Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
         {
             try
             {
-                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == OrderId);
+                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == updateOrderToCancelRequest.OrderId);
                 if (order == null)
                 {
                     return new ApiResponse().SetNotFound("Order not found");
                 }
                 order.OrderStatus = OrderStatusEnum.Canceled;
+                order.ReasonToCancel = updateOrderToCancelRequest.ReasonToCancel;
                 await _unitOfWork.SaveChangeAsync();
                 return new ApiResponse().SetOk(order);
             }
@@ -222,6 +223,62 @@ namespace Application.Services
                 var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Processing);
                 var orderProccessingList = _mapper.Map<List<OrderResponse>>(order);
                 return new ApiResponse().SetOk(orderProccessingList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetAllPendingPickUpOrderAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.PendingPickUp);
+                var orderPendingPickUpList = _mapper.Map<List<OrderResponse>>(order);
+                return new ApiResponse().SetOk(orderPendingPickUpList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetAllDeliveringOrderAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Delivering);
+                var orderDeliveringList = _mapper.Map<List<OrderResponse>>(order);
+                return new ApiResponse().SetOk(orderDeliveringList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetAllCompletedOrderAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Completed);
+                var orderCompletedList = _mapper.Map<List<OrderResponse>>(order);
+                return new ApiResponse().SetOk(orderCompletedList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetAllCanceledOrderAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Canceled);
+                var orderCanceledList = _mapper.Map<List<OrderResponse>>(order);
+                return new ApiResponse().SetOk(orderCanceledList);
             }
             catch (Exception ex)
             {

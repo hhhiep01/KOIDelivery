@@ -52,14 +52,16 @@ namespace Application.MyMapper
             CreateMap<TransportLocalServiceRequest, TransportService>();
             CreateMap<TransportService, TransportLocalServiceResponse>();
 
-                 ;
+                 
 
             //Route
             CreateMap<RouteRequest, Route>();
+            CreateMap<Route, RouteResponse>();
 
             //RouteStop
             CreateMap<RouteStopRequest, RouteStop>();
             CreateMap<RouteStopService, RouteStopResponse>();
+            CreateMap<RouteStop, RouteStopResponse>();
 
             //Driver
             CreateMap<DriverRequest, Driver>();
