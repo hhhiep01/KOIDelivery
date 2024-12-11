@@ -180,12 +180,12 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
-        public async Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
+        
         public async Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
         {
             try
             {
-                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == updateOrderToCancelRequest.OrderId);
+               
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == updateOrderToCancelRequest.OrderId);
                 if (order == null)
                 {
