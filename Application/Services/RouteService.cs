@@ -130,10 +130,12 @@ namespace Application.Services
             try
             {
                 var route = await _unitOfWork.Routes.GetAsync(x => x.Id == id);
+                var routeStops = route?.RouteStops;
                 if (route is null)
                 {
                     return apiResponse.SetBadRequest("Can not found Route Id : " + id);
                 }
+
                 var response = _mapper.Map<RouteResponse>(route);
                 return new ApiResponse().SetOk(response);
             }
@@ -142,12 +144,35 @@ namespace Application.Services
                 return apiResponse.SetBadRequest(ex.Message);
             }
         }
+        
         public async Task<ApiResponse> GetAllRouteByDriverIdAsync(int id)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
             {
                 var routes = await _unitOfWork.Routes.GetAllAsync(x => x.DriverId == id, include: x => x.Include(r => r.RouteStops));
+
+                var responseList = _mapper.Map<List<RouteResponse>>(routes);
+                return apiResponse.SetOk(responseList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse> GetAllRouteWithRouteStatusByDriverIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var routes = await _unitOfWork.Routes.GetAllAsync(x => x.DriverId == id && (x.RouteStatus == RouteStatus.Pending || x.RouteStatus == RouteStatus.InProgress)
+                , x => x.Include(r => r.RouteStops));
+
+                if (routes.Count == 0)
+                {
+                    
+                }
 
                 var responseList = _mapper.Map<List<RouteResponse>>(routes);
                 return apiResponse.SetOk(responseList);
@@ -180,12 +205,12 @@ namespace Application.Services
             try
             {
                 var routeStops = await _unitOfWork.RouteStops.GetAllAsync(rs => rs.RouteId == RouteId);
-                if (routeStops == null) return new ApiResponse().SetNotFound("RouteStops not found for the given RouteId");
+                if (routeStops == null || !routeStops.Any()) return new ApiResponse().SetNotFound("RouteStops not found for the given RouteId");
 
 
                 var route = await _unitOfWork.Routes.GetAsync(r => r.Id == RouteId);
                 if (route == null) return new ApiResponse().SetNotFound("Route not found");
-                route.DeliveryStartDate = DateTime.Now;
+                //route.DeliveryStartDate = DateTime.Now;
 
                 var orderIds = routeStops.Select(rs => rs.RouteId).Distinct();
                 var orders = await _unitOfWork.Orders.GetAllAsync(o => orderIds.Contains(o.Id));
@@ -195,11 +220,18 @@ namespace Application.Services
                 var driver = await _unitOfWork.Drivers.GetAsync(d => d.Id == driverId);
                 if (driver == null) return new ApiResponse().SetNotFound("Driver not found for the given Route");
 
-                bool hasStopOrderGreaterThanZero = false;
-
-                foreach (var routeStop in routeStops)
+                if (route.RouteStatus == RouteStatus.Pending)
                 {
-                    if (routeStop.StopOrder == (int)StopOrder.First)
+                    route.RouteStatus = RouteStatus.InProgress;
+                    route.DeliveryStartDate = DateTime.Now;
+                }
+
+                bool hasCompletedStops = routeStops.Any(rs => rs.StopOrder == 0);
+                bool hasPendingStops = false;
+
+                foreach (var routeStop in routeStops.OrderBy(rs => rs.StopOrder))
+                {
+                    if (routeStop.StopOrder == 1)
                     {
                         routeStop.StopOrder = 0;
                         routeStop.RouteStatus = RouteStopStatus.Completed;
@@ -207,15 +239,25 @@ namespace Application.Services
                     else if (routeStop.StopOrder > 1)
                     {
                         routeStop.StopOrder -= 1;
+                        hasPendingStops = true;
                     }
-                    if (routeStop.StopOrder > 0) hasStopOrderGreaterThanZero = true;
                 }
 
-                if (!hasStopOrderGreaterThanZero)
+                if (hasPendingStops)
                 {
-                    route.RouteStatus = (RouteStatus)3;
-                    driver.Status = (DriverStatus)1;
+                    if (route.RouteStatus == RouteStatus.Pending && !hasCompletedStops)
+                    {
+                        route.RouteStatus = RouteStatus.InProgress;
+                        route.DeliveryStartDate = DateTime.Now;
+                    }
                 }
+                else
+                {
+                    route.RouteStatus = RouteStatus.Completed;
+                    driver.Status = DriverStatus.Available;
+                }
+
+                await _unitOfWork.SaveChangeAsync();
 
                 var routeResponse = new RouteResponse()
                 {
@@ -225,9 +267,10 @@ namespace Application.Services
                     {
                         Id = rs.Id,
                         StopOrder = rs.StopOrder,
+                        RouteStopStatus = rs.RouteStatus
                     }).ToList(),
                 };
-                await _unitOfWork.SaveChangeAsync();
+
                 return new ApiResponse().SetOk("Update successfully");
             }
             catch (Exception ex)

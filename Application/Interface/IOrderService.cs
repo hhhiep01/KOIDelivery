@@ -18,9 +18,14 @@ namespace Application.Interface
         Task<ApiResponse> UpdateStatusOrderToDelivering(int OrderId);
         Task<ApiResponse> UpdateStatusOrderToCompleted(int OrderId);
         Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest);
+        Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest);
         Task<ApiResponse> UpdateStatusOrderToPendingPickUp(int OrderId);
         Task<ApiResponse> CreateFeedBackAsync(FeedbackRequest request);
         Task<ApiResponse> GetAllProccessingOrderAsync();
+        Task<ApiResponse> GetAllPendingPickUpOrderAsync();
+        Task<ApiResponse> GetAllDeliveringOrderAsync();
+        Task<ApiResponse> GetAllCompletedOrderAsync();
+        Task<ApiResponse> GetAllCanceledOrderAsync();
         Task<ApiResponse> GetAllPendingPickUpOrderAsync();
         Task<ApiResponse> GetAllDeliveringOrderAsync();
         Task<ApiResponse> GetAllCompletedOrderAsync();

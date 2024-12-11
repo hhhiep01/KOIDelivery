@@ -181,15 +181,18 @@ namespace Application.Services
             }
         }
         public async Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
+        public async Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
         {
             try
             {
+                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == updateOrderToCancelRequest.OrderId);
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == updateOrderToCancelRequest.OrderId);
                 if (order == null)
                 {
                     return new ApiResponse().SetNotFound("Order not found");
                 }
                 order.OrderStatus = OrderStatusEnum.Canceled;
+                order.ReasonToCancel = updateOrderToCancelRequest.ReasonToCancel;
                 order.ReasonToCancel = updateOrderToCancelRequest.ReasonToCancel;
                 await _unitOfWork.SaveChangeAsync();
                 return new ApiResponse().SetOk(order);

@@ -12,5 +12,7 @@ namespace Application.Request.RouteStop
         public int StopOrder { get; set; }
         public string Address { get; set; }
         public int OrderId { get; set; }
+
+        public string RouteStopType { get; set; }
     }
 }

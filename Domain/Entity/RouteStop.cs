@@ -12,6 +12,8 @@ namespace Domain.Entity
         public int StopOrder { get; set; } 
         public string Address { get; set; } 
         public RouteStopStatus RouteStatus { get; set; }
+
+        public string RouteStopType { get; set; }
         public Route Route { get; set; }
         public int RouteId { get; set; }
         public Order Order { get; set; }
