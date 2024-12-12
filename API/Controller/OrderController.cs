@@ -148,6 +148,18 @@ namespace API.Controller
             var result = await _service.GetAllCanceledOrderAsync();
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpPut("UpdateStatusPaymentToVnPayByOrderIdAsync")]
+        public async Task<IActionResult> UpdateStatusPaymentToVnPayByOrderIdAsync(int OrderId)
+        {
+            var result = await _service.UpdateStatusPaymentToVnPayByOrderIdAsync(OrderId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPut("UpdateStatusPaymentToCashByOrderIdAsync")]
+        public async Task<IActionResult> UpdateStatusPaymentToCashByOrderIdAsync(int OrderId)
+        {
+            var result = await _service.UpdateStatusPaymentToCashByOrderIdAsync(OrderId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
     }
 
 }

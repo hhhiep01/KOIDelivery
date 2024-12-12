@@ -26,5 +26,7 @@ namespace Application.Interface
         Task<ApiResponse> GetAllCompletedOrderAsync();
         Task<ApiResponse> GetAllCanceledOrderAsync();
         Task<ApiResponse> GetOrderByIdAsyncAsync(int id);
+        Task<ApiResponse> UpdateStatusPaymentToCashByOrderIdAsync(int orderId);
+        Task<ApiResponse> UpdateStatusPaymentToVnPayByOrderIdAsync(int orderId);
     }
 }

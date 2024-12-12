@@ -25,6 +25,7 @@ using Application.Response.UserAccount;
 using Application.Response.Route;
 using Application.Request.Feedback;
 using Application.Response.Feedback;
+using Application.Request.User;
 
 namespace Application.MyMapper
 {
@@ -74,8 +75,9 @@ namespace Application.MyMapper
             CreateMap<Order, FeedbackResponse>();
 
             //UserAccount
-            CreateMap<UserProfileResponse, UserAccount>();
-
+            //CreateMap<UserProfileResponse, UserAccount>();
+            CreateMap<UpdateUserRequest, UserAccount>();
+            CreateMap<UserAccount, UserProfileResponse>();
         }
     }
 }
