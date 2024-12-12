@@ -76,7 +76,7 @@ namespace Application.Services
                         return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
                     }
                 }
-                return apiResponse.SetOk("Add success");
+                return apiResponse.SetOk(orderFish.Id);
             }
             catch (Exception ex)
             {
