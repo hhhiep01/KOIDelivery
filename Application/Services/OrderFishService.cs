@@ -192,7 +192,7 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest($"Error: {ex.Message} - InnerException: {ex.InnerException?.Message}");
             }
         }
-
+        
     }
 
 }

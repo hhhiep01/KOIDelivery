@@ -34,7 +34,7 @@ namespace Application.Services
                 {
                     return apiresponse.SetNotFound("Can not found fish order id ");
                 }
-
+                fishHealth.CheckDate = DateTime.Now;
                 await _unitOfWork.FishHealths.AddAsync(fishHealth);
                 await _unitOfWork.SaveChangeAsync();
                 return apiresponse.SetOk("Add success");
