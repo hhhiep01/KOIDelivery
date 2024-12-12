@@ -47,7 +47,7 @@ namespace API.Controller
             var result = await _service.GetAllOrderAsync();
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("GetOrderByIdAsyncAsync{id}")]
+        [HttpGet("GetOrderByIdAsyncAsync/{id}")]
         public async Task<IActionResult> GetOrderByIdAsyncAsync(int id)
         {
             var result = await _service.GetOrderByIdAsyncAsync(id);
