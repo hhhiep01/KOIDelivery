@@ -17,16 +17,5 @@ namespace API.Controller
         {
             _settings = settings.Value;
         }
-
-        //[HttpGet]
-        //public IActionResult TokenCall(string identity = "driver")
-        //{
-        //    var grant = new VoiceGrant
-        //    {
-        //        OutgoingApplicationSid
-        //    }
-
-        //    return Ok(new {token = token.ToJwt() });
-        //}
     }
 }
