@@ -6,6 +6,7 @@ using Application.Response.Order;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Entity;
+using MaxMind.GeoIP2.Responses;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -335,6 +336,44 @@ namespace Application.Services
                                                                                  .ThenInclude(of => of.FishHealths));
                 var orderCanceledList = _mapper.Map<List<OrderResponse>>(order);
                 return new ApiResponse().SetOk(orderCanceledList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> UpdateStatusPaymentToVnPayByOrderIdAsync(int orderId)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAsync(o => o.Id == orderId);
+                if (order == null)
+                {
+                    return new ApiResponse().SetNotFound("Order not found");
+                }
+                order.PaymentMethod = PaymentMethodEnum.VnPay;
+                await _unitOfWork.SaveChangeAsync();
+                return apiResponse.SetOk("Update success");
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> UpdateStatusPaymentToCashByOrderIdAsync(int orderId)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var order = await _unitOfWork.Orders.GetAsync(o => o.Id == orderId);
+                if (order == null)
+                {
+                    return new ApiResponse().SetNotFound("Order not found");
+                }
+                order.PaymentMethod = PaymentMethodEnum.Cash;
+                await _unitOfWork.SaveChangeAsync();
+                return apiResponse.SetOk("Update success");
             }
             catch (Exception ex)
             {
