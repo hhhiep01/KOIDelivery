@@ -74,8 +74,8 @@ namespace Application.MyMapper
             CreateMap<Order, FeedbackResponse>();
 
             //UserAccount
-            CreateMap<UserProfileResponse, UserAccount>();
-
+            //CreateMap<UserProfileResponse, UserAccount>();
+            CreateMap<UserAccount, UserProfileResponse>();
         }
     }
 }
