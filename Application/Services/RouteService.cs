@@ -114,7 +114,7 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
-                var routes = await _unitOfWork.Routes.GetAllAsync(null);
+                var routes = await _unitOfWork.Routes.GetAllAsync(null, x => x.Include(r => r.RouteStops));
                 var responseList = _mapper.Map<List<RouteResponse>>(routes);
                 return new ApiResponse().SetOk(responseList);
             }
