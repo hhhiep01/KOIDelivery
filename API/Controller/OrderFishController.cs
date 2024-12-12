@@ -61,6 +61,12 @@ namespace API.Controller
             var resposne = await _service.UpdateOrderFishAsync(request);
             return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
+        [HttpGet("GetAllOrderFishByOrderIdAsync{id}")]
+        public async Task<IActionResult> GetAllOrderFishByOrderIdAsync(int id)
+        {
+            var response = await _service.GetAllOrderFishByOrderIdAsync(id);
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
 
     }
 }

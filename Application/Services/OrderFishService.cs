@@ -171,6 +171,28 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
+        public async Task<ApiResponse> GetAllOrderFishByOrderIdAsync(int id)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                //var orderFish = await _unitOfWork.OrderFishes.GetAllAsync(null, x => x.Include(c => c.FishHealths).Include(a => a.FishQualifications));
+                var orderFish = await _unitOfWork.OrderFishes.GetAllAsync(x => x.OrderId == id, x => x.Include(c => c.FishHealths).Include(a => a.FishQualifications));
+                var orderFishList = _mapper.Map<List<OrderFishResponse>>(orderFish);
+
+                return apiResponse.SetOk(orderFishList);
+            }
+            catch (JsonException jsonEx)
+            {
+                return new ApiResponse().SetBadRequest($"JSON Error: {jsonEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ khác
+                return new ApiResponse().SetBadRequest($"Error: {ex.Message} - InnerException: {ex.InnerException?.Message}");
+            }
+        }
 
     }
+
 }

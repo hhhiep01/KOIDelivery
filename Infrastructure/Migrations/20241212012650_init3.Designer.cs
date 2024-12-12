@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241207172901_UpdateDriverLocation")]
-    partial class UpdateDriverLocation
+    [Migration("20241212012650_init3")]
+    partial class init3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -413,6 +413,10 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("RouteStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("RouteStopType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StopOrder")
                         .HasColumnType("int");

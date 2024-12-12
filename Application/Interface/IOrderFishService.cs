@@ -15,5 +15,6 @@ namespace Application.Interface
         Task<ApiResponse> DeleteOrderFishAsync(int id);
         Task<ApiResponse> GetOrderFishByIdAsync(int id);
         Task<ApiResponse> UpdateOrderFishAsync(OrderFishUpdateRequest orderFishUpdateRequest);
-        }
+        Task<ApiResponse> GetAllOrderFishByOrderIdAsync(int id);
+    }
 }
