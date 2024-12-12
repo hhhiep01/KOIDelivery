@@ -45,6 +45,13 @@ namespace Application.Services
                 var claim = _claim.GetUserClaim();
                 var user = await _unitOfWork.UserAccounts.GetAsync(x => x.Id == claim.Id);
                 _mapper.Map(updateUserRequest,user);
+
+                user.FirstName = user.FirstName;
+                user.LastName = user.LastName;
+                user.PhoneNumber = user.PhoneNumber;
+                user.ImgUrl = user.ImgUrl;
+
+                await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Update Success");
             }
             catch (Exception ex)
