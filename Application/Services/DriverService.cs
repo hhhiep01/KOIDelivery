@@ -6,6 +6,7 @@ using Application.Response.Driver;
 using AutoMapper;
 using Domain.Entity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
-                var drivers = await _unitOfWork.Drivers.GetAllAsync(null);
+                var drivers = await _unitOfWork.Drivers.GetAllAsync(null, x => x.Include(x => x.UserAccount));
                 var driverList = _mapper.Map<List<DriverResponse>>(drivers);
                 return apiResponse.SetOk(driverList);
             }

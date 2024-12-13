@@ -69,7 +69,8 @@ namespace Application.MyMapper
             //Driver
             CreateMap<DriverRequest, Driver>();
             CreateMap<DriverService, DriverResponse>();
-            CreateMap<Driver, DriverResponse>();
+            CreateMap<Driver, DriverResponse>()
+                    .ForMember(dest => dest.UserProfile, opt => opt.MapFrom(src => src.UserAccount));
 
             CreateMap<FeedbackRequest, Order>();
             CreateMap<Order, FeedbackResponse>();
