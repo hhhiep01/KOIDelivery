@@ -12,5 +12,6 @@ namespace Application.Interface
     {
         Task<ApiResponse> GetUserProfileAsync();
         Task<ApiResponse> UpdateUserProfileAsync(UpdateUserRequest updateUserRequest);
+        Task<ApiResponse> GetAllAccountAsync();
     }
 }

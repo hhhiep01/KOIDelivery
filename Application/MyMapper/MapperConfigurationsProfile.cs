@@ -78,6 +78,7 @@ namespace Application.MyMapper
             //CreateMap<UserProfileResponse, UserAccount>();
             CreateMap<UpdateUserRequest, UserAccount>();
             CreateMap<UserAccount, UserProfileResponse>();
+            CreateMap<UserAccount, AccountResponse>();
         }
     }
 }

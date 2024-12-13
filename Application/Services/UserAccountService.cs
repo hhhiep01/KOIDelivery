@@ -44,7 +44,7 @@ namespace Application.Services
             {
                 var claim = _claim.GetUserClaim();
                 var user = await _unitOfWork.UserAccounts.GetAsync(x => x.Id == claim.Id);
-                _mapper.Map(updateUserRequest,user);
+                _mapper.Map(updateUserRequest, user);
 
                 user.FirstName = user.FirstName;
                 user.LastName = user.LastName;
@@ -53,6 +53,20 @@ namespace Application.Services
 
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk("Update Success");
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
+            }
+        }
+        public async Task<ApiResponse> GetAllAccountAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var user = await _unitOfWork.UserAccounts.GetAllAsync(null);
+                var userResponse = _mapper.Map<List<AccountResponse>>(user);
+                return apiResponse.SetOk(userResponse);
             }
             catch (Exception ex)
             {
