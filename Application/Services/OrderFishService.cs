@@ -69,7 +69,7 @@ namespace Application.Services
                 }
                 else if( orderFishExist.TransportService.TransportType == TransportType.Domestic)
                 {
-                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceInternational(orderFish.OrderId.Value);
+                    var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceDomestic(orderFish.OrderId.Value);
 
                     if (!calculateResponse.IsSuccess)
                     {
