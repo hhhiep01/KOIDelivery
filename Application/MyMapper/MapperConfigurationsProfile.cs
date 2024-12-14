@@ -38,7 +38,8 @@ namespace Application.MyMapper
 
             CreateMap<Order, OrderResponse>()
                 .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService))
-                .ForMember(dest => dest.OrderFishes, opt => opt.MapFrom(src => src.OrderFishs)); 
+                .ForMember(dest => dest.OrderFishes, opt => opt.MapFrom(src => src.OrderFishs))
+                .ForMember(dest => dest.RouteStops, opt => opt.MapFrom(src => src.RouteStops)); 
             CreateMap<OrderFishRequest, OrderFish>();
             CreateMap<OrderFish, OrderFishResponse>()
                  .ForMember(dest => dest.FishQualifications, opt => opt.MapFrom(src => src.FishQualifications))

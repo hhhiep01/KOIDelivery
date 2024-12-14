@@ -81,7 +81,9 @@ namespace Application.Services
                                                                                  .Include(x => x.OrderFishs)
                                                                                  .ThenInclude(of => of.FishQualifications)
                                                                                  .Include(x => x.OrderFishs)
-                                                                                 .ThenInclude(of => of.FishHealths));
+                                                                                 .ThenInclude(of => of.FishHealths)
+                                                                                 .Include(x => x.RouteStops)
+                                                                                    .ThenInclude(x => x.Route));
                 var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
                 return new ApiResponse().SetOk(orderResponse);
             }
