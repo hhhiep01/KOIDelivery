@@ -48,15 +48,19 @@ namespace Application.Services
                     payment.StatusPayment = StatusPayment.Pending;
                 }
                 var order = _mapper.Map<Order>(request);
-                var distanceResponse = await _googleMapService.GetDistanceAsync(request.FromAddress, request.ToAddress);
-                if (distanceResponse == null)
+                double distanceInKm = 0;
+                if (transportService.TransportType == TransportType.Local)
                 {
-                    return new ApiResponse().SetBadRequest("Unable to calculate distance.");
-                }
+                    var distanceResponse = await _googleMapService.GetDistanceAsync(request.FromAddress, request.ToAddress);
+                    if (distanceResponse == null)
+                    {
+                        return new ApiResponse().SetBadRequest("Unable to calculate distance.");
+                    }
 
-                var distanceData = Newtonsoft.Json.Linq.JObject.Parse(distanceResponse);
-                var distanceInMeters = double.Parse(distanceData["rows"][0]["elements"][0]["distance"]["value"].ToString());
-                var distanceInKm = distanceInMeters / 1000;
+                    var distanceData = Newtonsoft.Json.Linq.JObject.Parse(distanceResponse);
+                    var distanceInMeters = double.Parse(distanceData["rows"][0]["elements"][0]["distance"]["value"].ToString());
+                    distanceInKm = distanceInMeters / 1000;
+                }
                 await _unitOfWork.Orders.AddAsync(order);
                 order.Distance = distanceInKm;
                 order.AccountId = claim.Id;
@@ -181,12 +185,12 @@ namespace Application.Services
                 return new ApiResponse().SetBadRequest(ex.Message);
             }
         }
-        
+
         public async Task<ApiResponse> UpdateStatusOrderToCanceled(UpdateOrderToCancelRequest updateOrderToCancelRequest)
         {
             try
             {
-               
+
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == updateOrderToCancelRequest.OrderId);
                 if (order == null)
                 {
