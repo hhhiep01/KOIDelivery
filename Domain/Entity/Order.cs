@@ -26,6 +26,8 @@ namespace Domain.Entity
         public List<OrderFish> OrderFishs { get; set; }
         public List<RouteStop> RouteStops { get; set; }
         public List<Payment> Payments { get; set; }
+        public List<BoxAllocation> BoxAllocations { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
     }
 
     public enum OrderStatusEnum

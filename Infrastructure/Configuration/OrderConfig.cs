@@ -33,6 +33,8 @@ namespace Infrastructure.Configuration
               .WithOne(x => x.Order)
               .HasForeignKey(x => x.OrderId);
 
+    
+
         }
     }
 }
