@@ -89,5 +89,28 @@ namespace Application.Services
 
             return await task.GetDownloadUrlAsync();
         }
+
+        public async Task<string> UploadFishDetailUrl(string fishDetail, IFormFile file)
+        {
+            string firebaseBucket = _config["Firebase:Bucket"];
+
+            var firebaseStorage = new FirebaseStorage(firebaseBucket);
+
+            string fileName = $"{Guid.NewGuid().ToString()}_{Path.GetFileName(file.FileName)}";
+
+            if (fishDetail.EndsWith("/"))
+            {
+                fishDetail = fishDetail.TrimEnd('/');
+            }
+
+            fileName = fileName.Replace("/", "-");
+
+            var task = firebaseStorage.Child("FishDetails").Child(fishDetail).Child(fileName);
+
+            var stream = file.OpenReadStream();
+            await task.PutAsync(stream);
+            s
+            return await task.GetDownloadUrlAsync();
+        }
     }
 }

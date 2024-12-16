@@ -12,6 +12,7 @@ namespace Application.Interface
         Task<string> UploadUserImage(string userName, IFormFile file);
 
         Task<string> UploadOrderFishUrl(string orderFish, IFormFile file);
+        Task<string> UploadFishDetailUrl(string fishDetail, IFormFile file);
 
         Task<string> UploadFishQualificationUrl(string fishQualification, IFormFile file);
     }
