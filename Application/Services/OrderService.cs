@@ -60,6 +60,10 @@ namespace Application.Services
                     var distanceData = Newtonsoft.Json.Linq.JObject.Parse(distanceResponse);
                     var distanceInMeters = double.Parse(distanceData["rows"][0]["elements"][0]["distance"]["value"].ToString());
                     distanceInKm = distanceInMeters / 1000;
+                    if (distanceInKm <= 0.5) 
+                    {
+                        return new ApiResponse().SetBadRequest("the distance must be over 0.5 km for the order to be shipped !!!");
+                    }
                 }
                 await _unitOfWork.Orders.AddAsync(order);
                 order.Distance = distanceInKm;
