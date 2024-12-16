@@ -35,10 +35,10 @@ namespace Application.Services
                 }
                 var existingOrderItems = await _unitOfWork.OrderItems.GetAllAsync(x => x.OrderId == orderItemRequest.OrderId);
 
-                // 3. Lấy danh sách KoiSizeId mới từ request
+
                 var newKoiSizeIds = orderItemRequest.OrderItemDetails.Select(x => x.KoiSizeId).ToList();
 
-                // 4. Xóa các OrderItems không có trong request mới
+
                 foreach (var existingItem in existingOrderItems)
                 {
                     if (!newKoiSizeIds.Contains(existingItem.KoiSizeId))
@@ -124,6 +124,15 @@ namespace Application.Services
 
                 // 6. Tối ưu hóa thùng
                 OptimizeBoxAllocation(boxTypes, boxAllocationsDict);
+                decimal totalBoxCost = 0;
+                foreach (var allocation in boxAllocationsDict)
+                {
+                    var boxType = boxTypes.FirstOrDefault(b => b.BoxName == allocation.Key);
+                    if (boxType != null)
+                    {
+                        totalBoxCost += boxType.ShippingCost * allocation.Value;
+                    }
+                }
 
                 // 7. Gợi ý số lượng cá có thể thêm vào
                 var koiSizes = await _unitOfWork.KoiSizes.GetAllAsync(null);
@@ -131,15 +140,30 @@ namespace Application.Services
                 {
                     // Nếu không gian dư là 0, tất cả các gợi ý phải là 0
                     int maxQuantity = lastBoxRemainingSlots == 0 ? 0 : lastBoxRemainingSlots / koiSize.SpaceRequired;
-                    return $"{maxQuantity} of {koiSize.SizeCmMax}";
+                    return $"{maxQuantity} of {koiSize.SizeCmMax}cm({koiSize.SizeInchMax})";
                 }).ToList();
-
+                decimal totalPriceTransportService = 0;
+                var transportService = await _unitOfWork.TransportServices.GetAsync(x => x.Id == order.TransportServiceId);
+                if (transportService.TransportType == TransportType.Local)
+                {
+                    totalPriceTransportService +=
+                                                (transportService.PricePerKm ?? 0) * (decimal)order.Distance;
+                }
+                else
+                {
+                    totalPriceTransportService += (transportService.TransportPrice ?? 0);
+                }
+                var totalPrice = totalBoxCost + totalPriceTransportService;
+                order.TotalPrice = totalPrice;
+                await _unitOfWork.SaveChangeAsync();
                 // 8. Trả về kết quả
                 return apiResponse.SetOk(new
                 {
                     TotalSlotsUsed = totalSlotsUsed,
                     BoxAllocations = boxAllocationsDict.Select(b => $"{b.Value} {b.Key}").ToList(),
-                    TotalShippingCost = boxAllocationsDict.Sum(b => b.Value * 160),
+                    TotalBoxCost = totalBoxCost,
+                    TotalTransportCost = totalPriceTransportService,
+                    TotalPrice = totalPrice,
                     LastBoxRemainingSlots = lastBoxRemainingSlots,
                     Suggestions = suggestions
                 });
@@ -186,5 +210,7 @@ namespace Application.Services
                 }
             }
         }
+
+
     }
 }

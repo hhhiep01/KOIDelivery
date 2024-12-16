@@ -1,5 +1,6 @@
 ﻿using Application.Request.OrderItem;
 using Application.Response;
+using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Application.Interface
     public interface IOrderItemService
     {
         Task<ApiResponse> AddOrderItemAsync(OrderItemRequest orderItemRequest);
+       
     }
 }
