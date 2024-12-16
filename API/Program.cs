@@ -110,6 +110,7 @@ builder.Services.AddScoped<ICashPaymentService, CashPaymentService>();
 builder.Services.AddScoped<IGoogleMapService, GoogleMapService>();
 builder.Services.AddScoped<IKoiSizeService, KoiSizeService>();
 builder.Services.AddScoped<IBoxTypeService, BoxTypeService>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 
 
 builder.Services.AddScoped<IVnPayService, VnPayService>();

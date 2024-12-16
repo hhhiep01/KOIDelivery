@@ -24,7 +24,7 @@ namespace Application
         public IKoiSizeRepository KoiSizes { get; }
         public IBoxTypeRepository BoxTypes { get; }
         public IBoxAllocationRepository BoxAllocatios { get; }
-        public IOrderItemRepository IOrderItems { get; }
+        public IOrderItemRepository OrderItems { get; }
         public IFishDetailRepository FishDetails { get; }
 
         public Task SaveChangeAsync();

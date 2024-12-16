@@ -15,6 +15,6 @@ namespace Domain.Entity
         public int OrderId { get; set; }
         public KoiSize KoiSize { get; set; }
         public int KoiSizeId { get; set; }
-        public List<FishDetail> FishDetails { get; set; }
+        public List<FishDetail>? FishDetails { get; set; }
     }
 }
