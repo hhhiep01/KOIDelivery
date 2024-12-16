@@ -109,7 +109,7 @@ namespace Application.Services
 
             var stream = file.OpenReadStream();
             await task.PutAsync(stream);
-            s
+            
             return await task.GetDownloadUrlAsync();
         }
     }
