@@ -133,7 +133,47 @@ namespace Application.Services
                         totalBoxCost += boxType.ShippingCost * allocation.Value;
                     }
                 }
+                var existingBoxAllocations = await _unitOfWork.BoxAllocatios
+           .GetAllAsync(ba => ba.OrderId == orderItemRequest.OrderId);
 
+                foreach (var allocation in boxAllocationsDict)
+                {
+                    var boxType = boxTypes.FirstOrDefault(b => b.BoxName == allocation.Key);
+                    if (boxType != null)
+                    {
+                        var existingBoxAllocation = existingBoxAllocations
+                            .FirstOrDefault(ba => ba.BoxTypeId == boxType.Id);
+
+                        if (allocation.Value > 0) // Cập nhật nếu số lượng > 0
+                        {
+                            if (existingBoxAllocation != null)
+                            {
+                                existingBoxAllocation.BoxCount = allocation.Value;
+                            }
+                            else
+                            {
+                                var newBoxAllocation = new BoxAllocation
+                                {
+                                    OrderId = orderItemRequest.OrderId,
+                                    BoxTypeId = boxType.Id,
+                                    BoxCount = allocation.Value
+                                };
+                                await _unitOfWork.BoxAllocatios.AddAsync(newBoxAllocation);
+                            }
+                        }
+                    }
+                }
+
+                // Xóa các bản ghi không còn cần thiết
+                foreach (var existingAllocation in existingBoxAllocations)
+                {
+                    var boxName = boxTypes.FirstOrDefault(b => b.Id == existingAllocation.BoxTypeId)?.BoxName;
+
+                    if (boxName == null || !boxAllocationsDict.ContainsKey(boxName) || boxAllocationsDict[boxName] == 0)
+                    {
+                        await _unitOfWork.BoxAllocatios.RemoveByIdAsync(existingAllocation.Id);
+                    }
+                }
                 // 7. Gợi ý số lượng cá có thể thêm vào
                 var koiSizes = await _unitOfWork.KoiSizes.GetAllAsync(null);
                 var suggestions = koiSizes.Select(koiSize =>
@@ -142,6 +182,7 @@ namespace Application.Services
                     int maxQuantity = lastBoxRemainingSlots == 0 ? 0 : lastBoxRemainingSlots / koiSize.SpaceRequired;
                     return $"{maxQuantity} of {koiSize.SizeCmMax}cm({koiSize.SizeInchMax})";
                 }).ToList();
+
                 decimal totalPriceTransportService = 0;
                 var transportService = await _unitOfWork.TransportServices.GetAsync(x => x.Id == order.TransportServiceId);
                 if (transportService.TransportType == TransportType.Local)
