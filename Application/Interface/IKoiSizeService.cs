@@ -1,4 +1,5 @@
-﻿using Application.Request.KoiSize;
+﻿using Application.Request.Fish;
+using Application.Request.KoiSize;
 using Application.Response;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,8 @@ namespace Application.Interface
     {
         Task<ApiResponse> AddKoiSizeAsync(KoiSizeRequest koiSizeRequest);
         Task<ApiResponse> GetAllKoiSizeAsync();
+        Task<ApiResponse> DeleteKoiSizeAsync(int id);
+        Task<ApiResponse> GetKoiSizeByIdAsync(int id);
+        Task<ApiResponse> UpdateKoiSizeAsync(KoiSizeUpdateRequest koiSizeUpdateRequest);
     }
 }

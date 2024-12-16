@@ -30,6 +30,8 @@ using Application.Request.KoiSize;
 using Application.Response.KoiSize;
 using Application.Request.BoxType;
 using Application.Response.BoxType;
+using Application.Request.FishDetail;
+using Application.Response.FishDetail;
 
 namespace Application.MyMapper
 {
@@ -87,13 +89,19 @@ namespace Application.MyMapper
             CreateMap<UserAccount, AccountResponse>();
 
             //KoiSize
+            CreateMap<KoiSizeUpdateRequest, KoiSize>();
             CreateMap<KoiSizeRequest, KoiSize>();
             CreateMap<KoiSize, KoiSizeResponse>();
 
             //BoxSize
+            CreateMap<BoxTypeUpdateRequest, BoxType>();
             CreateMap<BoxTypeRequest, BoxType>();
             CreateMap<BoxType, BoxTypeResponse>();
 
+            //FishDetail
+            CreateMap<FishDetailUpdateRequest, FishDetail>();
+            CreateMap<FishDetailRequest, FishDetail>();
+            CreateMap<FishDetail, FishDetailResponse>();
         }
     }
 }
