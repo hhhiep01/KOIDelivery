@@ -1,4 +1,5 @@
 ﻿using Application.Interface;
+using Application.Request.BoxType;
 using Application.Request.Fish;
 using Application.Request.KoiSize;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,24 @@ namespace API.Controller
         {
             var response = await _service.GetAllKoiSizeAsync();
             return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+        [HttpDelete("DeleteKoiSizeBy{id}")]
+        public async Task<IActionResult> DeleteKoiSizeAsync(int id)
+        {
+            var response = await _service.DeleteKoiSizeAsync(id);
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("GetKoiSizeByIdBy{id}")]
+        public async Task<IActionResult> GetKoiSizeByIdAsync(int id)
+        {
+            var resposne = await _service.GetKoiSizeByIdAsync(id);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
+        }
+        [HttpPut("UpdateKoiSize")]
+        public async Task<IActionResult> UpdateBoxTypehAsync(KoiSizeUpdateRequest request)
+        {
+            var resposne = await _service.UpdateKoiSizeAsync(request);
+            return resposne.IsSuccess ? Ok(resposne) : BadRequest(resposne);
         }
     }
 }

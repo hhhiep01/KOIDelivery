@@ -87,10 +87,12 @@ namespace Application.MyMapper
             CreateMap<UserAccount, AccountResponse>();
 
             //KoiSize
+            CreateMap<KoiSizeUpdateRequest, KoiSize>();
             CreateMap<KoiSizeRequest, KoiSize>();
             CreateMap<KoiSize, KoiSizeResponse>();
 
             //BoxSize
+            CreateMap<BoxTypeUpdateRequest, BoxType>();
             CreateMap<BoxTypeRequest, BoxType>();
             CreateMap<BoxType, BoxTypeResponse>();
 
