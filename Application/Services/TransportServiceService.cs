@@ -116,8 +116,7 @@ namespace Application.Services
                 transportService.Description = transportServiceUpdateRequest.Description;   
                 transportService.TransportType = transportServiceUpdateRequest.TransportType;
                 transportService.TransportPrice = transportServiceUpdateRequest.TransportPrice;
-                transportService.PricePerKg = transportServiceUpdateRequest.PricePerKg;
-                transportService.PricePerAmount = transportServiceUpdateRequest.PricePerAmount;
+               
                 transportService.FromProvince = transportServiceUpdateRequest.FromProvince;
                 transportService.ToProvince = transportServiceUpdateRequest.ToProvince;
                 transportService.IsActive = transportServiceUpdateRequest.IsActive;

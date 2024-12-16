@@ -13,10 +13,10 @@ namespace Application.Request.TransportService
         //public TransportType TransportType { get; set; }
         public string Description { get; set; }
         public decimal TransportPrice { get; set; }
-        public decimal PricePerKg { get; set; }
+        //public decimal PricePerKg { get; set; }
         public string FromProvince { get; set; } 
         public string ToProvince { get; set; } 
-        public double PricePerAmount { get; set; }
+        //public double PricePerAmount { get; set; }
         public bool IsActive { get; set; }
     }
 }

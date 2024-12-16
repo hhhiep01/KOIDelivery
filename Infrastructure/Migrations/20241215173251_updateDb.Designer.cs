@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241212012650_init3")]
-    partial class init3
+    [Migration("20241215173251_updateDb")]
+    partial class updateDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,88 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Entity.BoxAllocation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoxCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BoxTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoxTypeId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("BoxAllocations");
+                });
+
+            modelBuilder.Entity("Domain.Entity.BoxType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BoxName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MyProperty")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ShippingCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BoxTypes");
+                });
 
             modelBuilder.Entity("Domain.Entity.Driver", b =>
                 {
@@ -90,6 +172,56 @@ namespace Infrastructure.Migrations
                     b.ToTable("EmailVerifications");
                 });
 
+            modelBuilder.Entity("Domain.Entity.FishDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FishImgURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Length")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderItemId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderItemId");
+
+                    b.ToTable("FishDetails");
+                });
+
             modelBuilder.Entity("Domain.Entity.FishHealth", b =>
                 {
                     b.Property<int>("Id")
@@ -104,6 +236,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CheckDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("FishDetailId")
+                        .HasColumnType("int");
 
                     b.Property<string>("HealthStatus")
                         .IsRequired()
@@ -126,6 +261,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FishDetailId");
+
                     b.HasIndex("OrderFishId");
 
                     b.ToTable("FishHealths");
@@ -138,6 +275,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FishDetailId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -152,9 +292,54 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FishDetailId");
+
                     b.HasIndex("OrderFishId");
 
                     b.ToTable("FishQualifications");
+                });
+
+            modelBuilder.Entity("Domain.Entity.KoiSize", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("SizeCmMax")
+                        .HasColumnType("real");
+
+                    b.Property<float>("SizeCmMin")
+                        .HasColumnType("real");
+
+                    b.Property<float>("SizeInchMax")
+                        .HasColumnType("real");
+
+                    b.Property<float>("SizeInchMin")
+                        .HasColumnType("real");
+
+                    b.Property<int>("SpaceRequired")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("KoiSizes");
                 });
 
             modelBuilder.Entity("Domain.Entity.Order", b =>
@@ -291,6 +476,32 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserAccountId");
 
                     b.ToTable("OrderFishs");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("KoiSizeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KoiSizeId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Domain.Entity.Payment", b =>
@@ -467,12 +678,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PricePerAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PricePerKg")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal?>("PricePerKm")
                         .HasColumnType("decimal(18,2)");
 
@@ -554,6 +759,25 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Domain.Entity.BoxAllocation", b =>
+                {
+                    b.HasOne("Domain.Entity.BoxType", "BoxType")
+                        .WithMany("BoxAllocations")
+                        .HasForeignKey("BoxTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.Order", "Order")
+                        .WithMany("BoxAllocations")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BoxType");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Domain.Entity.EmailVerification", b =>
                 {
                     b.HasOne("Domain.Entity.UserAccount", "User")
@@ -565,22 +789,45 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entity.FishDetail", b =>
+                {
+                    b.HasOne("Domain.Entity.OrderItem", "OrderItem")
+                        .WithMany("FishDetails")
+                        .HasForeignKey("OrderItemId");
+
+                    b.Navigation("OrderItem");
+                });
+
             modelBuilder.Entity("Domain.Entity.FishHealth", b =>
                 {
+                    b.HasOne("Domain.Entity.FishDetail", "FishDetail")
+                        .WithMany("FishHealths")
+                        .HasForeignKey("FishDetailId");
+
                     b.HasOne("Domain.Entity.OrderFish", "OrderFish")
                         .WithMany("FishHealths")
                         .HasForeignKey("OrderFishId");
+
+                    b.Navigation("FishDetail");
 
                     b.Navigation("OrderFish");
                 });
 
             modelBuilder.Entity("Domain.Entity.FishQualification", b =>
                 {
+                    b.HasOne("Domain.Entity.FishDetail", "FishDetail")
+                        .WithMany("FishQualifications")
+                        .HasForeignKey("FishDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entity.OrderFish", "OrderFish")
                         .WithMany("FishQualifications")
                         .HasForeignKey("OrderFishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FishDetail");
 
                     b.Navigation("OrderFish");
                 });
@@ -609,6 +856,25 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entity.UserAccount", null)
                         .WithMany("OrderFishes")
                         .HasForeignKey("UserAccountId");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OrderItem", b =>
+                {
+                    b.HasOne("Domain.Entity.KoiSize", "KoiSize")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("KoiSizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KoiSize");
 
                     b.Navigation("Order");
                 });
@@ -661,6 +927,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Driver");
                 });
 
+            modelBuilder.Entity("Domain.Entity.BoxType", b =>
+                {
+                    b.Navigation("BoxAllocations");
+                });
+
             modelBuilder.Entity("Domain.Entity.Driver", b =>
                 {
                     b.Navigation("Routes");
@@ -668,9 +939,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("UserAccount");
                 });
 
+            modelBuilder.Entity("Domain.Entity.FishDetail", b =>
+                {
+                    b.Navigation("FishHealths");
+
+                    b.Navigation("FishQualifications");
+                });
+
+            modelBuilder.Entity("Domain.Entity.KoiSize", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
             modelBuilder.Entity("Domain.Entity.Order", b =>
                 {
+                    b.Navigation("BoxAllocations");
+
                     b.Navigation("OrderFishs");
+
+                    b.Navigation("OrderItems");
 
                     b.Navigation("Payments");
 
@@ -682,6 +969,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("FishHealths");
 
                     b.Navigation("FishQualifications");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OrderItem", b =>
+                {
+                    b.Navigation("FishDetails");
                 });
 
             modelBuilder.Entity("Domain.Entity.Route", b =>

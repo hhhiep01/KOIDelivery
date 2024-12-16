@@ -24,13 +24,13 @@ namespace Application.Services
         private readonly IMapper _mapper;
 
         private readonly IFirebaseStorageService _firebaseStorageService;
-        private readonly ICaculateTotalPriceService _caculateTotalPriceService;
-        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService, ICaculateTotalPriceService caculateTotalPriceService)
+        //private readonly ICaculateTotalPriceService _caculateTotalPriceService;
+        public OrderFishService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _firebaseStorageService = firebaseStorageService;
-            _caculateTotalPriceService = caculateTotalPriceService;
+            
         }
 
         public async Task<ApiResponse> CreateOrderFishAsync(OrderFishRequest request)
@@ -49,7 +49,7 @@ namespace Application.Services
                 await _unitOfWork.OrderFishes.AddAsync(orderFish);
                 await _unitOfWork.SaveChangeAsync();
 
-                if (orderFishExist.TransportService.TransportType == TransportType.Local )
+                /*if (orderFishExist.TransportService.TransportType == TransportType.Local )
                 {
                     var calculateResponse = await _caculateTotalPriceService.CaculateTotalPriceLocal(orderFish.OrderId.Value);
 
@@ -75,7 +75,7 @@ namespace Application.Services
                     {
                         return apiResponse.SetBadRequest("Failed to calculate total price: " + calculateResponse);
                     }
-                }
+                }*/
                 return apiResponse.SetOk(orderFish.Id);
             }
             catch (Exception ex)

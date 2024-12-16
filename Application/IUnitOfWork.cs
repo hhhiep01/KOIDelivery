@@ -21,6 +21,11 @@ namespace Application
         public IDriverRepository Drivers { get; }
         public IPaymentRepository Payments { get; }
         public IFeedbackRepository Feedbacks { get; }
+        public IKoiSizeRepository KoiSizes { get; }
+        public IBoxTypeRepository BoxTypes { get; }
+        public IBoxAllocationRepository BoxAllocatios { get; }
+        public IOrderItemRepository IOrderItems { get; }
+        public IFishDetailRepository FishDetails { get; }
 
         public Task SaveChangeAsync();
         Task<T> ExecuteScalarAsync<T>(string sql);

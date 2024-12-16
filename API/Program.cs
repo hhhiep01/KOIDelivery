@@ -106,9 +106,10 @@ builder.Services.AddScoped<IRouteStopService, RouteStopService>();
 builder.Services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 builder.Services.AddSingleton<GeoHelper>();
-builder.Services.AddScoped<ICaculateTotalPriceService, CaculateTotalPriceService>();
 builder.Services.AddScoped<ICashPaymentService, CashPaymentService>();
 builder.Services.AddScoped<IGoogleMapService, GoogleMapService>();
+builder.Services.AddScoped<IKoiSizeService, KoiSizeService>();
+builder.Services.AddScoped<IBoxTypeService, BoxTypeService>();
 
 
 builder.Services.AddScoped<IVnPayService, VnPayService>();

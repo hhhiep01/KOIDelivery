@@ -14,8 +14,7 @@ namespace Domain.Entity
         public string Description { get; set; }
         public decimal? TransportPrice { get; set; }
         public decimal? PricePerKm { get; set; }
-        public decimal PricePerKg { get; set; }
-        public decimal PricePerAmount { get; set; }
+        //public decimal PricePerAmount { get; set; }
         public string? FromProvince { get; set; } = string.Empty;
         public string? ToProvince { get; set; } = string.Empty;
 

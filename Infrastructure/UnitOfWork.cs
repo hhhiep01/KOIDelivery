@@ -27,6 +27,12 @@ namespace Infrastructure
         public IPaymentRepository Payments { get;  }
 
         public IFeedbackRepository Feedbacks { get; }
+        public IKoiSizeRepository KoiSizes { get; }
+        public IBoxTypeRepository BoxTypes { get; }
+        public IBoxAllocationRepository BoxAllocatios { get; }
+        public IOrderItemRepository IOrderItems { get; }
+        public IFishDetailRepository FishDetails { get; }
+
 
         public UnitOfWork(AppDbContext context)
         {
@@ -42,6 +48,11 @@ namespace Infrastructure
             Routes = new RouteRepository(context);
             Drivers = new DriverRepository(context);
             Payments = new PaymentRepository(context);
+            KoiSizes = new KoiSizeRepository(context);
+            BoxTypes = new BoxTypeRepository(context);
+            BoxAllocatios = new BoxAllocationRepository(context);
+            IOrderItems = new OrderItemRepository(context);
+            FishDetails = new FishDetailRepository(context);
         }
         public async Task SaveChangeAsync()
         {

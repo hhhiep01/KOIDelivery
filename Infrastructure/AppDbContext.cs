@@ -29,6 +29,12 @@ namespace Infrastructure
         public DbSet<Route> Routes { get; set; }
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<KoiSize> KoiSizes { get; set; }
+        public DbSet<BoxType> BoxTypes { get; set; }
+        public DbSet<BoxAllocation> BoxAllocations { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<FishDetail> FishDetails { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

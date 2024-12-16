@@ -26,6 +26,10 @@ using Application.Response.Route;
 using Application.Request.Feedback;
 using Application.Response.Feedback;
 using Application.Request.User;
+using Application.Request.KoiSize;
+using Application.Response.KoiSize;
+using Application.Request.BoxType;
+using Application.Response.BoxType;
 
 namespace Application.MyMapper
 {
@@ -81,6 +85,15 @@ namespace Application.MyMapper
             CreateMap<UpdateUserRequest, UserAccount>();
             CreateMap<UserAccount, UserProfileResponse>();
             CreateMap<UserAccount, AccountResponse>();
+
+            //KoiSize
+            CreateMap<KoiSizeRequest, KoiSize>();
+            CreateMap<KoiSize, KoiSizeResponse>();
+
+            //BoxSize
+            CreateMap<BoxTypeRequest, BoxType>();
+            CreateMap<BoxType, BoxTypeResponse>();
+
         }
     }
 }
