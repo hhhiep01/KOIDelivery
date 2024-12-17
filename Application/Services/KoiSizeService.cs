@@ -8,6 +8,7 @@ using Application.Response.KoiSize;
 using Application.Response.TransportService;
 using AutoMapper;
 using Domain.Entity;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +21,27 @@ namespace Application.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
-
-        public KoiSizeService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IValidator<KoiSizeRequest> _koiSizevalidator;
+        private readonly IValidator<KoiSizeRequest> _updateKoiSizevalidator;
+        public KoiSizeService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<KoiSizeRequest> koiSizevalidator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _koiSizevalidator = koiSizevalidator;
+
         }
         public async Task<ApiResponse> AddKoiSizeAsync(KoiSizeRequest koiSizeRequest)
         {   
             ApiResponse apiResponse = new ApiResponse();
             try
             {
+                var validationResult = _koiSizevalidator.Validate(koiSizeRequest);
+                if (!validationResult.IsValid)
+                {
+                    var error = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    return new ApiResponse().SetBadRequest(string.Join(", ", error));
+                }
+
                 var koiSize = _mapper.Map<KoiSize>(koiSizeRequest);
                 await _unitOfWork.KoiSizes.AddAsync(koiSize);
                 await _unitOfWork.SaveChangeAsync();
@@ -82,7 +93,7 @@ namespace Application.Services
         {
             ApiResponse apiResponse = new ApiResponse();
             try
-            {
+            { 
                 var koiSizeService = await _unitOfWork.KoiSizes.GetAsync(x => x.Id == id);
                 if (koiSizeService is null)
                 {
