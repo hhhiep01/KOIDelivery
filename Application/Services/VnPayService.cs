@@ -90,6 +90,19 @@ namespace Application.Services
                 var pay = new VnPayLibrary();
                 var response = pay.GetFullResponseData(collections, _configuration["Vnpay:HashSecret"]);
 
+                if (collections.TryGetValue("vnp_ResponseCode", out var responseCode))
+                {
+                    // Handle cancellation or failure
+                    if (responseCode != "00")
+                    {
+                        return apiResponse.SetBadRequest("Payment was canceled or failed.");
+                    }
+                }
+                else
+                {
+                     return apiResponse.SetBadRequest("Missing response code.");
+                }
+
                 // Extract userId from query parameters
                 if (collections.TryGetValue("userId", out var userIdValue) &&
                     int.TryParse(userIdValue, out int userId) &&
