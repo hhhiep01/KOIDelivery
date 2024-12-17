@@ -30,7 +30,7 @@ namespace Infrastructure
         public IKoiSizeRepository KoiSizes { get; }
         public IBoxTypeRepository BoxTypes { get; }
         public IBoxAllocationRepository BoxAllocatios { get; }
-        public IOrderItemRepository IOrderItems { get; }
+        public IOrderItemRepository OrderItems { get; }
         public IFishDetailRepository FishDetails { get; }
 
 
@@ -51,7 +51,7 @@ namespace Infrastructure
             KoiSizes = new KoiSizeRepository(context);
             BoxTypes = new BoxTypeRepository(context);
             BoxAllocatios = new BoxAllocationRepository(context);
-            IOrderItems = new OrderItemRepository(context);
+            OrderItems = new OrderItemRepository(context);
             FishDetails = new FishDetailRepository(context);
         }
         public async Task SaveChangeAsync()
