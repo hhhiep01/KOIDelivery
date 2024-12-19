@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Request.BoxType;
 using Application.Response.BoxType;
+using FluentValidation;
 
 namespace Application.Services
 {
@@ -18,17 +19,25 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        
-        public BoxTypeService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IValidator<BoxTypeRequest> _boxTypeValidator;
+        public BoxTypeService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<BoxTypeRequest> boxTypeValidator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _boxTypeValidator = boxTypeValidator;
         }
         public async Task<ApiResponse> AddBoxTypeRequestAsync(BoxTypeRequest boxTypeRequest)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
             {
+                var validationResult = await _boxTypeValidator.ValidateAsync(boxTypeRequest);
+                if (!validationResult.IsValid)
+                {
+                    var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    return apiResponse.SetBadRequest(string.Join(", ", errors));
+                }
+
                 var boxType = _mapper.Map<BoxType>(boxTypeRequest);
                 await _unitOfWork.BoxTypes.AddAsync(boxType);
                 await _unitOfWork.SaveChangeAsync();

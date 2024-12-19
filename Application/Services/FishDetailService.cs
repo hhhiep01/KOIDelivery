@@ -1,11 +1,14 @@
 ﻿using Application.Interface;
+using Application.Request.BoxType;
 using Application.Request.Fish;
 using Application.Request.FishDetail;
 using Application.Response;
 using Application.Response.Fish;
 using Application.Response.FishDetail;
+using Application.Validation;
 using AutoMapper;
 using Domain.Entity;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,12 +26,14 @@ namespace Application.Services
         private readonly IMapper _mapper;
 
         private readonly IFirebaseStorageService _firebaseStorageService;
+        private readonly IValidator<FishDetailRequest> _fishDetailValidator;
         //private readonly ICaculateTotalPriceService _caculateTotalPriceService;
-        public FishDetailService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService)
+        public FishDetailService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseStorageService firebaseStorageService, IValidator<FishDetailRequest> fishDetailValidator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _firebaseStorageService = firebaseStorageService;
+            _fishDetailValidator = fishDetailValidator;
 
         }
         public async Task<ApiResponse> CreateFishDetailAsync(FishDetailRequest request)
@@ -36,6 +41,12 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
+                var validationResult = await _fishDetailValidator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                {
+                    var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    return apiResponse.SetBadRequest(string.Join(", ", errors));
+                }
                 var fishDetail = _mapper.Map<FishDetail>(request);
                 var orderItem = await _unitOfWork.OrderItems.GetAsync(x => x.Id == request.OrderItemId, x => x.Include(oi => oi.FishDetails)
                                                                                                             .Include(x=> x.KoiSize));

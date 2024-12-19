@@ -1,10 +1,13 @@
 ﻿using Application.Interface;
+using Application.Request.BoxType;
 using Application.Request.OrderItem;
 using Application.Response;
+using Application.Validation;
 using Application.Response.Fish;
 using Application.Response.OrderItem;
 using AutoMapper;
 using Domain.Entity;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,10 +22,12 @@ namespace Application.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
-        public OrderItemService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IValidator<OrderItemDetail> _orderItemDetailValidator;
+        public OrderItemService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<OrderItemDetail> orderItemDetailValidator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _orderItemDetailValidator = orderItemDetailValidator;
         }
         public async Task<ApiResponse> AddOrderItemAsync(OrderItemRequest orderItemRequest)
         {
@@ -53,6 +58,14 @@ namespace Application.Services
 
                 foreach (var itemDetail in orderItemRequest.OrderItemDetails)
                 {
+
+                    var validationResult = await _orderItemDetailValidator.ValidateAsync(itemDetail);
+                    if (!validationResult.IsValid)
+                    {
+                        var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                        return apiResponse.SetBadRequest($"Validation failed: {errorMessages}");
+                    }
+
                     var koiSize = await _unitOfWork.KoiSizes.GetAsync(x => x.Id == itemDetail.KoiSizeId);
                     if (koiSize == null)
                     {
