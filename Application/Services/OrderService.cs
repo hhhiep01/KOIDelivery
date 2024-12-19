@@ -60,7 +60,7 @@ namespace Application.Services
                     var distanceData = Newtonsoft.Json.Linq.JObject.Parse(distanceResponse);
                     var distanceInMeters = double.Parse(distanceData["rows"][0]["elements"][0]["distance"]["value"].ToString());
                     distanceInKm = distanceInMeters / 1000;
-                    if (distanceInKm <= 0.5) 
+                    if (distanceInKm <= 0.5)
                     {
                         return new ApiResponse().SetBadRequest("the distance must be over 0.5 km for the order to be shipped !!!");
                     }
@@ -83,11 +83,11 @@ namespace Application.Services
             {
                 var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService)
                                                                                .Include(x => x.OrderItems)
-                                                                               .ThenInclude(x=> x.KoiSize)
+                                                                               .ThenInclude(x => x.KoiSize)
                                                                                .Include(x => x.BoxAllocations)
                                                                                .ThenInclude(x => x.BoxType));
 
-                                                      
+
                 var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
                 return new ApiResponse().SetOk(orderResponse);
             }
@@ -101,9 +101,13 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
-                var order = await _unitOfWork.Orders.GetAsync(x => x.Id == id, x => x.Include(x => x.TransportService));
-                                                                                
-                                                                                 
+                var order = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService)
+                                                                                .Include(x => x.OrderItems)
+                                                                                .ThenInclude(x => x.KoiSize)
+                                                                                .Include(x => x.BoxAllocations)
+                                                                                .ThenInclude(x => x.BoxType));
+
+
                 if (order == null)
                 {
                     return new ApiResponse().SetNotFound("Order not found");
@@ -144,7 +148,10 @@ namespace Application.Services
             {
                 var orders = await _unitOfWork.Orders.GetAllAsync(x => x.AccountId == claim.Id,
                     x => x.Include(x => x.TransportService)
-                            .Include(x => x.OrderFishs));
+                                                                                .Include(x => x.OrderItems)
+                                                                                .ThenInclude(x => x.KoiSize)
+                                                                                .Include(x => x.BoxAllocations)
+                                                                                .ThenInclude(x => x.BoxType));
                 var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
                 return new ApiResponse().SetOk(orderResponse);
             }
@@ -262,7 +269,7 @@ namespace Application.Services
             {
                 var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Processing,
                                                                                  x => x.Include(x => x.TransportService));
-                                                                                 
+
                 var orderProccessingList = _mapper.Map<List<OrderResponse>>(order);
                 return new ApiResponse().SetOk(orderProccessingList);
             }
@@ -277,8 +284,12 @@ namespace Application.Services
             try
             {
                 var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.PendingPickUp,
-                                                                                     x => x.Include(x => x.TransportService));
-                                                                                
+                                                                                     x => x.Include(x => x.TransportService)
+                                                                                .Include(x => x.OrderItems)
+                                                                                .ThenInclude(x => x.KoiSize)
+                                                                                .Include(x => x.BoxAllocations)
+                                                                                .ThenInclude(x => x.BoxType));
+
                 var orderPendingPickUpList = _mapper.Map<List<OrderResponse>>(order);
                 return new ApiResponse().SetOk(orderPendingPickUpList);
             }
@@ -294,7 +305,7 @@ namespace Application.Services
             {
                 var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Delivering,
                      x => x.Include(x => x.TransportService));
-                                                                                 
+
                 var orderDeliveringList = _mapper.Map<List<OrderResponse>>(order);
                 return new ApiResponse().SetOk(orderDeliveringList);
             }
