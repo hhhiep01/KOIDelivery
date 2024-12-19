@@ -101,7 +101,7 @@ namespace Application.Services
             ApiResponse apiResponse = new ApiResponse();
             try
             {
-                var order = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService)
+                var order = await _unitOfWork.Orders.GetAsync(x=> x.Id == id, x => x.Include(x => x.TransportService)
                                                                                 .Include(x => x.OrderItems)
                                                                                 .ThenInclude(x => x.KoiSize)
                                                                                 .Include(x => x.BoxAllocations)
