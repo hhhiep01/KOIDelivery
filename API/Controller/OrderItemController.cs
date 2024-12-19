@@ -21,5 +21,11 @@ namespace API.Controller
             var result = await _service.AddOrderItemAsync(orderItemRequest);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetAllOrderItem")]
+        public async Task<IActionResult> GetAllOrderItemAsync()
+        {
+            var response = await _service.GetAllOrderItemAsync();
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+        }
     }
 }

@@ -37,13 +37,24 @@ namespace Application.Services
             try
             {
                 var fishDetail = _mapper.Map<FishDetail>(request);
-                var fishDetailExist = await _unitOfWork.Orders.GetAsync(x => x.Id == fishDetail.Id, x => x.Include(x => x.TransportService));
-                if (fishDetailExist == null)
+                var orderItem = await _unitOfWork.OrderItems.GetAsync(x => x.Id == request.OrderItemId, x => x.Include(oi => oi.FishDetails)
+                                                                                                            .Include(x=> x.KoiSize));
+                if (orderItem == null)
                 {
-                    return apiResponse.SetNotFound("Can not found Order Id: ");
+                    return apiResponse.SetNotFound($"OrderItem with Id {request.OrderItemId} not found");
+                }
+
+                int currentFishCount = orderItem.FishDetails.Count;
+                if (currentFishCount >= orderItem.Quantity)
+                {
+                    return apiResponse.SetBadRequest($"Cannot add more fish. Maximum allowed is {orderItem.Quantity}.");
+                }
+                if (request.Length < orderItem.KoiSize.SizeCmMin || request.Length > orderItem.KoiSize.SizeCmMax)
+                {
+                    return apiResponse.SetBadRequest($"Fish length {request.Length} cm is not within the allowed range of {orderItem.KoiSize.SizeCmMin} - {orderItem.KoiSize.SizeCmMax} cm.");
                 }
                 fishDetail.FishImgURL = await _firebaseStorageService.UploadFishDetailUrl(request.OrderItemId.ToString(), request.File);
-
+                fishDetail.OrderItemId = orderItem.Id;
                 await _unitOfWork.FishDetails.AddAsync(fishDetail);
                 await _unitOfWork.SaveChangeAsync();
                 return apiResponse.SetOk(fishDetail.Id);

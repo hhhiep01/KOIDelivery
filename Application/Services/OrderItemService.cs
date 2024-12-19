@@ -1,6 +1,8 @@
 ﻿using Application.Interface;
 using Application.Request.OrderItem;
 using Application.Response;
+using Application.Response.Fish;
+using Application.Response.OrderItem;
 using AutoMapper;
 using Domain.Entity;
 using Microsoft.EntityFrameworkCore;
@@ -249,6 +251,21 @@ namespace Application.Services
                         }
                     }
                 }
+            }
+        }
+        public async Task<ApiResponse> GetAllOrderItemAsync()
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            try
+            {
+                var orderItems = await _unitOfWork.OrderItems.GetAllAsync(null, x => x.Include(x => x.KoiSize));
+                var orderItemResponseList = _mapper.Map<List<OrderItemResponse>>(orderItems);
+                //var orderItemResponseList 
+               return apiResponse.SetOk(orderItemResponseList);
+            }
+            catch (Exception ex)
+            {
+                return apiResponse.SetBadRequest(ex.Message);
             }
         }
 

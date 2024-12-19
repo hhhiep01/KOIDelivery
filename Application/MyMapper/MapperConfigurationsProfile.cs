@@ -32,6 +32,8 @@ using Application.Request.BoxType;
 using Application.Response.BoxType;
 using Application.Request.FishDetail;
 using Application.Response.FishDetail;
+using Application.Response.OrderItem;
+using Application.Response.BoxAllocation;
 
 namespace Application.MyMapper
 {
@@ -44,7 +46,7 @@ namespace Application.MyMapper
 
             CreateMap<Order, OrderResponse>()
                 .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService))
-                .ForMember(dest => dest.OrderFishes, opt => opt.MapFrom(src => src.OrderFishs))
+                //.ForMember(dest => dest.OrderFishes, opt => opt.MapFrom(src => src.OrderFishs))
                 .ForMember(dest => dest.RouteStops, opt => opt.MapFrom(src => src.RouteStops)); 
             CreateMap<OrderFishRequest, OrderFish>();
             CreateMap<OrderFish, OrderFishResponse>()
@@ -92,6 +94,8 @@ namespace Application.MyMapper
             CreateMap<KoiSizeUpdateRequest, KoiSize>();
             CreateMap<KoiSizeRequest, KoiSize>();
             CreateMap<KoiSize, KoiSizeResponse>();
+             
+
 
             //BoxSize
             CreateMap<BoxTypeUpdateRequest, BoxType>();
@@ -102,6 +106,13 @@ namespace Application.MyMapper
             CreateMap<FishDetailUpdateRequest, FishDetail>();
             CreateMap<FishDetailRequest, FishDetail>();
             CreateMap<FishDetail, FishDetailResponse>();
+
+            //OrderItem
+            CreateMap<OrderItem, OrderItemResponse>()
+            .ForMember(dest => dest.KoiSize, opt => opt.MapFrom(src => src.KoiSize));
+            //
+            CreateMap<BoxAllocation, BoxAllocationResponse>()
+           .ForMember(dest => dest.BoxType, opt => opt.MapFrom(src => src.BoxType));
         }
     }
 }

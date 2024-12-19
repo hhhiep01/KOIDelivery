@@ -12,6 +12,8 @@ namespace Application.Interface
     public interface IOrderItemService
     {
         Task<ApiResponse> AddOrderItemAsync(OrderItemRequest orderItemRequest);
-       
+        Task<ApiResponse> GetAllOrderItemAsync();
+
+
     }
 }

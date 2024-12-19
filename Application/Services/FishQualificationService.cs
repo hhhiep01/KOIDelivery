@@ -33,10 +33,10 @@ namespace Application.Services
             try
             {
                 var fishqualification = _mapper.Map<FishQualification>(request);
-                var fishQualificationExist = await _unitOfWork.OrderFishes.GetAsync(x => x.Id == fishqualification.OrderFishId);
+                var fishQualificationExist = await _unitOfWork.FishDetails.GetAsync(x => x.Id == fishqualification.OrderFishId);
                 if (fishQualificationExist == null)
                 {
-                    return apiresponse.SetNotFound("Can not found fish order id " );
+                    return apiresponse.SetNotFound("Can not found fish detail id " );
                 }
                 fishqualification.ImageUrl = await _firebaseStorageService.UploadFishQualificationUrl(request.Name, file);
                 await _unitOfWork.FishQualifications.AddAsync(fishqualification);

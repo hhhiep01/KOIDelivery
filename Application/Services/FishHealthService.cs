@@ -29,10 +29,10 @@ namespace Application.Services
             try
             {
                 var fishHealth = _mapper.Map<FishHealth>(request);
-                var fishfishHealthExist = await _unitOfWork.OrderFishes.GetAsync(x => x.Id == fishHealth.OrderFishId);
+                var fishfishHealthExist = await _unitOfWork.FishDetails.GetAsync(x => x.Id == fishHealth.OrderFishId);
                 if (fishfishHealthExist == null)
                 {
-                    return apiresponse.SetNotFound("Can not found fish order id ");
+                    return apiresponse.SetNotFound("Can not found fish detail id ");
                 }
                 fishHealth.CheckDate = DateTime.Now;
                 await _unitOfWork.FishHealths.AddAsync(fishHealth);
