@@ -19,9 +19,7 @@ namespace Application.Validation
                 .NotNull().WithMessage("Age is required.")
                 .GreaterThan(0).WithMessage("Age must be greater than 0.");
 
-            RuleFor(x => x.Weight)
-                .NotNull().WithMessage("Weight is required.")
-                .GreaterThan(0).WithMessage("Weight must be greater than 0.");
+           
 
             RuleFor(x => x.Length)
                 .NotNull().WithMessage("Length is required.")

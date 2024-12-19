@@ -11,7 +11,7 @@ namespace Application.Request.FishDetail
     {
         public string Name { get; set; }
         public int Age { get; set; }
-        public float Weight { get; set; }
+       
         public float Length { get; set; }
         public int? OrderItemId { get; set; }
 
