@@ -12,9 +12,9 @@ namespace Application.Validation
     {
         public OrderItemValidator() 
         {
-            RuleFor(x => x.Quantity)
+           /* RuleFor(x => x.Quantity)
             .NotNull().WithMessage("Quantity is required.")
-            .GreaterThan(0).WithMessage("Quantity must be a positive number.");
+            .GreaterThan(0).WithMessage("Quantity must be a positive number.");*/
 
         }
     }
