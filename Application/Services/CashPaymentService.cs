@@ -32,8 +32,7 @@ namespace Application.Services
             try
             {
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == request.OrderId,
-                                                      x => x.Include(x => x.OrderFishs)
-                                                            .Include(x => x.TransportService));
+                                                      x => x.Include(x => x.TransportService));
                 if (order == null)
                 {
                     return apiResponse.SetNotFound("Order not found");
@@ -72,8 +71,7 @@ namespace Application.Services
             try
             {
                 var order = await _unitOfWork.Orders.GetAsync(x => x.Id == request.OrderId,
-                                                      x => x.Include(x => x.OrderFishs)
-                                                            .Include(x => x.TransportService));
+                                                      x => x.Include(x => x.TransportService));
                 if (order == null)
                 {
                     return apiResponse.SetNotFound("Order not found");

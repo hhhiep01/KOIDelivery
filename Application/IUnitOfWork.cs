@@ -13,7 +13,7 @@ namespace Application
         public IEmailVerificationRepository EmailVerifications { get; }
         public IOrderRepository Orders { get; }
         public ITransportServiceRepository TransportServices { get; }
-        public IOrderFishRepository OrderFishes { get; }
+        //public IOrderFishRepository OrderFishes { get; }
         public IFishQualificationRepository FishQualifications { get; }
         public IFishHealthRepository FishHealths { get; }
         public IRouteStopRepository RouteStops { get; }

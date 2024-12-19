@@ -14,6 +14,6 @@ namespace Application.Request.FishHealth
         public string Temperature { get; set; }
         public string WaterQuality { get; set; }
         public string Behavior { get; set; }
-        public int? OrderFishId { get; set; }
+        public int? FishDetailId { get; set; }
     }
 }

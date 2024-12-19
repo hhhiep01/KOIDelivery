@@ -16,8 +16,6 @@ namespace Domain.Entity
         public string WaterQuality { get; set; } 
         public string Behavior { get; set; }
         //
-        public OrderFish? OrderFish { get; set; }
-        public int? OrderFishId { get; set; }
 
         public int? FishDetailId { get; set; }
         public FishDetail FishDetail { get; set; }

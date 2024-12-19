@@ -18,7 +18,7 @@ namespace Infrastructure
         public IEmailVerificationRepository EmailVerifications { get; }
         public IOrderRepository Orders { get; }
         public ITransportServiceRepository TransportServices { get; }
-        public IOrderFishRepository OrderFishes { get; }
+        //public IOrderFishRepository OrderFishes { get; }
         public IFishQualificationRepository FishQualifications { get; }
         public IFishHealthRepository FishHealths { get;  }
         public IRouteStopRepository RouteStops { get;  }
@@ -41,7 +41,7 @@ namespace Infrastructure
             EmailVerifications = new EmailVerificationRepository(context);
             Orders = new OrderRepository(context);
             TransportServices = new TransportServiceRepository(context);
-            OrderFishes = new OrderFishRepository(context);
+            //OrderFishes = new OrderFishRepository(context);
             FishQualifications = new FishQualificationRepository(context);
             FishHealths = new FishHealthRepository(context);
             RouteStops = new RouteStopRepository(context);

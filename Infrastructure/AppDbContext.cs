@@ -22,7 +22,7 @@ namespace Infrastructure
         public DbSet<EmailVerification> EmailVerifications { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<TransportService> TransportServices { get; set; }
-        public DbSet<OrderFish> OrderFishs { get; set; }
+        //public DbSet<OrderFish> OrderFishs { get; set; }
         public DbSet<FishQualification> FishQualifications { get; set; }
         public DbSet<FishHealth> FishHealths { get; set; }
         public DbSet<RouteStop> RouteStops { get; set; }

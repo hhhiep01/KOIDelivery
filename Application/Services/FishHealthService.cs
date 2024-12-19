@@ -29,7 +29,7 @@ namespace Application.Services
             try
             {
                 var fishHealth = _mapper.Map<FishHealth>(request);
-                var fishfishHealthExist = await _unitOfWork.FishDetails.GetAsync(x => x.Id == fishHealth.OrderFishId);
+                var fishfishHealthExist = await _unitOfWork.FishDetails.GetAsync(x => x.Id == fishHealth.FishDetailId);
                 if (fishfishHealthExist == null)
                 {
                     return apiresponse.SetNotFound("Can not found fish detail id ");

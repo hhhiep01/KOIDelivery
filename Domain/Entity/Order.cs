@@ -23,7 +23,7 @@ namespace Domain.Entity
         public int? AccountId { get; set; }
         public TransportService TransportService { get; set; }
         public int? TransportServiceId { get; set; }
-        public List<OrderFish> OrderFishs { get; set; }
+       // public List<OrderFish> OrderFishs { get; set; }
         public List<RouteStop> RouteStops { get; set; }
         public List<Payment> Payments { get; set; }
         public List<BoxAllocation> BoxAllocations { get; set; }

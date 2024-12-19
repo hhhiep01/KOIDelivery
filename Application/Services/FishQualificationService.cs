@@ -33,7 +33,7 @@ namespace Application.Services
             try
             {
                 var fishqualification = _mapper.Map<FishQualification>(request);
-                var fishQualificationExist = await _unitOfWork.FishDetails.GetAsync(x => x.Id == fishqualification.OrderFishId);
+                var fishQualificationExist = await _unitOfWork.FishDetails.GetAsync(x => x.Id == fishqualification.FishDetailId);
                 if (fishQualificationExist == null)
                 {
                     return apiresponse.SetNotFound("Can not found fish detail id " );

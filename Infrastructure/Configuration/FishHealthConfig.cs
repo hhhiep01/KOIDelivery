@@ -13,9 +13,9 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<FishHealth> builder)
         {
-            builder.HasOne(o => o.OrderFish)
+            /*builder.HasOne(o => o.OrderFish)
                  .WithMany(o => o.FishHealths)
-                 .HasForeignKey(o => o.OrderFishId);
+                 .HasForeignKey(o => o.OrderFishId);*/
         }
     }
 }

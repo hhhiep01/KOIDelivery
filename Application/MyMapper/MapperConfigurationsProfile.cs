@@ -48,10 +48,10 @@ namespace Application.MyMapper
                 .ForMember(dest => dest.TransportService, opt => opt.MapFrom(src => src.TransportService))
                 //.ForMember(dest => dest.OrderFishes, opt => opt.MapFrom(src => src.OrderFishs))
                 .ForMember(dest => dest.RouteStops, opt => opt.MapFrom(src => src.RouteStops)); 
-            CreateMap<OrderFishRequest, OrderFish>();
+           /* CreateMap<OrderFishRequest, OrderFish>();
             CreateMap<OrderFish, OrderFishResponse>()
                  .ForMember(dest => dest.FishQualifications, opt => opt.MapFrom(src => src.FishQualifications))
-                 .ForMember(dest => dest.FishHealths, opt => opt.MapFrom(src => src.FishHealths));
+                 .ForMember(dest => dest.FishHealths, opt => opt.MapFrom(src => src.FishHealths));*/
             CreateMap<FishHealthRequest, FishHealth>();
             CreateMap<FishHealth, FishHealthResponse>();
 

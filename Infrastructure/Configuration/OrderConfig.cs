@@ -17,9 +17,9 @@ namespace Infrastructure.Configuration
                 .WithMany(x => x.Orders)
                 .HasForeignKey(x => x.AccountId);
             
-            builder.HasMany(x => x.OrderFishs)
+           /* builder.HasMany(x => x.OrderFishs)
                .WithOne(x => x.Order)
-               .HasForeignKey(x => x.OrderId);
+               .HasForeignKey(x => x.OrderId);*/
 
             builder.HasMany(x => x.RouteStops)
               .WithOne(x => x.Order)
