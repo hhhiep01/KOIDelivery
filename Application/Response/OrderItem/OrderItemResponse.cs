@@ -1,4 +1,5 @@
-﻿using Application.Response.KoiSize;
+﻿using Application.Response.FishDetail;
+using Application.Response.KoiSize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Application.Response.OrderItem
         public int OrderId { get; set; }
         public int Quantity { get; set; }
         public KoiSizeResponse KoiSize { get; set; }
+        public List<FishDetailResponse> FishDetails { get; set; }
         //public List<OrderItemDetailResponse> OrderItemDetails { get; set; }
     }
     public class OrderItemDetailResponse

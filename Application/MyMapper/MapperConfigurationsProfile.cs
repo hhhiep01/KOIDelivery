@@ -109,7 +109,8 @@ namespace Application.MyMapper
 
             //OrderItem
             CreateMap<OrderItem, OrderItemResponse>()
-            .ForMember(dest => dest.KoiSize, opt => opt.MapFrom(src => src.KoiSize));
+            .ForMember(dest => dest.KoiSize, opt => opt.MapFrom(src => src.KoiSize))
+            .ForMember(dest => dest.FishDetails, opt => opt.MapFrom(src => src.FishDetails));
             //
             CreateMap<BoxAllocation, BoxAllocationResponse>()
            .ForMember(dest => dest.BoxType, opt => opt.MapFrom(src => src.BoxType));

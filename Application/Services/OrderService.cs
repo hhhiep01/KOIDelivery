@@ -82,10 +82,12 @@ namespace Application.Services
             try
             {
                 var orders = await _unitOfWork.Orders.GetAllAsync(null, x => x.Include(x => x.TransportService)
-                                                                               .Include(x => x.OrderItems)
-                                                                               .ThenInclude(x => x.KoiSize)
-                                                                               .Include(x => x.BoxAllocations)
-                                                                               .ThenInclude(x => x.BoxType));
+                                                                                .Include(x => x.OrderItems)
+                                                                                .ThenInclude(x => x.KoiSize)
+                                                                                 .Include(x => x.OrderItems)
+                                                                                 .ThenInclude(x => x.FishDetails)
+                                                                                .Include(x => x.BoxAllocations)
+                                                                                .ThenInclude(x => x.BoxType));
 
 
                 var orderResponse = _mapper.Map<List<OrderResponse>>(orders);
@@ -104,6 +106,8 @@ namespace Application.Services
                 var order = await _unitOfWork.Orders.GetAsync(x=> x.Id == id, x => x.Include(x => x.TransportService)
                                                                                 .Include(x => x.OrderItems)
                                                                                 .ThenInclude(x => x.KoiSize)
+                                                                                 .Include(x => x.OrderItems)
+                                                                                 .ThenInclude(x=> x.FishDetails)
                                                                                 .Include(x => x.BoxAllocations)
                                                                                 .ThenInclude(x => x.BoxType));
 
@@ -268,7 +272,13 @@ namespace Application.Services
             try
             {
                 var order = await _unitOfWork.Orders.GetAllAsync(o => o.OrderStatus == OrderStatusEnum.Processing,
-                                                                                 x => x.Include(x => x.TransportService));
+                                                                                 x => x.Include(x => x.TransportService)
+                                                                                .Include(x => x.OrderItems)
+                                                                                .ThenInclude(x => x.KoiSize)
+                                                                                 .Include(x => x.OrderItems)
+                                                                                 .ThenInclude(x => x.FishDetails)
+                                                                                .Include(x => x.BoxAllocations)
+                                                                                .ThenInclude(x => x.BoxType));
 
                 var orderProccessingList = _mapper.Map<List<OrderResponse>>(order);
                 return new ApiResponse().SetOk(orderProccessingList);
@@ -287,6 +297,8 @@ namespace Application.Services
                                                                                      x => x.Include(x => x.TransportService)
                                                                                 .Include(x => x.OrderItems)
                                                                                 .ThenInclude(x => x.KoiSize)
+                                                                                 .Include(x => x.OrderItems)
+                                                                                 .ThenInclude(x => x.FishDetails)
                                                                                 .Include(x => x.BoxAllocations)
                                                                                 .ThenInclude(x => x.BoxType));
 

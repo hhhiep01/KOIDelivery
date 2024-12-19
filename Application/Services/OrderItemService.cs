@@ -59,12 +59,12 @@ namespace Application.Services
                 foreach (var itemDetail in orderItemRequest.OrderItemDetails)
                 {
 
-                    var validationResult = await _orderItemDetailValidator.ValidateAsync(itemDetail);
+                    /*var validationResult = await _orderItemDetailValidator.ValidateAsync(itemDetail);
                     if (!validationResult.IsValid)
                     {
                         var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
                         return apiResponse.SetBadRequest($"Validation failed: {errorMessages}");
-                    }
+                    }*/
 
                     var koiSize = await _unitOfWork.KoiSizes.GetAsync(x => x.Id == itemDetail.KoiSizeId);
                     if (koiSize == null)

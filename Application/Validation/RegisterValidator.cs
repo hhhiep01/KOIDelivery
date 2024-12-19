@@ -14,7 +14,7 @@ namespace Application.Validation
             RuleFor(user => user.Password)
                  .NotEmpty().WithMessage("Password is required.")
                  .MinimumLength(7).WithMessage("Password must be more than 6 characters.");
-            RuleFor(user => user.FistName)
+            RuleFor(user => user.FirstName)
                 .NotEmpty().WithMessage("FistName is required.");
             RuleFor(user => user.LastName)
                .NotEmpty().WithMessage("LastName is required.");

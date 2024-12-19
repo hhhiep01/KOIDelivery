@@ -53,7 +53,7 @@ namespace Application.Services
                     PasswordHash = pass.PasswordHash,
                     PasswordSalt = pass.PasswordSalt,
                     Email = userRequest.Email,
-                    FirstName = userRequest.FistName,
+                    FirstName = userRequest.FirstName,
                     LastName = userRequest.LastName,
                     Role = userRequest.Role,
                     IsEmailVerified = false // Initially, email is not verified
